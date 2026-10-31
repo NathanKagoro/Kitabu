@@ -12,6 +12,7 @@ import { isLowStock } from '@/lib/calc/stock';
 import { useProducts, useStock } from '@/lib/local/queries';
 import { groupByCategory, matchesQuery } from '@/lib/products';
 import { formatQty } from '@/lib/units';
+import { ProductIcon } from '@/components/products/product-icon';
 
 /**
  * Every product, grouped by category, shades and sizes of one product listed
@@ -94,9 +95,7 @@ export default function ProductsPage() {
               return (
                 <li key={product.id}>
                   <Link href={`/bidhaa/hariri?id=${product.id}`} className="flex min-h-16 items-center gap-3 px-4 py-2 active:bg-paper">
-                    <span className="text-2xl" aria-hidden>
-                      {product.icon ?? '📦'}
-                    </span>
+                    <ProductIcon icon={product.icon} size={24} />
                     <span className="min-w-0 flex-1">
                       <span className="block truncate font-semibold">
                         {product.name}

@@ -27,6 +27,7 @@ import { allowsDecimals, formatQty } from '@/lib/units';
 import type { Product } from '@/lib/types';
 import { categoriesOf, matchesQuery } from '@/lib/products';
 import { paymentMethodsOf } from '@/lib/shop-config';
+import { ProductIcon } from '@/components/products/product-icon';
 
 const SEARCH_THRESHOLD = 12;
 
@@ -263,9 +264,7 @@ export default function SalesPage() {
                     {formatQty(qty)}
                   </span>
                 )}
-                <span className="text-3xl leading-none" aria-hidden>
-                  {product.icon ?? '📦'}
-                </span>
+                <ProductIcon icon={product.icon} size={26} tile={false} />
                 <span className="line-clamp-2 text-[15px] leading-tight font-semibold">{product.name}</span>
                 {product.variant ? (
                   <span className="line-clamp-1 rounded-full bg-paper px-2 text-xs font-semibold text-ink-soft">{product.variant}</span>

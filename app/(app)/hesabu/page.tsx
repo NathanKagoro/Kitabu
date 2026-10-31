@@ -56,7 +56,7 @@ export default function SummaryPage() {
     const points = salesByDay(rows.sales, days, (s) => businessDay(s.clientCreatedAt));
     const top = topProducts(rows.saleLines.filter((l) => live.has(l.saleId)), 5);
     const products = await db().products.bulkGet(top.map((p) => p.productId));
-    return { points, top: top.map((p, i) => ({ ...p, name: products[i] ? productLabel(products[i]) : '—', icon: products[i]?.icon ?? '' })) };
+    return { points, top: top.map((p, i) => ({ ...p, name: products[i] ? productLabel(products[i]) : '—' })) };
   }, [businessId, today, range]);
 
   if (!data) return <PageHeader title={t('title')} back={false} />;
@@ -196,7 +196,7 @@ export default function SummaryPage() {
         <section className="card mx-3 mb-3 px-4 py-2">
           <h2 className="pt-2 pb-1 text-sm font-bold text-ink-soft">{t('topProducts')}</h2>
           {history.top.map((p) => (
-            <Row key={p.productId} label={`${p.icon} ${p.name} · ${formatQty(p.qty)}`} value={<Money value={p.total} />} />
+            <Row key={p.productId} label={`${p.name} · ${formatQty(p.qty)}`} value={<Money value={p.total} />} />
           ))}
         </section>
       )}

@@ -133,7 +133,7 @@ export default function PurchasesPage() {
                 <option value="">—</option>
                 {products?.map((p) => (
                   <option key={p.id} value={p.id}>
-                    {p.icon} {productLabel(p)}
+                    {productLabel(p)}
                   </option>
                 ))}
               </Select>

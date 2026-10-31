@@ -18,7 +18,8 @@
     "db:migrate": "node scripts/migrate.mjs",
     "icons": "node scripts/make-icon-set.mjs",
     "preview": "npm run build && node scripts/serve-static.mjs 3000",
-    "operator": "node scripts/create-operator.ts"
+    "operator": "node scripts/create-operator.ts",
+    "icons:products": "node scripts/make-product-sprite.mjs"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.7",

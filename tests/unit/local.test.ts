@@ -440,7 +440,7 @@ describe('the first visit', () => {
 });
 
 describe('every shop type starts with its own things', () => {
-  const VEG = /🍅|🧅|🥬|🌿|🍌|🥔|🥕|🫑|🥥|🍋/u;
+  const VEG = /^(cherry|sprout|salad|leaf|banana|carrot|nut|citrus)$/;
 
   it('a cosmetics demo has lotions and lipsticks in their categories, and no vegetables', async () => {
     const { createDemoBusiness } = await import('@/lib/demo');

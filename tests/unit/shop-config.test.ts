@@ -112,10 +112,10 @@ describe('starter products and pictures fit the trade', () => {
 
   it('only a genge gets fruit and vegetable pictures first', async () => {
     const { iconsFor, iconFor } = await import('@/lib/onboarding/starter-products');
-    expect(iconsFor('cosmetics').slice(0, 5)).not.toContain('🍅');
-    expect(iconsFor('genge')[0]).toBe('🍅');
-    expect(iconFor('cosmetics', 'Losheni')).toBe('🧴');
-    expect(iconFor('clothes', 'viatu')).toBe('👟');
-    expect(iconFor('hardware', 'Kitu kipya')).toBe('🔧');
+    expect(iconsFor('cosmetics').slice(0, 5)).not.toContain('cherry');
+    expect(iconsFor('genge')[0]).toBe('cherry');
+    expect(iconFor('cosmetics', 'Losheni')).toBe('droplet');
+    expect(iconFor('clothes', 'viatu')).toBe('footprints');
+    expect(iconFor('hardware', 'Kitu kipya')).toBe('wrench');
   });
 });

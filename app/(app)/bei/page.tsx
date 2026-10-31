@@ -14,6 +14,7 @@ import { cn } from '@/lib/cn';
 import { updatePrices } from '@/lib/local/actions';
 import { useProducts } from '@/lib/local/queries';
 import { formatTZS, parseTZS } from '@/lib/money';
+import { ProductIcon } from '@/components/products/product-icon';
 
 /**
  * The morning after Kariakoo: one list, every price pre-filled with what it was
@@ -62,7 +63,7 @@ function DailyPrices() {
           const moved = parsed != null && parsed !== product.price;
           return (
             <li key={product.id} className="flex items-center gap-3 px-4 py-2.5">
-              <span className="text-2xl" aria-hidden>{product.icon ?? '📦'}</span>
+              <ProductIcon icon={product.icon} size={22} />
               <label htmlFor={`price-${product.id}`} className="min-w-0 flex-1">
                 <span className="block truncate font-semibold">{productLabel(product)}</span>
                 <span className="text-xs text-ink-faint">

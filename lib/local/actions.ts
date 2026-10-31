@@ -240,7 +240,7 @@ export async function addProductsInBulk(
       cost,
       trackStock: input.trackStock,
       lowStockLevel: null,
-      icon: row.icon ?? input.icon ?? '📦',
+      icon: row.icon ?? input.icon ?? 'package',
       photoUrl: null,
       sku: null,
       barcode: null,
