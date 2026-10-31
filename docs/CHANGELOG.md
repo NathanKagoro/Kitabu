@@ -1,5 +1,41 @@
 # Changelog
 
+## 0.6.0 — shared foundations: honest cash, light and dark, icons, TRA-ready, the console (2026-10-31)
+
+Kitabu moved to its own repo (NathanKagoro/Kitabu); Hesabu and the first Daftari are in finance-trackers-legacy.
+
+### Cash that adds up
+- The demo opened its daily summary on "−TSh 2,720,100" expected cash. Cause: every purchase was assumed to come out of the tin, and the first one was the whole opening shelf.
+- **Where did the money come from?** Purchases and expenses ask: the shop's cash, mobile money, the bank or the owner's own pocket. Only the shop's cash comes off expected cash. New `payment_method` value `owner`.
+- **Toa pesa:** the owner takes money out, for themselves or to the bank (`owner_withdrawals`, owners and managers only). It lowers expected cash when taken from the tin and never touches sales, profit or receipts.
+- A day can't close on a negative count (action and database check). A negative expected cash shows a warning instead of a bare minus.
+- The expected-cash card lists its parts (opening, cash in, cash spent, taken out) instead of a formula.
+- The demo enters the opening shelf as opening stock, pays from the tin only when it holds enough, banks takings above a TSh 50,000 float every other evening, and is tested never to go below zero.
+
+### Light and dark
+- A dark palette for every colour, following the phone or a per-phone choice in **Zaidi → Mwonekano**, applied before the first paint.
+- `lib/color.ts` turns any shop colour into light- and dark-mode shades that keep 4.5:1 contrast (tested with yellow, pale pink, near-black and white). Text on fills uses a new `on-fill` colour.
+
+### The shop's own look
+- **Admin → Mwonekano:** the operator sets a shop's colour, logo and plan, with a light and dark preview. The logo is shrunk to 256px and stored inline, so it works offline; it shows on the till header and receipts.
+
+### No emoji
+- Product pictures are 88 line icons in one cached sprite (`public/product-icons.svg`, `npm run icons:products`), at no JavaScript cost. Old emoji values are translated when shown; editing a product saves the icon name.
+
+### TRA-ready sales
+- Shop switch **Risiti za TRA** (off by default). Every sale gets a fiscal receipt right after it is saved; a voided sale gets an adjustment that cancels it. Never blocks or undoes a sale.
+- `lib/fiscal/tra.ts` (TRA's receipt format: tax codes, payment types, global and daily counters, Z number, verification number, the `<RCT>` message) and `lib/fiscal/connector.ts` (one interface; a demo connector today, marked DEMO with no TRA link). Going live is set out in `docs/TRA.md`.
+- `fiscal_receipts` table (0011, 0012); receipts show the TRA block.
+
+### The console
+- Admin shows how many shops exist, are active and were used this week, and how many people have access; per shop, its plan, when it was last used, sales in 30 days, and everyone with access (role, phone, signs in or till PIN only). `shop_activity()` (0013, service role only).
+
+### Data budget
+- The operator's wording now loads only on the operator's screens (`messages/operator`), so traders' phones don't download it. Sales screen first load: 209.7 KB (budget 210).
+
+### Tests
+255 unit and database tests (from 206) and 4 end-to-end tests.
+
 ## 0.5.1 — a demo link with no sign-in (2026-10-28)
 
 - **`/demo`** opens Baraka Hardware, a sample hardware shop: two weeks of sales, purchases, credit customers, day closings and two stock checks, with an owner (Baraka) and two staff (Neema, Juma) so "sales by staff" has people in it. There is no sign-in. `/demo?lang=en` opens it in English.

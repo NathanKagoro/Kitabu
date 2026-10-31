@@ -31,8 +31,21 @@ if (locales.length === 0) {
   process.exit(1);
 }
 
+// Screens that only a few people open ship their wording separately
+// (messages/<screen>/<locale>.json, loaded by that screen): checked as one set.
+const SPLIT_DIRS = readdirSync(messagesDir).filter((entry) => statSync(join(messagesDir, entry)).isDirectory());
 const messages = Object.fromEntries(
-  locales.map((locale) => [locale, JSON.parse(readFileSync(join(messagesDir, `${locale}.json`), 'utf8'))])
+  locales.map((locale) => {
+    const base = JSON.parse(readFileSync(join(messagesDir, `${locale}.json`), 'utf8'));
+    for (const dir of SPLIT_DIRS) {
+      const extra = JSON.parse(readFileSync(join(messagesDir, dir, `${locale}.json`), 'utf8'));
+      for (const key of Object.keys(extra)) {
+        if (key in base) problems.push(`${dir}/${locale}.json: "${key}" is also in ${locale}.json`);
+        base[key] = extra[key];
+      }
+    }
+    return [locale, base];
+  })
 );
 
 function flatten(object, prefix = '', out = new Map()) {

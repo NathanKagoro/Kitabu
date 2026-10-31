@@ -75,7 +75,7 @@ export default function MorePage() {
       title: t('more.sections.system'),
       items: [
         { href: '/mipangilio', label: t('settings.title'), icon: <Settings size={22} />, permission: 'manageSettings' },
-        ...(operator ? [{ href: '/admin', label: t('admin.title'), icon: <Building2 size={22} /> }] : []),
+        ...(operator ? [{ href: '/admin', label: t('more.admin'), icon: <Building2 size={22} /> }] : []),
       ],
     },
   ];

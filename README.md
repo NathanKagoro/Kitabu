@@ -1,14 +1,14 @@
 # Kitabu
 
-A business app for Tanzanian shops (cosmetics, clothes, hardware, dukas, genges) that one operator sets up and customises per shop. Swahili first, works offline, runs on a cheap Android phone.
+A business app for Tanzanian shops (cosmetics, clothes, hardware, dukas, genges) that one operator sets up and customises per shop. Swahili first, works offline, runs on a cheap Android phone, in light or dark.
 
-**One app, many shops.** Each shop gets its own colour, payment methods and Lipa Namba numbers, receipt details, and the parts of the app it needs. Product details follow the trade: shades for cosmetics, size and colour for clothes, sizes and gauges for hardware.
+**One app, many shops.** Each shop gets its own colour and logo, payment methods and Lipa Namba numbers, receipt details, and the parts of the app it needs. Product details follow the trade: shades for cosmetics, size and colour for clothes, sizes and gauges for hardware.
 
 **Plain files plus Supabase.** The app builds to static files hosted free on GitHub Pages; Supabase holds the data and logins. No SMS: shops sign in with a setup code from you, then their own password.
 
 Live demo (data stays in your browser): **https://nathankagoro.github.io/Kitabu/**, sign in with any Tanzanian mobile number and the setup code **KTAB-2468**.
 
-Deploying and setting up shops: [docs/DEPLOY.md](docs/DEPLOY.md) · What's built: [docs/CHANGELOG.md](docs/CHANGELOG.md) · Original spec: [docs/MVP_SPEC.md](docs/MVP_SPEC.md)
+Deploying and setting up shops: [docs/DEPLOY.md](docs/DEPLOY.md) · TRA receipts: [docs/TRA.md](docs/TRA.md) · What's built: [docs/CHANGELOG.md](docs/CHANGELOG.md) · Original spec: [docs/MVP_SPEC.md](docs/MVP_SPEC.md)
 
 The code before Kitabu became a multi-shop template (Hesabu) is kept in [finance-trackers-legacy](https://github.com/NathanKagoro/finance-trackers-legacy/tree/hesabu-original).
 
@@ -53,8 +53,10 @@ tap "Lipa taslimu"
 | Shop type → preset (screens shown, categories, shade/size fields, default unit) | /admin when creating; Mipangilio |
 | Colour (themes the app and receipts), address, receipt footer, TIN | Mipangilio (colour also in /admin) |
 | Payment methods taken, Lipa Namba per method | Mipangilio |
-| Parts of the app on/off (stock, credit, suppliers, invoices, VAT, staff…) | Mipangilio |
+| Parts of the app on/off (stock, credit, suppliers, invoices, VAT, staff, TRA receipts…) | Mipangilio |
+| Logo and plan (with colour, in Mwonekano) | /admin only |
 | Active / paused | /admin only |
+| Light or dark | Zaidi → Mwonekano, per phone |
 
 **Accounts.** `supabase/functions/accounts` (the only server code, running inside Supabase) creates shops and logins and issues setup codes. Phone numbers map to fixed login addresses (`lib/auth/login.ts`). Public sign-up is off, and the database refuses business creation from phones (`db/migrations/0004_accounts.sql`).
 

@@ -1,0 +1,73 @@
+{
+  "admin": {
+    "title": "Maduka yote",
+    "count": "{count, plural, one {duka 1} other {maduka #}}",
+    "refresh": "Onyesha upya",
+    "newShop": "Duka jipya",
+    "staff": "{count, plural, one {mfanyakazi 1} other {wafanyakazi #}}",
+    "statusActive": "Hai",
+    "statusPaused": "Limesimamishwa",
+    "ownerFirstCode": "Namba ya kuanzia",
+    "ownerNewCode": "Namba mpya ya mwenye duka",
+    "activate": "Rudisha",
+    "pause": "Simamisha",
+    "paused": "Duka limesimamishwa",
+    "activated": "Duka limerudishwa",
+    "empty": "Bado hakuna duka. Bonyeza \"Duka jipya\" kuanza.",
+    "shopName": "Jina la duka",
+    "shopNamePlaceholder": "Mf. Mama Neema Cosmetics",
+    "shopType": "Aina ya duka",
+    "ownerName": "Jina la mwenye duka",
+    "ownerPhone": "Namba ya simu ya mwenye duka",
+    "language": "Lugha",
+    "colour": "Rangi ya duka",
+    "create": "Fungua duka",
+    "resetConfirm": "Kutoa namba mpya kutafuta neno siri la sasa la mwenye {shop}. Endelea?",
+    "pauseConfirm": "Kusimamisha {shop}? Hawataweza kuuza mpaka ulirudishe.",
+    "demoOnly": "Ukurasa huu unafanya kazi tu Kitabu kikiwa kimeunganishwa na Supabase.",
+    "notOperator": "Akaunti hii si ya msimamizi.",
+    "errors": {
+      "name": "Andika jina la duka."
+    },
+    "look": {
+      "button": "Mwonekano",
+      "title": "Mwonekano wa {shop}",
+      "colour": "Rangi",
+      "preview": "Itakavyoonekana",
+      "light": "Mwanga",
+      "dark": "Giza",
+      "logo": "Nembo (logo)",
+      "noLogo": "Bado hakuna nembo",
+      "addLogo": "Weka nembo",
+      "changeLogo": "Badilisha",
+      "removeLogo": "Ondoa",
+      "logoHint": "PNG, JPG au WebP. Tutaipunguza iwe ndogo ili ifanye kazi bila mtandao na kwenye risiti.",
+      "logoTooBig": "Picha hii ni kubwa mno hata baada ya kuipunguza. Jaribu nyingine.",
+      "save": "Hifadhi mwonekano",
+      "saved": "Mwonekano umehifadhiwa"
+    },
+    "console": {
+      "overview": "Muhtasari",
+      "shops": "Maduka",
+      "active": "Yanayotumika",
+      "usedThisWeek": "Yametumika wiki hii",
+      "people": "Watu wenye ruhusa",
+      "lastSeen": "Mara ya mwisho",
+      "never": "bado",
+      "today": "leo",
+      "yesterday": "jana",
+      "daysAgo": "siku {days} zilizopita",
+      "sales30": "{count, plural, one {mauzo 1} other {mauzo #}} siku 30",
+      "whoHasAccess": "{count, plural, one {Mtu 1 mwenye ruhusa} other {Watu # wenye ruhusa}}",
+      "noName": "Hana jina",
+      "canSignIn": "Anaingia",
+      "tillOnly": "PIN ya kaunta tu",
+      "plan": "Mpango",
+      "plans": {
+        "trial": "Majaribio",
+        "standard": "Kawaida",
+        "managed": "Tunasimamia"
+      }
+    }
+  }
+}
