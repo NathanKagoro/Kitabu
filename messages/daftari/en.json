@@ -1,0 +1,71 @@
+{
+  "daftari": {
+    "homeTab": "Today",
+    "title": "How business is going",
+    "periods": {
+      "today": "Today",
+      "week": "This week",
+      "month": "This month",
+      "lastMonth": "Last month",
+      "year": "This year",
+      "all": "All time"
+    },
+    "profit": "Profit",
+    "sales": "Sales",
+    "salesCount": "{count, plural, =0 {No sales yet} one {1 sale} other {# sales}}",
+    "owed": "Customers owe you",
+    "owedNone": "Everyone has paid",
+    "sell": "Record a sale",
+    "howWorked": "How the profit is worked out",
+    "costOfGoods": "Cost of what was sold (with transport)",
+    "expenses": "Expenses",
+    "losses": "Losses",
+    "split": {
+      "title": "Where the profit goes",
+      "change": "Change",
+      "none": "There is no profit to share in this period.",
+      "keys": {
+        "tithe": "Tithe",
+        "reinvest": "Reinvest in the business",
+        "personal": "Personal use",
+        "savings": "Savings"
+      },
+      "editTitle": "Profit split",
+      "editHint": "Choose where each shilling of profit goes. The percentages must add up to 100%.",
+      "add": "Add a category",
+      "reset": "Reset to default",
+      "total": "Total: {pct}%",
+      "name": "Name",
+      "percent": "Percent",
+      "remove": "Remove",
+      "save": "Save",
+      "saved": "Split saved",
+      "problems": {
+        "total": "The total must be 100%.",
+        "names": "Give every category a name.",
+        "negative": "Percentages can't be below zero."
+      }
+    },
+    "regulars": {
+      "title": "Customers to call",
+      "hint": "Regulars who are due or late for their usual order.",
+      "none": "No regulars are due right now.",
+      "due": "Due now",
+      "late": "Late",
+      "lastBought": "Last bought {days} days ago",
+      "rhythm": {
+        "weekly": "Weekly",
+        "fortnightly": "Every 2 weeks",
+        "monthly": "Monthly",
+        "rare": "Now and then",
+        "new": "New",
+        "none": "Not yet"
+      },
+      "call": "Call",
+      "whatsapp": "WhatsApp",
+      "message": "Hello {name}, it's {shop}. Fresh stock is in. Shall we put your usual order aside?"
+    },
+    "unpaid": "Not paid yet",
+    "seeAll": "See all"
+  }
+}

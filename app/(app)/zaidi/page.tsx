@@ -30,6 +30,7 @@ import { ThemeSwitch } from '@/components/theme-switch';
 import { signOut } from '@/lib/auth/session';
 import { clearUnlocked } from '@/lib/auth/unlock';
 import type { Feature, Permission } from '@/lib/modes';
+import { APP_NAME, IS_DAFTARI } from '@/lib/edition';
 
 interface Item {
   href: string;
@@ -37,6 +38,8 @@ interface Item {
   icon: ReactNode;
   feature?: Feature;
   permission?: Permission;
+  /** Shown in Daftari only (Kitabu has a tab for it). */
+  daftariOnly?: boolean;
 }
 
 export default function MorePage() {
@@ -57,7 +60,11 @@ export default function MorePage() {
     {
       title: t('more.sections.money'),
       items: [
-        { href: '/wateja', label: t('clients.title'), icon: <Users size={22} />, permission: 'customerList' },
+        // Daftari: customers have a tab of their own, and the profit split lives here.
+        ...(IS_DAFTARI
+          ? [{ href: '/leo/mgawanyo', label: t('daftari.split.editTitle'), icon: <TrendingUp size={22} />, permission: 'viewProfit' as const }]
+          : [{ href: '/wateja', label: t('clients.title'), icon: <Users size={22} />, permission: 'customerList' as const }]),
+        { href: '/madeni', label: t('daftari.unpaid'), icon: <Users size={22} />, feature: 'credit' as const, daftariOnly: true },
         { href: '/matumizi', label: t('expenses.title'), icon: <Receipt size={22} />, feature: 'expenses', permission: 'recordExpense' },
         { href: '/faida', label: t('profit.title'), icon: <TrendingUp size={22} />, permission: 'viewProfit' },
         { href: '/wauzaji', label: t('suppliers.title'), icon: <Truck size={22} />, feature: 'suppliers', permission: 'recordPurchase' },
@@ -85,7 +92,8 @@ export default function MorePage() {
       <PageHeader title={t('more.title')} back={false} />
       {sections.map((section) => {
         const items = section.items.filter(
-          (item) => (!item.feature || show(item.feature)) && (!item.permission || can(item.permission))
+          (item) =>
+            (!item.daftariOnly || IS_DAFTARI) && (!item.feature || show(item.feature)) && (!item.permission || can(item.permission))
         );
         if (items.length === 0) return null;
         return (
@@ -110,7 +118,7 @@ export default function MorePage() {
 
       <section className="flex items-center justify-center gap-2 px-3 pt-6 text-sm font-semibold text-ink-faint">
         <Logo size={20} />
-        {t('app.name')}
+        {APP_NAME}
       </section>
 
       <section className="space-y-2 px-3 pt-4 pb-4">

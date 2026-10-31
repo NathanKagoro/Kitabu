@@ -1,0 +1,71 @@
+{
+  "daftari": {
+    "homeTab": "Leo",
+    "title": "Biashara inavyokwenda",
+    "periods": {
+      "today": "Leo",
+      "week": "Wiki hii",
+      "month": "Mwezi huu",
+      "lastMonth": "Mwezi uliopita",
+      "year": "Mwaka huu",
+      "all": "Tangu mwanzo"
+    },
+    "profit": "Faida",
+    "sales": "Mauzo",
+    "salesCount": "{count, plural, =0 {Hakuna mauzo bado} one {mauzo 1} other {mauzo #}}",
+    "owed": "Unawadai wateja",
+    "owedNone": "Wote wamelipa",
+    "sell": "Andika mauzo",
+    "howWorked": "Faida inavyopatikana",
+    "costOfGoods": "Gharama ya bidhaa zilizouzwa (pamoja na usafiri)",
+    "expenses": "Matumizi",
+    "losses": "Hasara",
+    "split": {
+      "title": "Faida inakwenda wapi",
+      "change": "Badilisha",
+      "none": "Hakuna faida ya kugawa katika kipindi hiki.",
+      "keys": {
+        "tithe": "Zaka",
+        "reinvest": "Kuwekeza tena kwenye biashara",
+        "personal": "Matumizi binafsi",
+        "savings": "Akiba"
+      },
+      "editTitle": "Mgawanyo wa faida",
+      "editHint": "Chagua kila shilingi ya faida inakwenda wapi. Asilimia zote lazima zijumlishe 100%.",
+      "add": "Ongeza kundi",
+      "reset": "Rudisha za mwanzo",
+      "total": "Jumla: {pct}%",
+      "name": "Jina",
+      "percent": "Asilimia",
+      "remove": "Ondoa",
+      "save": "Hifadhi",
+      "saved": "Mgawanyo umehifadhiwa",
+      "problems": {
+        "total": "Jumla lazima iwe 100%.",
+        "names": "Kila kundi lipewe jina.",
+        "negative": "Asilimia haziwezi kuwa chini ya sifuri."
+      }
+    },
+    "regulars": {
+      "title": "Wateja wa kupigia simu",
+      "hint": "Wateja wa kawaida ambao wamefika au wamechelewa kwa oda yao.",
+      "none": "Hakuna mteja anayesubiriwa sasa hivi.",
+      "due": "Wakati wake",
+      "late": "Amechelewa",
+      "lastBought": "Alinunua siku {days} zilizopita",
+      "rhythm": {
+        "weekly": "Kila wiki",
+        "fortnightly": "Kila wiki mbili",
+        "monthly": "Kila mwezi",
+        "rare": "Mara chache",
+        "new": "Mpya",
+        "none": "Hajanunua"
+      },
+      "call": "Piga simu",
+      "whatsapp": "WhatsApp",
+      "message": "Habari {name}, ni {shop}. Tuna mzigo mpya, tukuwekee oda yako ya kawaida?"
+    },
+    "unpaid": "Bado hawajalipa",
+    "seeAll": "Ona wote"
+  }
+}

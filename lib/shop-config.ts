@@ -1,3 +1,4 @@
+import { EDITION_BRAND, IS_DAFTARI } from './edition';
 import { hasFeature, type Feature } from './modes';
 import type { Business, BusinessSettings, BusinessType, PaymentMethod, ProductUnit } from './types';
 
@@ -14,6 +15,7 @@ import type { Business, BusinessSettings, BusinessType, PaymentMethod, ProductUn
  *   - Features    -> per-shop on/off overrides on top of the preset.
  */
 
+/** The stylesheet's own green (app/globals.css). A shop with no colour gets its edition's (EDITION_BRAND). */
 export const DEFAULT_BRAND = '#0f6b3f';
 
 /** Colours offered in the picker: all hold up in sunlight against white text. */
@@ -123,7 +125,23 @@ export function presetOf(business: Pick<Business, 'type'> | null | undefined): S
  * Is a feature switched on for this shop? Shop-level overrides win, then the
  * shop type's preset, then the mode's default.
  */
+/**
+ * Parts of the app Daftari leaves out entirely: it is one owner's sales book,
+ * not a team's shop system. No setting can switch them on in a Daftari build.
+ */
+export const DAFTARI_LEAVES_OUT: ReadonlySet<Feature> = new Set<Feature>([
+  'staff',
+  'documents',
+  'suppliers',
+  'vat',
+  'traReceipts',
+  'productCodes',
+  'receiptPdf',
+  'dailyPriceUpdate',
+]);
+
 export function shopHasFeature(business: Pick<Business, 'type' | 'mode' | 'settings'> | null | undefined, feature: Feature): boolean {
+  if (IS_DAFTARI && DAFTARI_LEAVES_OUT.has(feature)) return false;
   const own = business?.settings?.features?.[feature];
   if (typeof own === 'boolean') return own;
   const preset = presetOf(business).features?.[feature];
@@ -133,7 +151,7 @@ export function shopHasFeature(business: Pick<Business, 'type' | 'mode' | 'setti
 
 export function brandColorOf(business: Pick<Business, 'settings'> | null | undefined): string {
   const color = business?.settings?.brandColor;
-  return typeof color === 'string' && /^#[0-9a-f]{6}$/i.test(color) ? color : DEFAULT_BRAND;
+  return typeof color === 'string' && /^#[0-9a-f]{6}$/i.test(color) ? color : EDITION_BRAND;
 }
 
 /** Payment methods this shop takes, cash first. Credit is a feature, not a method here. */

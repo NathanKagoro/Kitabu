@@ -1,3 +1,4 @@
+import path from 'node:path';
 import withSerwistInit from '@serwist/next';
 import createNextIntlPlugin from 'next-intl/plugin';
 
@@ -48,5 +49,14 @@ export default withSerwist(
     reactStrictMode: true,
     distDir: process.env.NEXT_DIST_DIR ?? '.next',
     typedRoutes: false,
+    // The Daftari build swaps in Daftari's wording (lib/edition/messages.ts).
+    webpack: (config, { webpack }) => {
+      if (process.env.NEXT_PUBLIC_EDITION === 'daftari') {
+        config.plugins.push(
+          new webpack.NormalModuleReplacementPlugin(/lib[\\/]edition[\\/]messages(\.ts)?$/, path.join(process.cwd(), 'lib/edition/messages.daftari.ts'))
+        );
+      }
+      return config;
+    },
   })
 );

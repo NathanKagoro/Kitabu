@@ -15,6 +15,7 @@ import { updatePrices } from '@/lib/local/actions';
 import { useProducts } from '@/lib/local/queries';
 import { formatTZS, parseTZS } from '@/lib/money';
 import { ProductIcon } from '@/components/products/product-icon';
+import { HOME } from '@/lib/edition';
 
 /**
  * The morning after Kariakoo: one list, every price pre-filled with what it was
@@ -46,7 +47,7 @@ function DailyPrices() {
     }
     const changed = await updatePrices({ businessId, userId, prices });
     setBusy(false);
-    if (firstRun) return router.replace('/mauzo');
+    if (firstRun) return router.replace(HOME);
     toast(changed ? t('updated', { count: changed }) : t('noChanges'), changed ? 'ok' : 'info');
   };
 
@@ -86,7 +87,7 @@ function DailyPrices() {
             {firstRun ? t('firstRunSave') : t('saveAll')}
           </Button>
           {firstRun && (
-            <Button variant="ghost" block className="mt-1" onClick={() => router.replace('/mauzo')}>
+            <Button variant="ghost" block className="mt-1" onClick={() => router.replace(HOME)}>
               {t('firstRunSkip')}
             </Button>
           )}

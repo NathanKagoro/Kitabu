@@ -11,6 +11,7 @@ import { Field, TextInput } from '@/components/ui/field';
 import { normalisePhone } from '@/lib/auth/phone';
 import { DEMO_CODE, isDemo, signIn } from '@/lib/auth/session';
 import { db, META_KEYS, setMeta } from '@/lib/local/db';
+import { HOME } from '@/lib/edition';
 
 /**
  * Phone number + password. The first time, the "password" is the setup code
@@ -40,7 +41,7 @@ export default function SignInPage() {
     const membership = await db().members.where('userId').equals(result.userId).filter((m) => m.active).first();
     if (membership) {
       await setMeta(META_KEYS.activeBusinessId, membership.businessId);
-      router.replace('/mauzo');
+      router.replace(HOME);
     } else if (result.operator) {
       router.replace('/admin');
     } else {

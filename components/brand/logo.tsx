@@ -1,3 +1,5 @@
+import { APP_NAME } from '@/lib/edition';
+
 /**
  * The app mark: a ruled book -- the daftari a trader already keeps -- in the
  * app's own colours. Same geometry as scripts/make-icons.mjs, which draws the
@@ -10,7 +12,7 @@ export function Logo({ size = 56, className }: { size?: number; className?: stri
       height={size}
       viewBox="0 0 24 24"
       role="img"
-      aria-label="Kitabu"
+      aria-label={APP_NAME}
       className={className}
     >
       <rect width="24" height="24" rx="5.4" fill="var(--color-brand)" />

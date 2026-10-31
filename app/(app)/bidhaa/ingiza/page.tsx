@@ -22,6 +22,7 @@ import { categoriesOf, findDuplicates, parseBulkText } from '@/lib/products';
 import { presetOf } from '@/lib/shop-config';
 import { iconFor } from '@/lib/onboarding/starter-products';
 import { uuidv7 } from '@/lib/uuid';
+import { HOME } from '@/lib/edition';
 
 /**
  * Setup day. The owner (or you, on the visit) counts a shelf and types it in:
@@ -187,7 +188,7 @@ function BulkEntryPage() {
     if (count) return router.replace(`/stoo/ripoti?id=${count.id}${firstRun ? '&anza=1' : ''}`);
     if (!firstRun) return router.back();
     const all = await db().products.where('businessId').equals(businessId).filter((p) => p.active).toArray();
-    router.replace(all.some((p) => !p.price) ? '/bei?anza=1' : '/mauzo');
+    router.replace(all.some((p) => !p.price) ? '/bei?anza=1' : HOME);
   };
 
   const variantName = asksVariant && preset.variantLabel ? t(`variantLabels.${preset.variantLabel}`) : '';
@@ -327,7 +328,7 @@ function BulkEntryPage() {
         )}
 
         {firstRun && (
-          <Link href="/mauzo" className="block py-3 text-center font-semibold text-ink-soft">
+          <Link href={HOME} className="block py-3 text-center font-semibold text-ink-soft">
             {tb('skip')}
           </Link>
         )}

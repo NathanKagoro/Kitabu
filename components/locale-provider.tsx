@@ -4,7 +4,10 @@ import { NextIntlClientProvider, type AbstractIntlMessages } from 'next-intl';
 import { createContext, useCallback, useContext, useEffect, useState, type ReactNode } from 'react';
 
 import { DEFAULT_LOCALE, isLocale, LOCALE_STORAGE_KEY, type Locale } from '@/lib/i18n/config';
-import swMessages from '@/messages/sw.json';
+import { EDITION_MESSAGES_SW, editionMessagesEn } from '@/lib/edition/messages';
+import baseSw from '@/messages/sw.json';
+
+const swMessages = { ...baseSw, ...EDITION_MESSAGES_SW };
 
 /**
  * The language lives on the phone (localStorage), not in a cookie: the app is
@@ -18,7 +21,10 @@ const SetLocaleContext = createContext<SetLocale | null>(null);
 
 const loaders: Record<Locale, () => Promise<AbstractIntlMessages>> = {
   sw: async () => swMessages as unknown as AbstractIntlMessages,
-  en: async () => (await import('@/messages/en.json')).default as unknown as AbstractIntlMessages,
+  en: async () => ({
+    ...((await import('@/messages/en.json')).default as unknown as AbstractIntlMessages),
+    ...(await editionMessagesEn()),
+  }),
 };
 
 function storedLocale(): Locale {

@@ -19,6 +19,7 @@ import type { BusinessType } from '@/lib/types';
 import { useSetLocale } from '@/components/locale-provider';
 import { SHOP_TYPE_OPTIONS } from '@/components/shop-types';
 import { ProductIcon } from '@/components/products/product-icon';
+import { HOME } from '@/lib/edition';
 
 const TYPES = SHOP_TYPE_OPTIONS;
 const starterKey = (item: StarterProduct) => `${item.name}|${item.variant ?? ''}`;
@@ -46,7 +47,7 @@ function NotLinked() {
   useEffect(() => {
     if (!ready) return;
     if (!userId) router.replace('/ingia');
-    else if (businessId) router.replace('/mauzo');
+    else if (businessId) router.replace(HOME);
   }, [ready, userId, businessId, router]);
 
   return (
@@ -86,7 +87,7 @@ function OnboardingPage() {
   useEffect(() => {
     if (!ready) return;
     if (!userId) router.replace('/ingia');
-    else if (businessId && !busy) router.replace('/mauzo');
+    else if (businessId && !busy) router.replace(HOME);
   }, [ready, userId, businessId, busy, router]);
 
   const starter = type ? STARTER_PRODUCTS[type] : [];

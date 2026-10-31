@@ -10,14 +10,15 @@ import { DEFAULT_LOCALE } from '@/lib/i18n/config';
 import { THEME_BOOT_SCRIPT } from '@/lib/theme-boot';
 
 import './globals.css';
+import { APP_NAME, APP_TAGLINE, EDITION_BRAND } from '@/lib/edition';
 
 export const metadata: Metadata = {
   // Absolute URLs for the link-preview image (set by the Pages build).
   metadataBase: process.env.NEXT_PUBLIC_SITE_URL ? new URL(process.env.NEXT_PUBLIC_SITE_URL) : undefined,
-  title: 'Kitabu',
-  description: 'Biashara yako, mkononi',
-  applicationName: 'Kitabu',
-  appleWebApp: { capable: true, title: 'Kitabu', statusBarStyle: 'default' },
+  title: APP_NAME,
+  description: APP_TAGLINE,
+  applicationName: APP_NAME,
+  appleWebApp: { capable: true, title: APP_NAME, statusBarStyle: 'default' },
   formatDetection: { telephone: false },
 };
 
@@ -27,7 +28,7 @@ export const viewport: Viewport = {
   // Zoom stays enabled: pinch-to-zoom is an accessibility feature, and locking
   // it to look "app-like" is not worth taking that away.
   maximumScale: 5,
-  themeColor: '#0f6b3f',
+  themeColor: EDITION_BRAND,
   viewportFit: 'cover',
 };
 

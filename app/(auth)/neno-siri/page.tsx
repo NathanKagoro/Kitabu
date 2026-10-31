@@ -11,6 +11,7 @@ import { Field, TextInput } from '@/components/ui/field';
 import { MIN_PASSWORD_LENGTH } from '@/lib/auth/login';
 import { setPassword } from '@/lib/auth/session';
 import { db, getMeta, META_KEYS, setMeta } from '@/lib/local/db';
+import { HOME } from '@/lib/edition';
 
 /** After signing in with a setup code: choose the password used from now on. */
 export default function SetPasswordPage() {
@@ -41,7 +42,7 @@ export default function SetPasswordPage() {
     if (membership) {
       await setMeta(META_KEYS.activeBusinessId, membership.businessId);
       // New on this phone: a PIN for quick unlocking comes next.
-      router.replace(membership.pinHash ? '/mauzo' : '/pin');
+      router.replace(membership.pinHash ? HOME : '/pin');
     } else if (await getMeta<boolean>(META_KEYS.operator, false)) {
       router.replace('/admin');
     } else {

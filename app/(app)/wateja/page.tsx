@@ -20,6 +20,7 @@ import { createCustomer } from '@/lib/local/actions';
 import { useCustomers } from '@/lib/local/queries';
 import { useCustomerStats } from '@/lib/local/report-queries';
 import { cn } from '@/lib/cn';
+import { APP_NAME, IS_DAFTARI } from '@/lib/edition';
 
 /**
  * Wateja: everyone the shop knows, not just people who owe money. Built for
@@ -69,13 +70,14 @@ function CustomersPageInner() {
     toast(tc('saved'));
   };
 
-  const shop = business?.name ?? 'Kitabu';
+  const shop = business?.name ?? APP_NAME;
   const fileBase = `${shop.toLowerCase().replace(/[^a-z0-9]+/g, '-')}-wateja-${today}`;
 
   return (
     <>
       <PageHeader
         title={t('title')}
+        back={!IS_DAFTARI}
         subtitle={customers?.length ? t('count', { count: customers.length }) : undefined}
         action={
           <Button variant="ghost" size="icon" aria-label={t('add')} onClick={() => setAdding(true)}>

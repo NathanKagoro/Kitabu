@@ -1,29 +1,41 @@
 'use client';
 
-import { BookUser, LayoutGrid, Menu, ShoppingCart, Wallet } from '@/components/icons';
+import { BookUser, LayoutGrid, Menu, ShoppingCart, Users, Wallet } from '@/components/icons';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 
 import { cn } from '@/lib/cn';
+import { IS_DAFTARI } from '@/lib/edition';
 
-const ITEMS = [
-  { href: '/mauzo', key: 'sales', Icon: Wallet },
+const KITABU_ITEMS = [
+  { href: '/mauzo', key: 'nav.sales', Icon: Wallet },
   // Buying stock is the other half of a trading day, so it gets a tab of its
   // own rather than hiding under "Zaidi".
-  { href: '/manunuzi', key: 'purchases', Icon: ShoppingCart },
-  { href: '/madeni', key: 'credit', Icon: BookUser },
-  { href: '/hesabu', key: 'summary', Icon: LayoutGrid },
-  { href: '/zaidi', key: 'more', Icon: Menu },
+  { href: '/manunuzi', key: 'nav.purchases', Icon: ShoppingCart },
+  { href: '/madeni', key: 'nav.credit', Icon: BookUser },
+  { href: '/hesabu', key: 'nav.summary', Icon: LayoutGrid },
+  { href: '/zaidi', key: 'nav.more', Icon: Menu },
 ] as const;
+
+/** Daftari opens on how the business is going; customers get a tab, money owed shows on Leo. */
+const DAFTARI_ITEMS = [
+  { href: '/leo', key: 'daftari.homeTab', Icon: LayoutGrid },
+  { href: '/mauzo', key: 'nav.sales', Icon: Wallet },
+  { href: '/manunuzi', key: 'nav.purchases', Icon: ShoppingCart },
+  { href: '/wateja', key: 'clients.title', Icon: Users },
+  { href: '/zaidi', key: 'nav.more', Icon: Menu },
+] as const;
+
+const ITEMS = IS_DAFTARI ? DAFTARI_ITEMS : KITABU_ITEMS;
 
 export function BottomNav() {
   const pathname = usePathname();
-  const t = useTranslations('nav');
+  const t = useTranslations();
 
   return (
     <nav
-      aria-label={t('more')}
+      aria-label={t('nav.more')}
       className="fixed inset-x-0 bottom-0 z-40 border-t border-line bg-surface pb-[env(safe-area-inset-bottom,0px)]"
     >
       <ul className="mx-auto flex max-w-lg">

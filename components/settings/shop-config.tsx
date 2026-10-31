@@ -9,7 +9,8 @@ import { Field, TextInput } from '@/components/ui/field';
 import { SwitchRow } from '@/components/ui/switch';
 import type { Feature } from '@/lib/modes';
 import { MODE_FOR_TYPE } from '@/lib/modes';
-import { ALL_PAYMENT_METHODS, brandColorOf, paymentMethodsOf, shopHasFeature } from '@/lib/shop-config';
+import { IS_DAFTARI } from '@/lib/edition';
+import { ALL_PAYMENT_METHODS, brandColorOf, DAFTARI_LEAVES_OUT, paymentMethodsOf, shopHasFeature } from '@/lib/shop-config';
 import type { Business, BusinessType, PaymentMethod } from '@/lib/types';
 
 /**
@@ -113,7 +114,7 @@ export function ShopConfigSections({ draft, onSave }: { draft: Business; onSave:
         <h2 className="font-bold">{t('features')}</h2>
         <p className="text-sm text-ink-soft">{t('featuresHint')}</p>
         <div className="card divide-y divide-line overflow-hidden">
-          {OWNER_FEATURES.map((feature) => (
+          {OWNER_FEATURES.filter((feature) => !(IS_DAFTARI && DAFTARI_LEAVES_OUT.has(feature))).map((feature) => (
             <SwitchRow
               key={feature}
               label={t(`featureNames.${feature}`)}

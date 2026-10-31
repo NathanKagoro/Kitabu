@@ -7,6 +7,7 @@ import { Logo } from '@/components/brand/logo';
 import { useSetLocale } from '@/components/locale-provider';
 import { Button } from '@/components/ui/button';
 import { withBase } from '@/lib/base-path';
+import { HOME, IS_DAFTARI } from '@/lib/edition';
 import { businessDay } from '@/lib/date';
 import { db, getMeta, META_KEYS, setDb, setMeta } from '@/lib/local/db';
 import { setShowcase } from '@/lib/showcase';
@@ -45,17 +46,22 @@ export default function DemoPage() {
           await setMeta(META_KEYS.mustSetPassword, false);
           await setMeta(META_KEYS.operator, false);
           const { createDemoBusiness } = await import('@/lib/demo');
-          await createDemoBusiness(userId, 'Baraka Hardware', lang, 'hardware', {
-            owner: 'Baraka',
-            staff: [
-              { name: 'Neema', role: 'manager' },
-              { name: 'Juma', role: 'cashier' },
-            ],
-          });
+          if (IS_DAFTARI) {
+            // Daftari: one owner, one phone, a small shop.
+            await createDemoBusiness(userId, 'Duka la Mama Asha', lang, 'duka', { owner: 'Mama Asha' });
+          } else {
+            await createDemoBusiness(userId, 'Baraka Hardware', lang, 'hardware', {
+              owner: 'Baraka',
+              staff: [
+                { name: 'Neema', role: 'manager' },
+                { name: 'Juma', role: 'cashier' },
+              ],
+            });
+          }
           await setMeta(SEEDED_ON, businessDay());
         }
         // A full load, so every screen opens on the demo database.
-        if (!cancelled) window.location.replace(withBase('/mauzo/'));
+        if (!cancelled) window.location.replace(withBase(`${HOME}/`));
       } catch (error) {
         console.error(error);
         if (!cancelled) setFailed(true);

@@ -22,6 +22,7 @@ import type {
   WasteEvent,
   WasteReason,
 } from '../types';
+import { checkSplit, type SplitBucket } from '../calc/profit-split';
 import { db } from './db';
 import { persist, persistAll } from './write';
 
@@ -713,4 +714,16 @@ export async function recordSupplierPayment(
   };
   await persist('payments', payment);
   return payment;
+}
+
+/** The owner's "where the profit goes" percentages, kept with the shop's settings (synced). */
+export async function saveProfitSplit(businessId: string, buckets: readonly SplitBucket[]): Promise<void> {
+  if (checkSplit(buckets) !== null) throw new Error('A profit split must add up to 100%, every part named');
+  const business = await db().businesses.get(businessId);
+  if (!business) throw new Error('Business not found');
+  await persist('businesses', {
+    ...business,
+    settings: { ...business.settings, profitSplit: buckets.map((b) => ({ ...b, label: b.label?.trim() || undefined })) },
+    updatedAt: nowIso(),
+  });
 }

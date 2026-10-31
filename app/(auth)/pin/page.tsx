@@ -6,6 +6,7 @@ import { useEffect } from 'react';
 import { useApp } from '@/components/app-provider';
 import { PinLock } from '@/components/pin-lock';
 import { db } from '@/lib/local/db';
+import { HOME } from '@/lib/edition';
 
 export default function SetPinPage() {
   const router = useRouter();
@@ -22,11 +23,11 @@ export default function SetPinPage() {
    * straight to the till.
    */
   const next = async () => {
-    if (!businessId || !can('manageProducts')) return router.replace('/mauzo');
+    if (!businessId || !can('manageProducts')) return router.replace(HOME);
     const products = await db().products.where('businessId').equals(businessId).filter((p) => p.active && !p.deletedAt).toArray();
     if (products.length === 0) return router.replace('/bidhaa/ingiza?anza=1');
     if (products.some((p) => !p.price)) return router.replace('/bei?anza=1');
-    router.replace('/mauzo');
+    router.replace(HOME);
   };
 
   if (!ready || !member) return null;
