@@ -212,7 +212,20 @@
     "notFound": "Risiti haipatikani",
     "voidedNotice": "Mauzo haya yalibatilishwa",
     "sendAndSave": "Tuma risiti na umhifadhi",
-    "saveCustomer": "Mhifadhi mteja kwa ofa"
+    "saveCustomer": "Mhifadhi mteja kwa ofa",
+    "fiscal": {
+      "title": "Risiti ya TRA",
+      "demo": "MFANO",
+      "verification": "Namba ya uhakiki",
+      "number": "Risiti Na.",
+      "zNumber": "Z Na.",
+      "beforeVat": "Kabla ya VAT",
+      "vat": "VAT",
+      "pending": "Inasubiri kutumwa TRA.",
+      "failed": "Haikutumwa TRA. Tutajaribu tena.",
+      "verify": "Hakiki kwenye tovuti ya TRA",
+      "demoNote": "Hii ni risiti ya mfano: haijatumwa TRA. Risiti halisi zitaanza duka likishasajiliwa."
+    }
   },
   "products": {
     "title": "Bidhaa",
@@ -594,7 +607,8 @@
       "dailyPriceUpdate": "Bei za kila siku",
       "staff": "Wafanyakazi",
       "documents": "Ankara na proforma",
-      "vat": "VAT na TIN"
+      "vat": "VAT na TIN",
+      "traReceipts": "Risiti za TRA"
     },
     "featureHints": {
       "stockTracking": "Hesabu kilichobaki, onyo kikikaribia kuisha",
@@ -606,7 +620,8 @@
       "dailyPriceUpdate": "Kubadilisha bei kila asubuhi",
       "staff": "Wafanyakazi wenye akaunti zao",
       "documents": "Ankara, proforma, delivery note",
-      "vat": "Kodi ya VAT kwenye bei na risiti"
+      "vat": "Kodi ya VAT kwenye bei na risiti",
+      "traReceipts": "Kila mauzo yanapata risiti ya TRA. Ni za mfano mpaka duka lisajiliwe na TRA."
     }
   },
   "more": {

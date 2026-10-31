@@ -598,3 +598,49 @@ export const ownerWithdrawals = pgTable(
   },
   (t) => [index('owner_withdrawals_time_idx').on(t.businessId, t.clientCreatedAt)]
 );
+
+/**
+ * A fiscal (TRA) receipt for a sale, or an adjustment that cancels one. Written
+ * by the connector (lib/fiscal): today the demo connector on the phone; a live
+ * connector will write these from the server, where the TRA certificate lives.
+ *
+ * Counters never repeat within a shop (unique business_id + gc), each sale has
+ * at most one receipt and one adjustment, and rows are never deleted: a
+ * mistake is cancelled by an adjustment, as TRA requires.
+ */
+export const fiscalReceipts = pgTable(
+  'fiscal_receipts',
+  {
+    id: uuid('id').primaryKey(),
+    syncedAt: timestamp('synced_at', { withTimezone: true }).defaultNow().notNull(),
+    businessId: uuid('business_id')
+      .notNull()
+      .references(() => businesses.id, { onDelete: 'cascade' }),
+    saleId: uuid('sale_id').notNull(),
+    /** 'sale', or 'adjustment' when the sale was cancelled after its receipt. */
+    kind: text('kind').notNull().default('sale'),
+    /** 'demo' until the shop is registered with TRA; then 'live'. */
+    mode: text('mode').notNull().default('demo'),
+    /** 'issued', 'pending' (waiting for signal or the server) or 'failed'. */
+    status: text('status').notNull().default('pending'),
+    gc: bigint('gc', { mode: 'number' }),
+    dc: bigint('dc', { mode: 'number' }),
+    znum: text('znum'),
+    rctvNum: text('rctv_num'),
+    verifyUrl: text('verify_url'),
+    totalInclusive: money('total_inclusive').notNull(),
+    totalExclusive: money('total_exclusive').notNull(),
+    vat: money('vat').notNull(),
+    provider: text('provider'),
+    ackCode: text('ack_code'),
+    ackMessage: text('ack_message'),
+    issuedAt: timestamp('issued_at', { withTimezone: true }),
+    createdBy: uuid('created_by'),
+    clientCreatedAt: timestamp('client_created_at', { withTimezone: true }).notNull(),
+    createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
+  },
+  (t) => [
+    index('fiscal_receipts_time_idx').on(t.businessId, t.clientCreatedAt),
+    index('fiscal_receipts_sale_idx').on(t.saleId),
+  ]
+);

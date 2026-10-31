@@ -10,6 +10,7 @@ import type {
   DocumentLine,
   Expense,
   OwnerWithdrawal,
+  FiscalReceipt,
   Member,
   OutboxEntry,
   Payment,
@@ -54,6 +55,7 @@ export class HesabuDB extends Dexie {
   payments!: EntityTable<Payment, 'id'>;
   expenses!: EntityTable<Expense, 'id'>;
   ownerWithdrawals!: EntityTable<OwnerWithdrawal, 'id'>;
+  fiscalReceipts!: EntityTable<FiscalReceipt, 'id'>;
   purchases!: EntityTable<Purchase, 'id'>;
   purchaseLines!: EntityTable<PurchaseLine, 'id'>;
   wasteEvents!: EntityTable<WasteEvent, 'id'>;
@@ -107,6 +109,11 @@ export class HesabuDB extends Dexie {
     // v4: money the owner took out (for themselves or to the bank).
     this.version(4).stores({
       ownerWithdrawals: 'id, businessId, clientCreatedAt, [businessId+clientCreatedAt]',
+    });
+
+    // v5: TRA receipts and adjustments.
+    this.version(5).stores({
+      fiscalReceipts: 'id, businessId, saleId, clientCreatedAt, [businessId+clientCreatedAt]',
     });
   }
 }

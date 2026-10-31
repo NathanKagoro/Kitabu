@@ -212,7 +212,20 @@
     "notFound": "Receipt not found",
     "voidedNotice": "This sale was voided",
     "sendAndSave": "Send receipt and save them",
-    "saveCustomer": "Save this customer for offers"
+    "saveCustomer": "Save this customer for offers",
+    "fiscal": {
+      "title": "TRA receipt",
+      "demo": "DEMO",
+      "verification": "Verification number",
+      "number": "Receipt no.",
+      "zNumber": "Z no.",
+      "beforeVat": "Before VAT",
+      "vat": "VAT",
+      "pending": "Waiting to be sent to TRA.",
+      "failed": "Not sent to TRA. It will be tried again.",
+      "verify": "Check on TRA's website",
+      "demoNote": "This is a demo receipt: it was not sent to TRA. Real receipts start once the shop is registered."
+    }
   },
   "products": {
     "title": "Products",
@@ -594,7 +607,8 @@
       "dailyPriceUpdate": "Daily prices",
       "staff": "Staff",
       "documents": "Invoices and proformas",
-      "vat": "VAT and TIN"
+      "vat": "VAT and TIN",
+      "traReceipts": "TRA receipts"
     },
     "featureHints": {
       "stockTracking": "Count what is left, warn when it runs low",
@@ -606,7 +620,8 @@
       "dailyPriceUpdate": "Change prices each morning",
       "staff": "Staff with their own logins",
       "documents": "Invoices, proformas, delivery notes",
-      "vat": "VAT on prices and receipts"
+      "vat": "VAT on prices and receipts",
+      "traReceipts": "Every sale gets a TRA receipt. Demo receipts until the shop is registered with TRA."
     }
   },
   "more": {

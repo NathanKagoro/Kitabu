@@ -81,6 +81,14 @@ export async function voidSale(
     { table: 'payments', rows: hiddenPayments },
     { table: 'stockMovements', rows: reversals },
   ]);
+
+  // A sale with a TRA receipt is cancelled with an adjustment, as TRA requires.
+  try {
+    const { issueFiscalReceipt } = await import('../fiscal/issue');
+    await issueFiscalReceipt(saleId, 'adjustment', { userId: actor.userId ?? null, at });
+  } catch (error) {
+    console.error('TRA adjustment not issued', error);
+  }
 }
 
 // --- Customers & credit ----------------------------------------------------

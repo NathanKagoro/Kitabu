@@ -66,6 +66,8 @@ export const MOBILE_MONEY_METHODS: readonly PaymentMethod[] = [
 export interface BusinessSettings {
   vatRate?: number;
   receiptFooter?: string;
+  /** TRA registration details for live receipts (operator only). */
+  fiscal?: FiscalSettings;
   /** Set by the operator (admin → Look): a small inline image or an https link. */
   logoUrl?: string | null;
   reminderTemplate?: string;
@@ -358,6 +360,40 @@ export interface OwnerWithdrawal {
   clientCreatedAt: string;
   createdAt: string;
   deletedAt?: string | null;
+}
+
+/** A TRA receipt (or the adjustment cancelling one). See db/schema.ts fiscalReceipts. */
+export interface FiscalReceipt {
+  id: string;
+  businessId: string;
+  saleId: string;
+  kind: 'sale' | 'adjustment';
+  mode: 'demo' | 'live';
+  status: 'pending' | 'issued' | 'failed';
+  gc: number | null;
+  dc: number | null;
+  znum: string | null;
+  rctvNum: string | null;
+  verifyUrl: string | null;
+  totalInclusive: number;
+  totalExclusive: number;
+  vat: number;
+  provider?: string | null;
+  ackCode?: string | null;
+  ackMessage?: string | null;
+  issuedAt: string | null;
+  createdBy?: string | null;
+  clientCreatedAt: string;
+  createdAt: string;
+}
+
+/** What the shop needs to issue live TRA receipts; set by the operator once registered. */
+export interface FiscalSettings {
+  mode?: 'demo' | 'live';
+  regId?: string;
+  efdSerial?: string;
+  receiptCode?: string;
+  provider?: string;
 }
 
 export type StockCountKind = 'check' | 'opening';

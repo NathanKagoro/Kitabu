@@ -21,6 +21,17 @@ export interface ReceiptData {
   };
   sale: { total: number; discount: number; status: string; createdAt: string };
   lines: { description: string; qty: number; unitPrice: number; lineTotal: number }[];
+  /** The TRA receipt, when the shop issues them. */
+  fiscal?: {
+    mode: 'demo' | 'live';
+    status: 'pending' | 'issued' | 'failed';
+    rctvNum: string | null;
+    verifyUrl: string | null;
+    gc: number | null;
+    znum: string | null;
+    vat: number;
+    totalExclusive: number;
+  } | null;
 }
 
 /** Rendered on the server for customers, and on the seller's phone offline. */
@@ -86,6 +97,7 @@ export function ReceiptView({ receipt }: { receipt: ReceiptData }) {
             ))}
           </ul>
         ) : null}
+        {receipt.fiscal ? <FiscalBlock fiscal={receipt.fiscal} /> : null}
         <p className="mt-6 text-center text-sm text-ink-soft">{receipt.business.footer || t('thanks')}</p>
         <p className="mt-5 flex items-center justify-center gap-1.5 text-xs text-ink-faint">
           <Logo size={16} />
@@ -93,5 +105,54 @@ export function ReceiptView({ receipt }: { receipt: ReceiptData }) {
         </p>
       </div>
     </article>
+  );
+}
+
+/**
+ * The TRA part of a receipt. A demo receipt says so plainly and carries no TRA
+ * link, so it can never pass for a real one.
+ */
+function FiscalBlock({ fiscal }: { fiscal: NonNullable<ReceiptData['fiscal']> }) {
+  const t = useTranslations('receipt.fiscal');
+  const demo = fiscal.mode === 'demo';
+  return (
+    <section className="mt-5 rounded-[10px] border border-line px-3 py-2.5 text-sm">
+      <p className="flex items-center justify-between gap-2 font-bold">
+        {t('title')}
+        {demo ? <span className="rounded-full bg-debt-tint px-2 py-0.5 text-xs font-bold text-debt">{t('demo')}</span> : null}
+      </p>
+      {fiscal.status === 'issued' ? (
+        <dl className="mt-2 space-y-1">
+          <div className="flex justify-between gap-3">
+            <dt className="text-ink-soft">{t('verification')}</dt>
+            <dd className="tnum font-semibold">{fiscal.rctvNum}</dd>
+          </div>
+          <div className="flex justify-between gap-3">
+            <dt className="text-ink-soft">{t('number')}</dt>
+            <dd className="tnum">{fiscal.gc}</dd>
+          </div>
+          <div className="flex justify-between gap-3">
+            <dt className="text-ink-soft">{t('zNumber')}</dt>
+            <dd className="tnum">{fiscal.znum}</dd>
+          </div>
+          <div className="flex justify-between gap-3">
+            <dt className="text-ink-soft">{t('beforeVat')}</dt>
+            <dd className="tnum">{formatTZS(fiscal.totalExclusive)}</dd>
+          </div>
+          <div className="flex justify-between gap-3">
+            <dt className="text-ink-soft">{t('vat')}</dt>
+            <dd className="tnum">{formatTZS(fiscal.vat)}</dd>
+          </div>
+        </dl>
+      ) : (
+        <p className="mt-1 text-ink-soft">{fiscal.status === 'pending' ? t('pending') : t('failed')}</p>
+      )}
+      {fiscal.verifyUrl ? (
+        <a href={fiscal.verifyUrl} className="mt-2 block font-semibold text-brand underline" rel="noopener">
+          {t('verify')}
+        </a>
+      ) : null}
+      {demo ? <p className="mt-2 text-xs text-ink-faint">{t('demoNote')}</p> : null}
+    </section>
   );
 }

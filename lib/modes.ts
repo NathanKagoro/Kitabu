@@ -35,7 +35,9 @@ export type Feature =
   | 'vat'
   | 'productCodes'
   | 'receiptPdf'
-  | 'export';
+  | 'export'
+  /** TRA receipts on every sale (demo until the shop is registered). Off unless switched on. */
+  | 'traReceipts';
 
 const MODE_FEATURES: Record<BusinessMode, ReadonlySet<Feature>> = {
   genge: new Set<Feature>([

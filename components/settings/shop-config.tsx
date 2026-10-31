@@ -33,6 +33,7 @@ const OWNER_FEATURES: readonly Feature[] = [
   'staff',
   'documents',
   'vat',
+  'traReceipts',
 ];
 
 export function ShopConfigSections({ draft, onSave }: { draft: Business; onSave: (next: Business) => void }) {

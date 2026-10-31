@@ -396,6 +396,28 @@ describe('owner withdrawals', () => {
   });
 });
 
+describe('fiscal receipts', () => {
+  const insert = `INSERT INTO fiscal_receipts (id, business_id, sale_id, kind, mode, status, gc, total_inclusive, total_exclusive, vat, client_created_at)
+                  VALUES ($1, $2, $3, $4, $5, $6, $7, 1180, 1000, 180, now())`;
+
+  it('anyone in the shop records and reads them; another business sees nothing', async () => {
+    await as(CASHIER, () => pg.query(insert, [id(), BIZ_A, id(), 'sale', 'demo', 'issued', 1]));
+    expect(await as(CASHIER, () => rows('SELECT gc FROM fiscal_receipts'))).toHaveLength(1);
+    expect(await as(USER_B, () => rows('SELECT * FROM fiscal_receipts'))).toHaveLength(0);
+    await expect(as(USER_B, () => pg.query(insert, [id(), BIZ_A, id(), 'sale', 'demo', 'issued', 2]))).rejects.toThrow(/row-level security/);
+  });
+
+  it('an issued receipt is final and never deleted; live counters never repeat', async () => {
+    const changed = await as(USER_A, () => pg.query(`UPDATE fiscal_receipts SET vat = 0 WHERE status = 'issued'`));
+    expect(changed.affectedRows ?? 0).toBe(0);
+    const deleted = await as(USER_A, () => pg.query('DELETE FROM fiscal_receipts'));
+    expect(deleted.affectedRows ?? 0).toBe(0);
+    await as(USER_A, () => pg.query(insert, [id(), BIZ_A, id(), 'sale', 'live', 'issued', 9]));
+    await expect(as(USER_A, () => pg.query(insert, [id(), BIZ_A, id(), 'sale', 'live', 'issued', 9]))).rejects.toThrow(/fiscal_receipts_gc_unique/);
+    await expect(as(USER_A, () => pg.query(insert, [id(), BIZ_A, id(), 'refund', 'demo', 'issued', 10]))).rejects.toThrow(/fiscal_receipts_kind_check/);
+  });
+});
+
 describe('customers and offers', () => {
   it('a customer can be marked "no offers" by anyone in the shop', async () => {
     const customer = id();

@@ -10,9 +10,10 @@ export function LocalReceipt({ token, notFound }: { token: string; notFound: str
   const receipt = useLiveQuery(async (): Promise<ReceiptData | null> => {
     const sale = await db().sales.where('receiptToken').equals(token).first();
     if (!sale) return null;
-    const [business, lines] = await Promise.all([
+    const [business, lines, fiscal] = await Promise.all([
       db().businesses.get(sale.businessId),
       db().saleLines.where('saleId').equals(sale.id).toArray(),
+      db().fiscalReceipts.where('saleId').equals(sale.id).filter((r) => r.kind === 'sale').first(),
     ]);
     return {
       business: {
@@ -27,6 +28,18 @@ export function LocalReceipt({ token, notFound }: { token: string; notFound: str
       },
       sale: { total: sale.total, discount: sale.discount, status: sale.status, createdAt: sale.clientCreatedAt },
       lines: lines.map((l) => ({ description: l.description ?? '', qty: l.qty, unitPrice: l.unitPrice, lineTotal: l.lineTotal })),
+      fiscal: fiscal
+        ? {
+            mode: fiscal.mode,
+            status: fiscal.status,
+            rctvNum: fiscal.rctvNum,
+            verifyUrl: fiscal.verifyUrl,
+            gc: fiscal.gc,
+            znum: fiscal.znum,
+            vat: fiscal.vat,
+            totalExclusive: fiscal.totalExclusive,
+          }
+        : null,
     };
   }, [token]);
 

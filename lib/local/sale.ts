@@ -4,6 +4,7 @@ import { buildSaleLines, cartTotal, clampDiscount, settleSale, type CartLine, ty
 import type { Payment, Sale, StockMovement } from '../types';
 import { db } from './db';
 import { persistAll } from './write';
+import { shopHasFeature } from '../shop-config';
 
 /*
  * Taking a sale: the one thing the till screen writes. Split from actions.ts
@@ -122,7 +123,24 @@ export async function recordSale(input: RecordSaleInput): Promise<RecordSaleResu
     { table: 'stockMovements', rows: movements },
   ]);
 
+  await issueReceiptIfOn(sale, userId);
   return { sale, total };
+}
+
+/**
+ * The TRA receipt, for shops that switched it on. Loaded only then, so the
+ * till carries none of that code for everyone else, and a failure there can
+ * never undo or block the sale that was just saved.
+ */
+async function issueReceiptIfOn(sale: Sale, userId: string | null): Promise<void> {
+  try {
+    const business = await db().businesses.get(sale.businessId);
+    if (!business || !shopHasFeature(business, 'traReceipts')) return;
+    const { issueFiscalReceipt } = await import('../fiscal/issue');
+    await issueFiscalReceipt(sale.id, 'sale', { userId, at: sale.clientCreatedAt });
+  } catch (error) {
+    console.error('TRA receipt not issued', error);
+  }
 }
 
 export async function trackedProducts(

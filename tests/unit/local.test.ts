@@ -498,6 +498,55 @@ describe('cash in the tin', () => {
   }, 30_000);
 });
 
+describe('TRA receipts', () => {
+  const switchOn = async () => {
+    const business = (await db().businesses.get(businessId))!;
+    await db().businesses.put({ ...business, settings: { ...business.settings, vatRate: 18, features: { ...(business.settings.features ?? {}), traReceipts: true } } });
+  };
+  const sell = async (productId: string, price: number) =>
+    actions.recordSale({ businessId, lines: [cartLine(productId, 1, price, 600)], tenders: [{ method: 'cash', amount: price }] });
+
+  it('a shop that has not switched them on gets none', async () => {
+    const product = await firstProduct();
+    await sell(product.id, 1180);
+    expect(await db().fiscalReceipts.count()).toBe(0);
+  });
+
+  it('every sale gets a demo receipt with unbroken counters; it never passes for a real one', async () => {
+    await switchOn();
+    const product = await firstProduct();
+    const a = await sell(product.id, 1180);
+    const b = await sell(product.id, 2360);
+    const receipts = (await db().fiscalReceipts.toArray()).sort((x, y) => (x.gc ?? 0) - (y.gc ?? 0));
+    expect(receipts.map((r) => [r.saleId, r.gc, r.dc, r.status, r.mode])).toEqual([
+      [a.sale.id, 1, 1, 'issued', 'demo'],
+      [b.sale.id, 2, 2, 'issued', 'demo'],
+    ]);
+    expect(receipts[0]!.rctvNum).toBe('DEMO1');
+    expect(receipts[0]!.verifyUrl).toBeNull();
+    expect(receipts[0]!.vat).toBe(180);
+    expect(receipts[0]!.totalExclusive).toBe(1000);
+    await sync();
+    expect(server.tables.get('fiscal_receipts')?.size).toBe(2);
+  });
+
+  it('voiding a sale with a receipt adds an adjustment that cancels it, with its own counter', async () => {
+    await switchOn();
+    const product = await firstProduct();
+    const { sale } = await sell(product.id, 1180);
+    await actions.voidSale(sale.id, 'kosa', { businessId });
+    const rows = await db().fiscalReceipts.where('saleId').equals(sale.id).toArray();
+    const adjustment = rows.find((r) => r.kind === 'adjustment')!;
+    expect(rows).toHaveLength(2);
+    expect(adjustment.totalInclusive).toBe(-1180);
+    expect(adjustment.vat).toBe(-180);
+    expect(adjustment.gc).toBe(2);
+    // Voiding twice changes nothing.
+    await actions.voidSale(sale.id, 'kosa', { businessId });
+    expect(await db().fiscalReceipts.where('saleId').equals(sale.id).count()).toBe(2);
+  });
+});
+
 describe('a count is right even when another phone syncs late', () => {
   /** Setup day was an hour ago, as in a real shop: the stock existed before the count. */
   const backdate = async (productId: string) => {
@@ -599,6 +648,9 @@ describe('0.5: who sold it, and offers consent, reach the server', () => {
     });
     await actions.recordStockCount({ businessId, kind: 'check', items: [{ productId: product.id, counted: 5 }] });
     await actions.recordWithdrawal({ businessId, amount: 5000, purpose: 'personal' });
+    const business = (await db().businesses.get(businessId))!;
+    await db().businesses.put({ ...business, settings: { ...business.settings, features: { traReceipts: true } } });
+    await actions.recordSale({ businessId, lines: [cartLine(product.id, 1, 1000, 600)], tenders: [{ method: 'cash', amount: 1000 }] });
     await actions.recordPurchase({ businessId, lines: [{ productId: product.id, qty: 2, totalCost: 1200 }], method: 'owner' });
     await sync();
 

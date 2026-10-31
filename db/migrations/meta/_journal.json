@@ -78,6 +78,20 @@
       "when": 1793459137490,
       "tag": "0010_receipt_logo",
       "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "7",
+      "when": 1793459789744,
+      "tag": "0011_fiscal_receipts",
+      "breakpoints": true
+    },
+    {
+      "idx": 12,
+      "version": "7",
+      "when": 1793459790684,
+      "tag": "0012_fiscal_receipts_rls",
+      "breakpoints": true
     }
   ]
 }
