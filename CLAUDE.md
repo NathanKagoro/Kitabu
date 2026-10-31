@@ -1,6 +1,6 @@
 # CLAUDE.md — Project context for Claude Code
 
-> Name: **Kitabu** (formerly Hesabu; the pre-template code is on the `hesabu-original` branch). The phone database is still called `hesabu` on purpose: renaming it would strand records already on phones.
+> Name: **Kitabu** (formerly Hesabu; the pre-template code is on the `hesabu-original` branch of NathanKagoro/finance-trackers-legacy). The phone database is still called `hesabu` on purpose: renaming it would strand records already on phones.
 
 ## What we are building
 A simple, mobile-first business app for Tanzanian small businesses. It must work equally well for:
