@@ -103,6 +103,7 @@ describe('the operator’s new-shop form', () => {
       ownerPhone: '0712345678',
       locale: 'sw',
       brandColor: '#b0225f',
+      edition: 'kitabu',
     });
   });
 
@@ -160,6 +161,7 @@ describe("the operator's console", () => {
     expect(summary.staff).toBe(2);
     expect(summary.plan).toBe('standard');
     expect(summary.sales30).toBe(42);
+    expect(summary.edition).toBe('kitabu');
     expect(summary.lastSeenAt).toBe('2026-10-30T10:00:00Z');
   });
 
@@ -182,5 +184,19 @@ describe("the operator's console", () => {
     expect(daysSince('2026-10-31T00:30:00Z', now)).toBe(0);
     expect(daysSince('2026-10-30T20:59:00Z', now)).toBe(1); // 23:59 the day before, in Dar
     expect(daysSince('2026-10-24T08:00:00Z', now)).toBe(7);
+  });
+});
+
+describe('two products, one console', () => {
+  const base = { name: 'Mama Asha', type: 'duka', ownerPhone: '0712345678' };
+  it('a new shop is Kitabu unless the operator picks Daftari', () => {
+    expect(parseShopInput(base)).toMatchObject({ edition: 'kitabu' });
+    expect(parseShopInput({ ...base, edition: 'daftari' })).toMatchObject({ edition: 'daftari' });
+    expect(parseShopInput({ ...base, edition: 'maktaba' })).toMatchObject({ edition: 'kitabu' });
+  });
+
+  it('the console says which product each shop uses', () => {
+    const shop = { id: 's', name: 'Mama Asha', type: 'duka', status: 'active', settings: { edition: 'daftari' }, created_at: '2026-10-31T00:00:00Z' };
+    expect(summariseShop(shop, [], undefined).edition).toBe('daftari');
   });
 });

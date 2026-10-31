@@ -67,6 +67,13 @@
         "trial": "Trial",
         "standard": "Standard",
         "managed": "Managed"
+      },
+      "kitabu": "Kitabu shops",
+      "daftari": "Daftari books",
+      "product": "Product",
+      "productHint": {
+        "kitabu": "A shop with staff, stock and TRA receipts.",
+        "daftari": "One owner, one phone, a simple sales book."
       }
     }
   }

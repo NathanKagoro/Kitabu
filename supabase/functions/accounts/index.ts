@@ -132,7 +132,7 @@ async function createShop(admin: SupabaseClient, body: Record<string, unknown>):
   if (!digits || !email) return fail(400, 'badPhone');
 
   const businessId = crypto.randomUUID();
-  const settings: Record<string, unknown> = { vatRate: 18 };
+  const settings: Record<string, unknown> = { vatRate: 18, edition: input.edition };
   if (input.brandColor) settings.brandColor = input.brandColor;
 
   const { error: bizError } = await admin.from('businesses').insert({

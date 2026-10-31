@@ -61,6 +61,8 @@ export interface ShopInput {
   ownerPhone: string;
   locale: 'sw' | 'en';
   brandColor: string | null;
+  /** Which product the shop uses: Kitabu (default) or Daftari. */
+  edition: 'kitabu' | 'daftari';
 }
 
 /** Validates the operator's "new shop" form. Returns an error key or the clean input. */
@@ -71,10 +73,11 @@ export function parseShopInput(raw: Record<string, unknown>): ShopInput | { erro
   const ownerName = typeof raw.ownerName === 'string' && raw.ownerName.trim() ? raw.ownerName.trim() : null;
   const locale = raw.locale === 'en' ? 'en' : 'sw';
   const brandColor = typeof raw.brandColor === 'string' && HEX.test(raw.brandColor) ? raw.brandColor : null;
+  const edition = raw.edition === 'daftari' ? 'daftari' : 'kitabu';
   if (name.length < 2 || name.length > 80) return { error: 'badName' };
   if (!modeForType(type)) return { error: 'badType' };
   if (!ownerPhone) return { error: 'badPhone' };
-  return { name, type, ownerName, ownerPhone, locale, brandColor };
+  return { name, type, ownerName, ownerPhone, locale, brandColor, edition };
 }
 
 /** The settings keys the operator may set from the admin screen. */
@@ -161,6 +164,7 @@ export function summariseShop(shop: ShopRow, members: readonly MemberRow[], acti
     brandColor: (settings.brandColor as string | undefined) ?? null,
     logoUrl: (settings.logoUrl as string | undefined) ?? null,
     plan,
+    edition: settings.edition === 'daftari' ? ('daftari' as const) : ('kitabu' as const),
     createdAt: shop.created_at,
     owner: owner ? { memberId: owner.memberId, name: owner.name, phone: owner.phone, hasLogin: owner.hasLogin } : null,
     staff: people.length - (owner ? 1 : 0),

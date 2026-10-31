@@ -24,8 +24,10 @@ export function ConsoleOverview({ shops }: { shops: readonly ShopSummary[] }) {
     return days !== null && days <= 7;
   }).length;
   const people = shops.reduce((sum, s) => sum + s.people.length, 0);
+  const daftari = shops.filter((s) => s.edition === 'daftari').length;
   const tiles = [
-    { label: t('shops'), value: shops.length },
+    { label: t('kitabu'), value: shops.length - daftari },
+    { label: t('daftari'), value: daftari },
     { label: t('active'), value: active },
     { label: t('usedThisWeek'), value: usedThisWeek },
     { label: t('people'), value: people },

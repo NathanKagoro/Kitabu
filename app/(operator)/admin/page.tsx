@@ -57,6 +57,7 @@ export default function AdminPage() {
   const [ownerPhone, setOwnerPhone] = useState('');
   const [locale, setLocale] = useState<'sw' | 'en'>('sw');
   const [colour, setColour] = useState(DEFAULT_BRAND);
+  const [product, setProduct] = useState<'kitabu' | 'daftari'>('kitabu');
   const [formError, setFormError] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
 
@@ -104,6 +105,7 @@ export default function AdminPage() {
       ownerPhone,
       locale,
       brandColor: colour === DEFAULT_BRAND ? null : colour,
+      edition: product,
     });
     setSaving(false);
     if (!result.ok) return setFormError(tac(`errors.${result.error}`));
@@ -176,7 +178,7 @@ export default function AdminPage() {
               <span className="min-w-0 flex-1">
                 <span className="block truncate font-semibold">{shop.name}</span>
                 <span className="block truncate text-sm text-ink-faint">
-                  {to(`types.${shop.type}`)}
+                  {shop.edition === 'daftari' ? 'Daftari' : 'Kitabu'} · {to(`types.${shop.type}`)}
                   {shop.plan ? ` · ${t(`console.plans.${shop.plan}`)}` : ''}
                   {shop.owner?.phone ? ` · ${shop.owner.name ? `${shop.owner.name}, ` : ''}${formatPhone(shop.owner.phone)}` : ''}
                 </span>
@@ -224,6 +226,19 @@ export default function AdminPage() {
             void submit();
           }}
         >
+          <div className="space-y-1.5">
+            <p className="text-sm font-semibold text-ink-soft">{t('console.product')}</p>
+            <OptionGrid<'kitabu' | 'daftari'>
+              columns={2}
+              value={product}
+              onChange={setProduct}
+              options={[
+                { value: 'kitabu', label: 'Kitabu' },
+                { value: 'daftari', label: 'Daftari' },
+              ]}
+            />
+            <p className="text-xs text-ink-faint">{t(`console.productHint.${product}`)}</p>
+          </div>
           <Field label={t('shopName')}>
             {(id) => <TextInput id={id} value={name} onChange={(e) => setName(e.target.value)} placeholder={t('shopNamePlaceholder')} />}
           </Field>

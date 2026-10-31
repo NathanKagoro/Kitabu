@@ -53,6 +53,7 @@ export interface NewShopInput {
   ownerPhone: string;
   locale: 'sw' | 'en';
   brandColor: string | null;
+  edition: 'kitabu' | 'daftari';
 }
 
 /** code is null when the owner already had a login (they keep their password). */
@@ -79,6 +80,8 @@ export interface ShopSummary {
   brandColor: string | null;
   logoUrl: string | null;
   plan: ShopPlan | null;
+  /** Which product the shop uses. */
+  edition: 'kitabu' | 'daftari';
   createdAt: string;
   owner: { memberId: string; name: string | null; phone: string | null; hasLogin: boolean } | null;
   staff: number;

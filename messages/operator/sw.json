@@ -67,6 +67,13 @@
         "trial": "Majaribio",
         "standard": "Kawaida",
         "managed": "Tunasimamia"
+      },
+      "kitabu": "Maduka ya Kitabu",
+      "daftari": "Madaftari",
+      "product": "Programu",
+      "productHint": {
+        "kitabu": "Duka lenye wafanyakazi, stoo na risiti za TRA.",
+        "daftari": "Mwenye duka mmoja, simu moja, daftari rahisi."
       }
     }
   }

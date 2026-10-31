@@ -66,6 +66,8 @@ export const MOBILE_MONEY_METHODS: readonly PaymentMethod[] = [
 export interface BusinessSettings {
   vatRate?: number;
   receiptFooter?: string;
+  /** Which product the shop uses (set by the operator when creating it). */
+  edition?: 'kitabu' | 'daftari';
   /** Daftari: where the profit goes (lib/calc/profit-split.ts). */
   profitSplit?: { id: string; key?: 'tithe' | 'reinvest' | 'personal' | 'savings'; label?: string; pct: number }[];
   /** TRA registration details for live receipts (operator only). */
