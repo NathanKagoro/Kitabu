@@ -60,6 +60,17 @@ export function createShop(input: NewShopInput) {
   return call<{ businessId: string; code: string | null }>('create_shop', { ...input });
 }
 
+export type ShopPlan = 'trial' | 'standard' | 'managed';
+
+export interface ShopPerson {
+  memberId: string;
+  name: string | null;
+  phone: string | null;
+  role: 'owner' | 'manager' | 'cashier';
+  hasLogin: boolean;
+}
+
+/** One shop as the operator's console shows it (supabase/functions/accounts/rules.ts summariseShop). */
 export interface ShopSummary {
   id: string;
   name: string;
@@ -67,16 +78,23 @@ export interface ShopSummary {
   status: BusinessStatus;
   brandColor: string | null;
   logoUrl: string | null;
+  plan: ShopPlan | null;
   createdAt: string;
   owner: { memberId: string; name: string | null; phone: string | null; hasLogin: boolean } | null;
   staff: number;
+  /** Everyone with access, owner first. */
+  people: ShopPerson[];
+  /** When anything was last synced from the shop. */
+  lastSeenAt: string | null;
+  lastSaleAt: string | null;
+  sales30: number;
 }
 
 export function listShops() {
   return call<{ shops: ShopSummary[] }>('list_shops');
 }
 
-export function updateShop(businessId: string, patch: { name?: string; type?: BusinessType; status?: BusinessStatus; settings?: { brandColor?: string; logoUrl?: string | null } }) {
+export function updateShop(businessId: string, patch: { name?: string; type?: BusinessType; status?: BusinessStatus; settings?: { brandColor?: string; logoUrl?: string | null; plan?: ShopPlan } }) {
   return call<Record<string, never>>('update_shop', { businessId, ...patch });
 }
 

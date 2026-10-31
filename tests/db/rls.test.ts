@@ -418,6 +418,14 @@ describe('fiscal receipts', () => {
   });
 });
 
+describe("the operator's activity report", () => {
+  it('signed-in users cannot run it; the server can', async () => {
+    await expect(as(USER_A, () => pg.query('SELECT * FROM shop_activity()'))).rejects.toThrow(/permission denied/);
+    const report = await rows('SELECT business_id, sales_30_days FROM shop_activity()');
+    expect(report.length).toBeGreaterThan(0);
+  });
+});
+
 describe('customers and offers', () => {
   it('a customer can be marked "no offers" by anyone in the shop', async () => {
     const customer = id();

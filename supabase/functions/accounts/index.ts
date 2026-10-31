@@ -22,7 +22,17 @@
 import { createClient, type SupabaseClient } from 'npm:@supabase/supabase-js@2';
 
 import { loginEmail, makeSetupCode, phoneDigits } from '../_shared/login.ts';
-import { cleanSettingsPatch, mayIssueCode, modeForType, parseShopInput, type Role } from './rules.ts';
+import {
+  cleanSettingsPatch,
+  mayIssueCode,
+  modeForType,
+  parseShopInput,
+  summariseShop,
+  type ActivityRow,
+  type MemberRow,
+  type Role,
+  type ShopRow,
+} from './rules.ts';
 
 const CORS = {
   'Access-Control-Allow-Origin': '*',
@@ -179,21 +189,12 @@ async function listShops(admin: SupabaseClient): Promise<Response> {
     .eq('active', true);
   if (memberError) throw memberError;
 
-  const list = (shops ?? []).map((shop) => {
-    const people = (members ?? []).filter((m) => m.business_id === shop.id);
-    const owner = people.find((m) => m.role === 'owner') ?? null;
-    return {
-      id: shop.id,
-      name: shop.name,
-      type: shop.type,
-      status: shop.status,
-      brandColor: (shop.settings as Record<string, unknown> | null)?.brandColor ?? null,
-      logoUrl: (shop.settings as Record<string, unknown> | null)?.logoUrl ?? null,
-      createdAt: shop.created_at,
-      owner: owner ? { memberId: owner.id, name: owner.name, phone: owner.phone, hasLogin: Boolean(owner.user_id) } : null,
-      staff: people.length - (owner ? 1 : 0),
-    };
-  });
+
+  // Last activity per shop; a failure here shouldn't hide the list.
+  const { data: activity } = await admin.rpc('shop_activity');
+  const byShop = new Map(((activity ?? []) as ActivityRow[]).map((a) => [a.business_id, a]));
+
+  const list = (shops ?? []).map((shop) => summariseShop(shop as ShopRow, (members ?? []) as MemberRow[], byShop.get(shop.id)));
   return reply(200, { ok: true, shops: list });
 }
 

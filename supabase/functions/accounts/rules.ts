@@ -83,6 +83,7 @@ export function cleanSettingsPatch(raw: unknown): Record<string, unknown> {
   const patch = raw as Record<string, unknown>;
   const out: Record<string, unknown> = {};
   if (typeof patch.brandColor === 'string' && HEX.test(patch.brandColor)) out.brandColor = patch.brandColor;
+  if (typeof patch.plan === 'string' && (PLANS as readonly string[]).includes(patch.plan)) out.plan = patch.plan;
   if (patch.logoUrl === null) out.logoUrl = null;
   else if (typeof patch.logoUrl === 'string' && isAcceptableLogo(patch.logoUrl)) out.logoUrl = patch.logoUrl;
   return out;
@@ -105,4 +106,67 @@ export function isAcceptableLogo(value: string): boolean {
   } catch {
     return false;
   }
+}
+
+// --- The operator's console ------------------------------------------------
+
+export interface MemberRow {
+  id: string;
+  business_id: string;
+  user_id: string | null;
+  name: string | null;
+  phone: string | null;
+  role: Role;
+  active: boolean;
+}
+
+export interface ActivityRow {
+  business_id: string;
+  last_seen_at: string | null;
+  last_sale_at: string | null;
+  sales_30_days: number | string | null;
+}
+
+export interface ShopRow {
+  id: string;
+  name: string;
+  type: string;
+  status: string;
+  settings: Record<string, unknown> | null;
+  created_at: string;
+}
+
+export const PLANS = ['trial', 'standard', 'managed'] as const;
+export type Plan = (typeof PLANS)[number];
+
+const ROLE_ORDER: Record<Role, number> = { owner: 0, manager: 1, cashier: 2 };
+
+/**
+ * One shop as the console shows it: who has access (everyone active, owner
+ * first), how it looks, its plan, and when it was last used.
+ */
+export function summariseShop(shop: ShopRow, members: readonly MemberRow[], activity: ActivityRow | undefined) {
+  const people = members
+    .filter((m) => m.business_id === shop.id && m.active)
+    .sort((a, b) => ROLE_ORDER[a.role] - ROLE_ORDER[b.role] || (a.name ?? '').localeCompare(b.name ?? ''))
+    .map((m) => ({ memberId: m.id, name: m.name, phone: m.phone, role: m.role, hasLogin: Boolean(m.user_id) }));
+  const owner = people.find((p) => p.role === 'owner') ?? null;
+  const settings = shop.settings ?? {};
+  const plan = PLANS.includes(settings.plan as Plan) ? (settings.plan as Plan) : null;
+  return {
+    id: shop.id,
+    name: shop.name,
+    type: shop.type,
+    status: shop.status,
+    brandColor: (settings.brandColor as string | undefined) ?? null,
+    logoUrl: (settings.logoUrl as string | undefined) ?? null,
+    plan,
+    createdAt: shop.created_at,
+    owner: owner ? { memberId: owner.memberId, name: owner.name, phone: owner.phone, hasLogin: owner.hasLogin } : null,
+    staff: people.length - (owner ? 1 : 0),
+    people,
+    lastSeenAt: activity?.last_seen_at ?? null,
+    lastSaleAt: activity?.last_sale_at ?? null,
+    sales30: Number(activity?.sales_30_days ?? 0),
+  };
 }

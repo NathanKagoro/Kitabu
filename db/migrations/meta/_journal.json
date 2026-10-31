@@ -92,6 +92,13 @@
       "when": 1793459790684,
       "tag": "0012_fiscal_receipts_rls",
       "breakpoints": true
+    },
+    {
+      "idx": 13,
+      "version": "7",
+      "when": 1793460035304,
+      "tag": "0013_shop_activity",
+      "breakpoints": true
     }
   ]
 }

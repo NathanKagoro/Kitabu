@@ -8,7 +8,8 @@ import { ColourPicker } from '@/components/colour-picker';
 import { Button } from '@/components/ui/button';
 import { Sheet } from '@/components/ui/sheet';
 import { useToast } from '@/components/ui/toast';
-import { updateShop, type ShopSummary } from '@/lib/auth/accounts';
+import { updateShop, type ShopPlan, type ShopSummary } from '@/lib/auth/accounts';
+import { OptionGrid } from '@/components/ui/bits';
 import { brandShades } from '@/lib/color';
 import { shrinkLogo } from '@/lib/logo';
 import { DEFAULT_BRAND } from '@/lib/shop-config';
@@ -22,11 +23,13 @@ import { DEFAULT_BRAND } from '@/lib/shop-config';
 export function ShopLookSheet({ shop, onClose, onSaved }: { shop: ShopSummary | null; onClose: () => void; onSaved: () => void }) {
   const t = useTranslations('admin.look');
   const tac = useTranslations('accounts');
+  const tcon = useTranslations('admin.console');
   const toast = useToast();
   const file = useRef<HTMLInputElement>(null);
   // The admin screen re-mounts this per shop (key={shop.id}), so state starts from the shop.
   const [colour, setColour] = useState(shop?.brandColor ?? DEFAULT_BRAND);
   const [logo, setLogo] = useState<string | null>(shop?.logoUrl ?? null);
+  const [plan, setPlan] = useState<ShopPlan | null>(shop?.plan ?? null);
   const [saving, setSaving] = useState(false);
 
   const pick = async (picked: File | undefined) => {
@@ -41,7 +44,7 @@ export function ShopLookSheet({ shop, onClose, onSaved }: { shop: ShopSummary | 
   const save = async () => {
     if (!shop) return;
     setSaving(true);
-    const result = await updateShop(shop.id, { settings: { brandColor: colour, logoUrl: logo } });
+    const result = await updateShop(shop.id, { settings: { brandColor: colour, logoUrl: logo, ...(plan ? { plan } : {}) } });
     setSaving(false);
     if (!result.ok) return toast(tac(`errors.${result.error}`), 'warn');
     toast(t('saved'));
@@ -100,6 +103,16 @@ export function ShopLookSheet({ shop, onClose, onSaved }: { shop: ShopSummary | 
               void pick(e.target.files?.[0]);
               e.target.value = '';
             }}
+          />
+        </div>
+
+        <div className="space-y-1.5">
+          <p className="text-sm font-semibold text-ink-soft">{tcon('plan')}</p>
+          <OptionGrid<ShopPlan>
+            columns={3}
+            value={plan ?? ('' as ShopPlan)}
+            onChange={setPlan}
+            options={(['trial', 'standard', 'managed'] as const).map((p) => ({ value: p, label: tcon(`plans.${p}`) }))}
           />
         </div>
 

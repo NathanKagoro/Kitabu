@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useCallback, useEffect, useState } from 'react';
 
 import { useApp } from '@/components/app-provider';
+import { ConsoleOverview, LastSeen, ShopPeople } from '@/components/admin/console-parts';
 import { ShopLookSheet } from '@/components/admin/shop-look-sheet';
 import { ShopLogo } from '@/components/brand/shop-logo';
 import { ColourPicker } from '@/components/colour-picker';
@@ -28,8 +29,10 @@ import type { BusinessType } from '@/lib/types';
  * else the accounts function refuses every call.
  *
  *   - New shop: name, type, owner's phone, colour -> a setup code for the owner.
- *   - Every shop: pause / reactivate, a fresh code for the owner, and its look
- *     (colour and logo).
+ *   - Every shop: pause / reactivate, a fresh code for the owner, its look
+ *     (colour and logo) and plan.
+ *   - The console: how many shops exist and are in use, who has access to
+ *     each (role, phone, signed in or till-only), and when each was last used.
  */
 export default function AdminPage() {
   const t = useTranslations('admin');
@@ -148,6 +151,12 @@ export default function AdminPage() {
         }
       />
 
+      {shops && shops.length > 0 ? (
+        <div className="pt-4">
+          <ConsoleOverview shops={shops} />
+        </div>
+      ) : null}
+
       <div className="p-4">
         <Button size="lg" block onClick={() => setCreating(true)}>
           <Plus size={22} />
@@ -168,13 +177,17 @@ export default function AdminPage() {
                 <span className="block truncate font-semibold">{shop.name}</span>
                 <span className="block truncate text-sm text-ink-faint">
                   {to(`types.${shop.type}`)}
+                  {shop.plan ? ` · ${t(`console.plans.${shop.plan}`)}` : ''}
                   {shop.owner?.phone ? ` · ${shop.owner.name ? `${shop.owner.name}, ` : ''}${formatPhone(shop.owner.phone)}` : ''}
-                  {shop.staff ? ` · ${t('staff', { count: shop.staff })}` : ''}
+                </span>
+                <span className="block truncate text-sm">
+                  <LastSeen shop={shop} />
                 </span>
               </span>
               {shop.status === 'paused' ? <Badge tone="loss">{t('statusPaused')}</Badge> : <Badge tone="brand">{t('statusActive')}</Badge>}
             </div>
-            <div className="flex gap-2">
+            {shop.people.length ? <ShopPeople shop={shop} /> : null}
+            <div className="flex flex-wrap gap-2">
               <Button variant="secondary" size="sm" disabled={busyId === shop.id || !shop.owner} onClick={() => void ownerCode(shop)}>
                 {shop.owner?.hasLogin ? t('ownerNewCode') : t('ownerFirstCode')}
               </Button>

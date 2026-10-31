@@ -771,6 +771,29 @@
       "logoTooBig": "This image is too big even after shrinking. Try another.",
       "save": "Save look",
       "saved": "Look saved"
+    },
+    "console": {
+      "overview": "Overview",
+      "shops": "Shops",
+      "active": "Active",
+      "usedThisWeek": "Used this week",
+      "people": "People with access",
+      "lastSeen": "Last used",
+      "never": "never",
+      "today": "today",
+      "yesterday": "yesterday",
+      "daysAgo": "{days} days ago",
+      "sales30": "{count, plural, one {1 sale} other {# sales}} in 30 days",
+      "whoHasAccess": "{count, plural, one {1 person with access} other {# people with access}}",
+      "noName": "No name",
+      "canSignIn": "Signs in",
+      "tillOnly": "Till PIN only",
+      "plan": "Plan",
+      "plans": {
+        "trial": "Trial",
+        "standard": "Standard",
+        "managed": "Managed"
+      }
     }
   },
   "stockCheck": {

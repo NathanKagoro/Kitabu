@@ -13,7 +13,8 @@ import {
   phoneDigits,
 } from '@/lib/auth/login';
 import { MODE_FOR_TYPE as APP_MODES } from '@/lib/modes';
-import { cleanSettingsPatch, mayIssueCode, MODE_FOR_TYPE, parseShopInput } from '@/supabase/functions/accounts/rules';
+import { cleanSettingsPatch, mayIssueCode, MODE_FOR_TYPE, parseShopInput, summariseShop } from '@/supabase/functions/accounts/rules';
+import { daysSince } from '@/components/admin/console-parts';
 
 describe('phone number -> login', () => {
   it('every way of writing a number is the same login', () => {
@@ -136,5 +137,50 @@ describe('the function and the app agree', () => {
     const app = readFileSync(join(process.cwd(), 'lib/auth/login.ts'), 'utf8');
     const fn = readFileSync(join(process.cwd(), 'supabase/functions/_shared/login.ts'), 'utf8');
     expect(fn).toBe(app);
+  });
+});
+
+describe("the operator's console", () => {
+  const shop = { id: 's1', name: 'Baraka Hardware', type: 'hardware', status: 'active', settings: { plan: 'standard', brandColor: '#123abc' }, created_at: '2026-10-01T00:00:00Z' };
+  const member = (id: string, role: 'owner' | 'manager' | 'cashier', userId: string | null, active = true, business = 's1') => ({
+    id, business_id: business, user_id: userId, name: id, phone: null, role, active,
+  });
+
+  it('lists everyone with access, owner first, and who can sign in', () => {
+    const summary = summariseShop(
+      shop,
+      [member('Neema', 'cashier', null), member('Baraka', 'owner', 'u1'), member('Juma', 'manager', 'u2'), member('Gone', 'cashier', null, false), member('Other', 'owner', 'u9', true, 's2')],
+      { business_id: 's1', last_seen_at: '2026-10-30T10:00:00Z', last_sale_at: '2026-10-30T09:00:00Z', sales_30_days: '42' }
+    );
+    expect(summary.people.map((p) => [p.name, p.role, p.hasLogin])).toEqual([
+      ['Baraka', 'owner', true],
+      ['Juma', 'manager', true],
+      ['Neema', 'cashier', false],
+    ]);
+    expect(summary.staff).toBe(2);
+    expect(summary.plan).toBe('standard');
+    expect(summary.sales30).toBe(42);
+    expect(summary.lastSeenAt).toBe('2026-10-30T10:00:00Z');
+  });
+
+  it('a shop with no activity yet, or an unknown plan, shows as such', () => {
+    const summary = summariseShop({ ...shop, settings: { plan: 'gold' } }, [], undefined);
+    expect(summary.plan).toBeNull();
+    expect(summary.lastSeenAt).toBeNull();
+    expect(summary.sales30).toBe(0);
+    expect(summary.owner).toBeNull();
+  });
+
+  it('the operator can set a plan, but only a known one', () => {
+    expect(cleanSettingsPatch({ plan: 'managed' })).toEqual({ plan: 'managed' });
+    expect(cleanSettingsPatch({ plan: 'gold' })).toEqual({});
+  });
+
+  it('counts days by the calendar in Dar es Salaam', () => {
+    const now = new Date('2026-10-31T08:00:00Z'); // 11:00 in Dar
+    expect(daysSince(null, now)).toBeNull();
+    expect(daysSince('2026-10-31T00:30:00Z', now)).toBe(0);
+    expect(daysSince('2026-10-30T20:59:00Z', now)).toBe(1); // 23:59 the day before, in Dar
+    expect(daysSince('2026-10-24T08:00:00Z', now)).toBe(7);
   });
 });
