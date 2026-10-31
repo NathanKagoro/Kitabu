@@ -83,5 +83,26 @@ export function cleanSettingsPatch(raw: unknown): Record<string, unknown> {
   const patch = raw as Record<string, unknown>;
   const out: Record<string, unknown> = {};
   if (typeof patch.brandColor === 'string' && HEX.test(patch.brandColor)) out.brandColor = patch.brandColor;
+  if (patch.logoUrl === null) out.logoUrl = null;
+  else if (typeof patch.logoUrl === 'string' && isAcceptableLogo(patch.logoUrl)) out.logoUrl = patch.logoUrl;
   return out;
+}
+
+/**
+ * The shop's logo, set by the operator. A small image stored inline (the admin
+ * screen shrinks it to 256px first) so it works offline and on receipts with
+ * no storage bucket, or an https link. Capped so settings stay light to sync.
+ */
+export const MAX_LOGO_CHARS = 60_000;
+const LOGO_DATA_URL = /^data:image\/(png|jpeg|webp);base64,[A-Za-z0-9+/=]+$/;
+
+export function isAcceptableLogo(value: string): boolean {
+  if (value.length > MAX_LOGO_CHARS) return false;
+  if (LOGO_DATA_URL.test(value)) return true;
+  try {
+    const url = new URL(value);
+    return url.protocol === 'https:' && value.length <= 500;
+  } catch {
+    return false;
+  }
 }

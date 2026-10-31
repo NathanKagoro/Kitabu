@@ -236,7 +236,7 @@ export async function createDemoBusiness(
         await recordWithdrawal({ businessId, userId, at: at(day, 18.5), amount: 10000, purpose: 'personal' });
       }
       const afterPersonal = summariseDay({ ...(await loadRange(businessId, day, day)), openingCash });
-      if (daysAgo % 3 === 0 && afterPersonal.expectedCash > FLOAT * 2) {
+      if (daysAgo % 2 === 1 && afterPersonal.expectedCash > FLOAT * 2) {
         const bank = Math.floor((afterPersonal.expectedCash - FLOAT) / 10000) * 10000;
         await recordWithdrawal({ businessId, userId, at: at(day, 18.75), amount: bank, purpose: 'bank' });
       }

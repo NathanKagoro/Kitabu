@@ -87,7 +87,7 @@ export function SuccessSheet({ done, onClose }: { done: CompletedSale | null; on
               rel="noreferrer"
               aria-disabled={!typedPhone}
               onClick={() => void remember()}
-              className={`flex h-14 w-full items-center justify-center gap-2 rounded-[10px] bg-brand text-lg font-semibold text-white ${typedPhone ? '' : 'pointer-events-none opacity-45'}`}
+              className={`flex h-14 w-full items-center justify-center gap-2 rounded-[10px] bg-brand text-lg font-semibold text-on-fill ${typedPhone ? '' : 'pointer-events-none opacity-45'}`}
             >
               <MessageCircle size={22} />
               {t('sendAndSave')}

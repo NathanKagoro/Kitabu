@@ -18,7 +18,7 @@ export function ShowcaseBar() {
   const on = useSyncExternalStore(noSubscribe, isShowcase, () => false);
   if (!on) return null;
   return (
-    <div className="flex min-h-10 items-center gap-2 bg-ink px-4 text-sm text-white">
+    <div className="flex min-h-10 items-center gap-2 bg-ink px-4 text-sm text-paper">
       <span className="min-w-0 flex-1 truncate">{t('banner')}</span>
       <button
         className="h-10 shrink-0 px-2 font-semibold underline"

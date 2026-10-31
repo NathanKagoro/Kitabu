@@ -37,6 +37,9 @@
   --color-info: #1c5c8a;
   --color-info-tint: #e7f0f7;
 
+  /* Text on a solid brand, loss or debt fill: white in light mode, near-black in dark. */
+  --color-on-fill: #ffffff;
+
   --radius-card: 12px;
   --radius-control: 10px;
 
@@ -45,6 +48,61 @@
 
   --font-sans:
     system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif;
+}
+
+/*
+ * Dark mode. Follows the phone unless the person picked one in Zaidi
+ * (html[data-theme]). The surfaces are warm near-blacks, not pure black, and the
+ * colours are lighter tones with dark text on fills -- white on a light green
+ * would not read. The shop's own brand shades are set by <ThemeColor> for
+ * whichever mode is showing (lib/color.ts keeps them at 4.5:1 or better).
+ */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    color-scheme: dark;
+    --color-paper: #121411;
+    --color-surface: #1b1e1a;
+    --color-line: #2e322c;
+    --color-line-strong: #464b43;
+    --color-ink: #f1efe9;
+    --color-ink-soft: #bdb8ad;
+    --color-ink-faint: #8f8a7f;
+    --color-brand: #4cbf83;
+    --color-brand-dark: #a5e3c1;
+    --color-brand-tint: #1f3a2b;
+    --color-debt: #e8a957;
+    --color-debt-tint: #3a2c15;
+    --color-loss: #f08a84;
+    --color-loss-tint: #3d1f1d;
+    --color-info: #7db8e8;
+    --color-info-tint: #182b3b;
+    --color-on-fill: #10120f;
+  }
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --color-paper: #121411;
+  --color-surface: #1b1e1a;
+  --color-line: #2e322c;
+  --color-line-strong: #464b43;
+  --color-ink: #f1efe9;
+  --color-ink-soft: #bdb8ad;
+  --color-ink-faint: #8f8a7f;
+  --color-brand: #4cbf83;
+  --color-brand-dark: #a5e3c1;
+  --color-brand-tint: #1f3a2b;
+  --color-debt: #e8a957;
+  --color-debt-tint: #3a2c15;
+  --color-loss: #f08a84;
+  --color-loss-tint: #3d1f1d;
+  --color-info: #7db8e8;
+  --color-info-tint: #182b3b;
+  --color-on-fill: #10120f;
+}
+
+:root[data-theme='light'] {
+  color-scheme: light;
 }
 
 @layer base {

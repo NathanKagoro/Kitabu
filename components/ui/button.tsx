@@ -14,11 +14,11 @@ const button = cva(
   {
     variants: {
       variant: {
-        primary: 'bg-brand text-white active:bg-brand-dark',
+        primary: 'bg-brand text-on-fill active:bg-brand-dark',
         secondary: 'bg-surface text-ink border border-line-strong active:bg-paper',
         ghost: 'bg-transparent text-ink-soft active:bg-line/40',
-        danger: 'bg-loss text-white active:brightness-90',
-        debt: 'bg-debt text-white active:brightness-90',
+        danger: 'bg-loss text-on-fill active:brightness-90',
+        debt: 'bg-debt text-on-fill active:brightness-90',
       },
       size: {
         sm: 'h-11 px-3 text-sm',

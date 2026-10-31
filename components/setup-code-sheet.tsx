@@ -47,7 +47,7 @@ export function SetupCodeSheet({ issued, onClose }: { issued: IssuedCode | null;
           href={whatsappLink(message, issued.phone)}
           target="_blank"
           rel="noopener noreferrer"
-          className="flex h-14 w-full items-center justify-center gap-2 rounded-[10px] bg-brand text-lg font-semibold text-white active:bg-brand-dark"
+          className="flex h-14 w-full items-center justify-center gap-2 rounded-[10px] bg-brand text-lg font-semibold text-on-fill active:bg-brand-dark"
         >
           <MessageCircle size={22} />
           {t('sendWhatsapp')}

@@ -15,7 +15,7 @@ export default function OfflinePage() {
       <Logo size={56} />
       <CloudOff size={40} className="text-ink-faint" />
       <p className="max-w-xs text-lg font-semibold">{t('offlineSafe')}</p>
-      <Link href="/mauzo" className="flex h-14 items-center rounded-[10px] bg-brand px-6 text-lg font-semibold text-white">
+      <Link href="/mauzo" className="flex h-14 items-center rounded-[10px] bg-brand px-6 text-lg font-semibold text-on-fill">
         {tn('sales')}
       </Link>
     </main>

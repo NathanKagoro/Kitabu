@@ -7,6 +7,7 @@ import { ServiceWorker } from '@/components/service-worker';
 import { ThemeColor } from '@/components/theme-color';
 import { ToastProvider } from '@/components/ui/toast';
 import { DEFAULT_LOCALE } from '@/lib/i18n/config';
+import { THEME_BOOT_SCRIPT } from '@/lib/theme-boot';
 
 import './globals.css';
 
@@ -34,6 +35,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     // The language is switched on the phone after load (see LocaleProvider).
     <html lang={DEFAULT_LOCALE} suppressHydrationWarning>
+      <head>
+        {/* Light or dark before the first paint, so the screen never flashes. */}
+        <script dangerouslySetInnerHTML={{ __html: THEME_BOOT_SCRIPT }} />
+      </head>
       <body>
         <LocaleProvider>
           <AppProvider>

@@ -115,6 +115,16 @@ describe('the operator’s new-shop form', () => {
     expect(cleanSettingsPatch({ brandColor: '#123abc', vatRate: 0 })).toEqual({ brandColor: '#123abc' });
     expect(cleanSettingsPatch({ brandColor: 'red' })).toEqual({});
   });
+
+  it('accepts a small inline logo or an https link, and removing it; refuses anything else', () => {
+    const png = 'data:image/png;base64,iVBORw0KGgo=';
+    expect(cleanSettingsPatch({ logoUrl: png })).toEqual({ logoUrl: png });
+    expect(cleanSettingsPatch({ logoUrl: 'https://example.com/logo.png' })).toEqual({ logoUrl: 'https://example.com/logo.png' });
+    expect(cleanSettingsPatch({ logoUrl: null })).toEqual({ logoUrl: null });
+    expect(cleanSettingsPatch({ logoUrl: 'http://example.com/logo.png' })).toEqual({});
+    expect(cleanSettingsPatch({ logoUrl: 'data:image/svg+xml;base64,PHN2Zz4=' })).toEqual({});
+    expect(cleanSettingsPatch({ logoUrl: `data:image/png;base64,${'A'.repeat(70_000)}` })).toEqual({});
+  });
 });
 
 describe('the function and the app agree', () => {

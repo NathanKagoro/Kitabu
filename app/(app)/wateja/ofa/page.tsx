@@ -138,7 +138,7 @@ function OfferPageInner() {
                       {t('sent')}
                     </span>
                   ) : (
-                    <span className="flex h-11 items-center gap-1.5 rounded-[10px] bg-brand px-3 text-sm font-semibold text-white">
+                    <span className="flex h-11 items-center gap-1.5 rounded-[10px] bg-brand px-3 text-sm font-semibold text-on-fill">
                       <MessageCircle size={18} />
                       {t('send')}
                     </span>

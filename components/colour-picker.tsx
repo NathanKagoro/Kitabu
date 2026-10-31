@@ -20,7 +20,7 @@ export function ColourPicker({ value, onChange, label }: { value: string; onChan
             onClick={() => onChange(colour)}
             style={{ backgroundColor: colour }}
             className={cn(
-              'flex h-12 w-12 items-center justify-center rounded-full text-white',
+              'flex h-12 w-12 items-center justify-center rounded-full text-on-fill',
               selected ? 'ring-2 ring-ink ring-offset-2 ring-offset-paper' : ''
             )}
           >

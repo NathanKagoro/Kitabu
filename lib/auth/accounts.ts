@@ -66,6 +66,7 @@ export interface ShopSummary {
   type: BusinessType;
   status: BusinessStatus;
   brandColor: string | null;
+  logoUrl: string | null;
   createdAt: string;
   owner: { memberId: string; name: string | null; phone: string | null; hasLogin: boolean } | null;
   staff: number;
@@ -75,7 +76,7 @@ export function listShops() {
   return call<{ shops: ShopSummary[] }>('list_shops');
 }
 
-export function updateShop(businessId: string, patch: { name?: string; type?: BusinessType; status?: BusinessStatus; settings?: { brandColor?: string } }) {
+export function updateShop(businessId: string, patch: { name?: string; type?: BusinessType; status?: BusinessStatus; settings?: { brandColor?: string; logoUrl?: string | null } }) {
   return call<Record<string, never>>('update_shop', { businessId, ...patch });
 }
 

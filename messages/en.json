@@ -616,6 +616,12 @@
       "money": "Money",
       "business": "Business",
       "system": "System"
+    },
+    "theme": {
+      "title": "Appearance",
+      "system": "Like the phone",
+      "light": "Light",
+      "dark": "Dark"
     }
   },
   "feedback": {
@@ -733,6 +739,23 @@
     "notOperator": "This is not the operator account.",
     "errors": {
       "name": "Enter the shop name."
+    },
+    "look": {
+      "button": "Look",
+      "title": "How {shop} looks",
+      "colour": "Colour",
+      "preview": "Preview",
+      "light": "Light",
+      "dark": "Dark",
+      "logo": "Logo",
+      "noLogo": "No logo yet",
+      "addLogo": "Add logo",
+      "changeLogo": "Change",
+      "removeLogo": "Remove",
+      "logoHint": "PNG, JPG or WebP. It's shrunk so it works offline and on receipts.",
+      "logoTooBig": "This image is too big even after shrinking. Try another.",
+      "save": "Save look",
+      "saved": "Look saved"
     }
   },
   "stockCheck": {

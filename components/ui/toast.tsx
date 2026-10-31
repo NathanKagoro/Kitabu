@@ -52,8 +52,8 @@ export function ToastProvider({ children }: { children: ReactNode }) {
             key={toast.id}
             className={cn(
               'fade-in flex max-w-md items-center gap-2.5 rounded-[10px] border px-3.5 py-3 text-[15px] font-semibold',
-              toast.tone === 'ok' && 'border-brand bg-brand text-white',
-              toast.tone === 'warn' && 'border-loss bg-loss text-white',
+              toast.tone === 'ok' && 'border-brand bg-brand text-on-fill',
+              toast.tone === 'warn' && 'border-loss bg-loss text-on-fill',
               toast.tone === 'info' && 'border-line-strong bg-surface text-ink'
             )}
           >

@@ -66,6 +66,8 @@ export const MOBILE_MONEY_METHODS: readonly PaymentMethod[] = [
 export interface BusinessSettings {
   vatRate?: number;
   receiptFooter?: string;
+  /** Set by the operator (admin → Look): a small inline image or an https link. */
+  logoUrl?: string | null;
   reminderTemplate?: string;
   bankName?: string;
   bankAccount?: string;

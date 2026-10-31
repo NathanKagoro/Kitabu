@@ -7,6 +7,7 @@ import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 import { useMemo, useReducer, useRef, useState } from 'react';
 
+import { ShopLogo } from '@/components/brand/shop-logo';
 import { useApp } from '@/components/app-provider';
 import type { CompletedSale } from '@/components/pos/success-sheet';
 import { SyncIndicator } from '@/components/sync-indicator';
@@ -144,6 +145,7 @@ export default function SalesPage() {
     <>
       <header className="sticky top-0 z-30 border-b border-line bg-paper">
         <div className="flex items-center gap-1 py-1.5 pr-1 pl-4">
+          <ShopLogo src={business?.settings.logoUrl} size={32} className="mr-2 shrink-0 rounded-[8px] bg-white object-contain" />
           <h1 className="min-w-0 flex-1 truncate text-lg font-bold">{business?.name ?? t('title')}</h1>
           {tillPeople.length > 1 && (
             // Who is selling: tap to hand the till to someone else (their PIN).
@@ -202,7 +204,7 @@ export default function SalesPage() {
               aria-pressed={category === name}
               className={cn(
                 'h-10 shrink-0 rounded-full border px-3.5 text-sm font-semibold whitespace-nowrap',
-                category === name ? 'border-brand bg-brand text-white' : 'border-line-strong bg-surface text-ink-soft'
+                category === name ? 'border-brand bg-brand text-on-fill' : 'border-line-strong bg-surface text-ink-soft'
               )}
             >
               {name ?? tc('all')}
@@ -228,7 +230,7 @@ export default function SalesPage() {
           icon={<ShoppingBasket size={44} />}
           title={t('noProducts')}
           action={
-            <Link href="/bidhaa/mpya" className="mt-2 inline-flex h-12 items-center gap-2 rounded-[10px] bg-brand px-4 font-semibold text-white">
+            <Link href="/bidhaa/mpya" className="mt-2 inline-flex h-12 items-center gap-2 rounded-[10px] bg-brand px-4 font-semibold text-on-fill">
               <Plus size={20} />
               {t('addFirstProduct')}
             </Link>
@@ -257,7 +259,7 @@ export default function SalesPage() {
                 )}
               >
                 {qty > 0 && (
-                  <span className="tnum absolute top-1.5 right-1.5 min-w-7 rounded-full bg-brand px-1.5 py-0.5 text-sm font-bold text-white">
+                  <span className="tnum absolute top-1.5 right-1.5 min-w-7 rounded-full bg-brand px-1.5 py-0.5 text-sm font-bold text-on-fill">
                     {formatQty(qty)}
                   </span>
                 )}

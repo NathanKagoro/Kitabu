@@ -55,7 +55,7 @@ export default function StockCheckPage() {
         {can('countStock') && (
           <Link
             href="/stoo/hesabu"
-            className="flex h-14 w-full items-center justify-center gap-2 rounded-[10px] bg-brand text-lg font-semibold text-white active:bg-brand-dark"
+            className="flex h-14 w-full items-center justify-center gap-2 rounded-[10px] bg-brand text-lg font-semibold text-on-fill active:bg-brand-dark"
           >
             <Package size={22} />
             {t('startCount')}

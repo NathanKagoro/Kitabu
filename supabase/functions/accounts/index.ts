@@ -9,7 +9,7 @@
  * Actions (POST JSON { action, ... } with the caller's session token):
  *   create_shop   operator   new business + owner login -> setup code
  *   list_shops    operator   every shop, its owner and status
- *   update_shop   operator   name, type, colour, active/paused
+ *   update_shop   operator   name, type, colour, logo, active/paused
  *   issue_code    operator, or an owner for their own staff
  *                            first login for a member, or a reset -> setup code
  *
@@ -188,6 +188,7 @@ async function listShops(admin: SupabaseClient): Promise<Response> {
       type: shop.type,
       status: shop.status,
       brandColor: (shop.settings as Record<string, unknown> | null)?.brandColor ?? null,
+      logoUrl: (shop.settings as Record<string, unknown> | null)?.logoUrl ?? null,
       createdAt: shop.created_at,
       owner: owner ? { memberId: owner.id, name: owner.name, phone: owner.phone, hasLogin: Boolean(owner.user_id) } : null,
       staff: people.length - (owner ? 1 : 0),

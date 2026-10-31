@@ -5,6 +5,8 @@ import { useRouter } from 'next/navigation';
 import { useCallback, useEffect, useState } from 'react';
 
 import { useApp } from '@/components/app-provider';
+import { ShopLookSheet } from '@/components/admin/shop-look-sheet';
+import { ShopLogo } from '@/components/brand/shop-logo';
 import { ColourPicker } from '@/components/colour-picker';
 import { Plus, RefreshCw } from '@/components/icons';
 import { SetupCodeSheet, type IssuedCode } from '@/components/setup-code-sheet';
@@ -26,7 +28,8 @@ import type { BusinessType } from '@/lib/types';
  * else the accounts function refuses every call.
  *
  *   - New shop: name, type, owner's phone, colour -> a setup code for the owner.
- *   - Every shop: pause / reactivate, and a fresh code for the owner.
+ *   - Every shop: pause / reactivate, a fresh code for the owner, and its look
+ *     (colour and logo).
  */
 export default function AdminPage() {
   const t = useTranslations('admin');
@@ -43,6 +46,7 @@ export default function AdminPage() {
   const [creating, setCreating] = useState(false);
   const [issued, setIssued] = useState<IssuedCode | null>(null);
   const [busyId, setBusyId] = useState<string | null>(null);
+  const [styling, setStyling] = useState<ShopSummary | null>(null);
 
   const [name, setName] = useState('');
   const [type, setType] = useState<BusinessType>('cosmetics');
@@ -155,11 +159,11 @@ export default function AdminPage() {
         {shops?.map((shop) => (
           <li key={shop.id} className="space-y-2 px-4 py-3">
             <div className="flex items-center gap-3">
-              <span
-                aria-hidden
-                className="h-9 w-9 shrink-0 rounded-full"
-                style={{ backgroundColor: shop.brandColor ?? DEFAULT_BRAND }}
-              />
+              {shop.logoUrl ? (
+                <ShopLogo src={shop.logoUrl} size={36} />
+              ) : (
+                <span aria-hidden className="h-9 w-9 shrink-0 rounded-full" style={{ backgroundColor: shop.brandColor ?? DEFAULT_BRAND }} />
+              )}
               <span className="min-w-0 flex-1">
                 <span className="block truncate font-semibold">{shop.name}</span>
                 <span className="block truncate text-sm text-ink-faint">
@@ -173,6 +177,9 @@ export default function AdminPage() {
             <div className="flex gap-2">
               <Button variant="secondary" size="sm" disabled={busyId === shop.id || !shop.owner} onClick={() => void ownerCode(shop)}>
                 {shop.owner?.hasLogin ? t('ownerNewCode') : t('ownerFirstCode')}
+              </Button>
+              <Button variant="secondary" size="sm" onClick={() => setStyling(shop)}>
+                {t('look.button')}
               </Button>
               <Button variant="ghost" size="sm" disabled={busyId === shop.id} onClick={() => void toggle(shop)} className={shop.status === 'paused' ? 'text-brand' : 'text-loss'}>
                 {shop.status === 'paused' ? t('activate') : t('pause')}
@@ -250,6 +257,7 @@ export default function AdminPage() {
       </Sheet>
 
       <SetupCodeSheet issued={issued} onClose={() => setIssued(null)} />
+      <ShopLookSheet key={styling?.id ?? 'none'} shop={styling} onClose={() => setStyling(null)} onSaved={() => void load()} />
     </main>
   );
 }

@@ -26,6 +26,7 @@ import { Logo } from '@/components/brand/logo';
 import { FeedbackButton } from '@/components/feedback';
 import { PageHeader } from '@/components/ui/bits';
 import { SupportButton } from '@/components/support-button';
+import { ThemeSwitch } from '@/components/theme-switch';
 import { signOut } from '@/lib/auth/session';
 import { clearUnlocked } from '@/lib/auth/unlock';
 import type { Feature, Permission } from '@/lib/modes';
@@ -104,6 +105,8 @@ export default function MorePage() {
           </section>
         );
       })}
+
+      <ThemeSwitch />
 
       <section className="flex items-center justify-center gap-2 px-3 pt-6 text-sm font-semibold text-ink-faint">
         <Logo size={20} />

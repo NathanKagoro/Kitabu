@@ -184,7 +184,7 @@ export default function CountPage() {
                 aria-pressed={category === name}
                 className={cn(
                   'h-10 shrink-0 rounded-full border px-3.5 text-sm font-semibold whitespace-nowrap',
-                  category === name ? 'border-brand bg-brand text-white' : 'border-line-strong bg-surface text-ink-soft'
+                  category === name ? 'border-brand bg-brand text-on-fill' : 'border-line-strong bg-surface text-ink-soft'
                 )}
               >
                 {name ?? tc('all')}

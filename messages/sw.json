@@ -616,6 +616,12 @@
       "money": "Pesa",
       "business": "Biashara",
       "system": "Mfumo"
+    },
+    "theme": {
+      "title": "Mwonekano",
+      "system": "Kama simu",
+      "light": "Mwanga",
+      "dark": "Giza"
     }
   },
   "feedback": {
@@ -733,6 +739,23 @@
     "notOperator": "Akaunti hii si ya msimamizi.",
     "errors": {
       "name": "Andika jina la duka."
+    },
+    "look": {
+      "button": "Mwonekano",
+      "title": "Mwonekano wa {shop}",
+      "colour": "Rangi",
+      "preview": "Itakavyoonekana",
+      "light": "Mwanga",
+      "dark": "Giza",
+      "logo": "Nembo (logo)",
+      "noLogo": "Bado hakuna nembo",
+      "addLogo": "Weka nembo",
+      "changeLogo": "Badilisha",
+      "removeLogo": "Ondoa",
+      "logoHint": "PNG, JPG au WebP. Tutaipunguza iwe ndogo ili ifanye kazi bila mtandao na kwenye risiti.",
+      "logoTooBig": "Picha hii ni kubwa mno hata baada ya kuipunguza. Jaribu nyingine.",
+      "save": "Hifadhi mwonekano",
+      "saved": "Mwonekano umehifadhiwa"
     }
   },
   "stockCheck": {

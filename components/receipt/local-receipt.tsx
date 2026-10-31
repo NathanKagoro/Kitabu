@@ -22,6 +22,7 @@ export function LocalReceipt({ token, notFound }: { token: string; notFound: str
         footer: business?.settings.receiptFooter,
         address: business?.settings.address,
         brandColor: business?.settings.brandColor,
+        logoUrl: business?.settings.logoUrl,
         tillNumbers: business?.settings.tillNumbers,
       },
       sale: { total: sale.total, discount: sale.discount, status: sale.status, createdAt: sale.clientCreatedAt },

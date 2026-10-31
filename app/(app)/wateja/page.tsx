@@ -89,7 +89,7 @@ function CustomersPageInner() {
           <Link
             href={`/wateja/ofa?kwa=${audience}`}
             className={cn(
-              'flex h-12 items-center justify-center gap-2 rounded-[10px] bg-brand font-semibold text-white active:bg-brand-dark',
+              'flex h-12 items-center justify-center gap-2 rounded-[10px] bg-brand font-semibold text-on-fill active:bg-brand-dark',
               reachable.length === 0 && 'pointer-events-none opacity-45'
             )}
             aria-disabled={reachable.length === 0}

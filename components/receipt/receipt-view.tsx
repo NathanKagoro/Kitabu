@@ -1,6 +1,8 @@
 import { useTranslations } from 'next-intl';
 
 import { Logo } from '@/components/brand/logo';
+import { ShopLogo } from '@/components/brand/shop-logo';
+import { brandShades } from '@/lib/color';
 import { formatTZS } from '@/lib/money';
 import { formatQty } from '@/lib/units';
 import { brandColorOf } from '@/lib/shop-config';
@@ -14,6 +16,7 @@ export interface ReceiptData {
     footer?: string | null;
     address?: string | null;
     brandColor?: string | null;
+    logoUrl?: string | null;
     tillNumbers?: Partial<Record<PaymentMethod, string>> | null;
   };
   sale: { total: number; discount: number; status: string; createdAt: string };
@@ -36,9 +39,12 @@ export function ReceiptView({ receipt }: { receipt: ReceiptData }) {
       {/* The shop's own colour: a customer opening this link has no theme loaded. */}
       <header
         className="border-b border-line px-5 py-4 text-white"
-        style={{ backgroundColor: brandColorOf({ settings: { brandColor: receipt.business.brandColor ?? undefined } }) }}
+        style={{ backgroundColor: brandShades(brandColorOf({ settings: { brandColor: receipt.business.brandColor ?? undefined } })).light.brand }}
       >
-        <h1 className="text-xl font-bold">{receipt.business.name}</h1>
+        <div className="flex items-center gap-3">
+          <ShopLogo src={receipt.business.logoUrl} size={44} />
+          <h1 className="text-xl font-bold">{receipt.business.name}</h1>
+        </div>
         {receipt.business.address ? <p className="text-sm opacity-90">{receipt.business.address}</p> : null}
         {receipt.business.phone ? <p className="text-sm opacity-90">{receipt.business.phone}</p> : null}
         {receipt.business.tin ? <p className="text-sm opacity-90">TIN {receipt.business.tin}</p> : null}
