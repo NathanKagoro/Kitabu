@@ -292,7 +292,10 @@ export interface Purchase {
   id: string;
   businessId: string;
   supplierId?: string | null;
+  /** Goods plus transport. */
   total: number;
+  /** Transport for this trip, spread into the lines' cost. Absent on records before 0.7. */
+  transport?: number;
   paidAmount: number;
   method: SpendMethod;
   note?: string | null;

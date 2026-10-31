@@ -164,10 +164,11 @@ export async function createDemoBusiness(
         return { productId: p.id, qty, totalCost: Math.round(qty * cost), packId: pack?.id ?? null, packLabel: bulk.label, packQty };
       })
     );
-    const restockTotal = lines.reduce((sum, l) => sum + l.totalCost, 0);
-    await recordPurchase({ businessId, userId, at: at(day, 7), lines, method: payFrom(restockTotal) });
+    // The boda to the supplier and back: part of what the goods cost.
+    const transport = 3000;
+    const restockTotal = lines.reduce((sum, l) => sum + l.totalCost, 0) + transport;
+    await recordPurchase({ businessId, userId, at: at(day, 7), lines, transport, method: payFrom(restockTotal) });
 
-    await recordExpense({ businessId, userId, at: at(day, 7.5), category: 'nauli', amount: 3000, method: payFrom(3000) });
     if (daysAgo % 7 === 0) {
       await recordExpense({ businessId, userId, at: at(day, 12), category: 'kodi' as ExpenseCategory, amount: 15000, method: payFrom(15000) });
     }

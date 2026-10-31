@@ -49,6 +49,7 @@ export default function PurchasesPage() {
   const [supplierId, setSupplierId] = useState('');
   const [paid, setPaid] = useState('');
   const [method, setMethod] = useState<SpendMethod>('cash');
+  const [transport, setTransport] = useState('');
 
   const today = businessDay();
   const todays = useLiveQuery(
@@ -76,7 +77,8 @@ export default function PurchasesPage() {
   const perUnit = costPerUnit(totalCost, units);
   const margin = product ? unitMargin(product.price, perUnit) : null;
 
-  const total = lines.reduce((sum, line) => sum + line.totalCost, 0);
+  const transportCost = Math.max(0, parseTZS(transport) ?? 0);
+  const total = lines.reduce((sum, line) => sum + line.totalCost, 0) + transportCost;
   const nameOf = (id: string) => products?.find((p) => p.id === id)?.name ?? '';
   const unitOf = (id: string) => {
     const found = products?.find((p) => p.id === id);
@@ -116,10 +118,11 @@ export default function PurchasesPage() {
   const save = async () => {
     if (!businessId || lines.length === 0) return;
     const paidAmount = show('suppliers') && paid.trim() ? Math.min(parseTZS(paid) ?? total, total) : total;
-    await recordPurchase({ businessId, userId, lines, supplierId: supplierId || null, paidAmount, method });
+    await recordPurchase({ businessId, userId, lines, supplierId: supplierId || null, paidAmount, method, transport: transportCost });
     toast(t('costUpdated'));
     setLines([]);
     setPaid('');
+    setTransport('');
   };
 
   return (
@@ -229,6 +232,9 @@ export default function PurchasesPage() {
                 </li>
               ))}
             </ul>
+            <Field label={t('transportLabel')} hint={t('transportHint')}>
+              {(id) => <AmountInput id={id} value={transport} onChange={(e) => setTransport(e.target.value)} />}
+            </Field>
             <Row label={tc('total')} value={<Money value={total} symbol />} strong />
 
             {show('suppliers') && (

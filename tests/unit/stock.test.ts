@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { averageUnitCost, isLowStock, stockAsOf, stockByProduct, stockOnHand, wasteCost, weightedAverageCost } from '@/lib/calc/stock';
+import { averageUnitCost, isLowStock, stockAsOf, stockByProduct, stockOnHand, wasteCost, spreadTransport, weightedAverageCost } from '@/lib/calc/stock';
 import type { StockMovement } from '@/lib/types';
 
 const move = (productId: string, qty: number, type: StockMovement['type'] = 'adjust'): StockMovement => ({
@@ -140,5 +140,20 @@ describe('average cost', () => {
   it('falls back to the product’s cost when nothing was ever received with one', () => {
     expect(averageUnitCost([{ qty: -1, unitCost: null, type: 'sale' }], 4000)).toBe(4000);
     expect(averageUnitCost([], null)).toBeNull();
+  });
+});
+
+describe('transport becomes part of the cost (landed cost)', () => {
+  it('shares transport by value, in whole shillings that add up exactly', () => {
+    expect(spreadTransport([{ totalCost: 30000, qty: 2 }, { totalCost: 10000, qty: 5 }], 4000)).toEqual([3000, 1000]);
+    const shares = spreadTransport([{ totalCost: 1, qty: 1 }, { totalCost: 1, qty: 1 }, { totalCost: 1, qty: 1 }], 1000);
+    expect(shares.reduce((a, b) => a + b, 0)).toBe(1000);
+    expect(Math.max(...shares) - Math.min(...shares)).toBeLessThanOrEqual(1);
+  });
+
+  it('no transport, no lines, or free goods (shared by quantity)', () => {
+    expect(spreadTransport([{ totalCost: 500, qty: 1 }], 0)).toEqual([0]);
+    expect(spreadTransport([], 900)).toEqual([]);
+    expect(spreadTransport([{ totalCost: 0, qty: 3 }, { totalCost: 0, qty: 1 }], 400)).toEqual([300, 100]);
   });
 });

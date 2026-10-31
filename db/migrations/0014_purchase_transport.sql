@@ -1,0 +1,1 @@
+ALTER TABLE "purchases" ADD COLUMN "transport" bigint DEFAULT 0 NOT NULL;

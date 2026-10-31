@@ -125,3 +125,28 @@ export function wasteCost(qty: number, unitCost: number | null | undefined): num
   if (!unitCost || unitCost <= 0) return 0;
   return Math.round(qty * unitCost);
 }
+
+/**
+ * Transport (or any cost of bringing the goods in) shared over a purchase's
+ * lines by their value, so each product's cost includes what it took to get
+ * it to the shelf ("landed cost"). Whole shillings that always add up to the
+ * transport exactly: leftovers go to the largest remainders. Lines with no
+ * cost share by quantity instead, so free samples still carry their transport.
+ */
+export function spreadTransport(lines: readonly { totalCost: number; qty: number }[], transport: number): number[] {
+  const amount = Math.max(0, Math.round(transport));
+  if (lines.length === 0 || amount === 0) return lines.map(() => 0);
+  const byValue = lines.reduce((sum, l) => sum + Math.max(0, l.totalCost), 0);
+  const weights = byValue > 0 ? lines.map((l) => Math.max(0, l.totalCost)) : lines.map((l) => Math.max(0, l.qty) || 1);
+  const totalWeight = weights.reduce((a, b) => a + b, 0);
+  const exact = weights.map((w) => (amount * w) / totalWeight);
+  const shares = exact.map(Math.floor);
+  let left = amount - shares.reduce((a, b) => a + b, 0);
+  const order = exact.map((value, index) => ({ index, rest: value - Math.floor(value) })).sort((a, b) => b.rest - a.rest || a.index - b.index);
+  for (const { index } of order) {
+    if (left <= 0) break;
+    shares[index]! += 1;
+    left -= 1;
+  }
+  return shares;
+}

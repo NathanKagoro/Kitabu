@@ -1,6 +1,6 @@
 import { businessDay, nowIso } from '../date';
 import { uuidv7 } from '../uuid';
-import { stockOnHand, wasteCost, weightedAverageCost } from '../calc/stock';
+import { spreadTransport, stockOnHand, wasteCost, weightedAverageCost } from '../calc/stock';
 import type {
   Customer,
   DayClosing,
@@ -525,6 +525,8 @@ export async function recordPurchase(
     paidAmount?: number;
     /** Where the money came from. Only 'cash' leaves the shop's tin. */
     method?: SpendMethod;
+    /** Transport for this trip: becomes part of each product's cost, shared by value. */
+    transport?: number;
     note?: string | null;
     at?: string;
   }
@@ -534,13 +536,19 @@ export async function recordPurchase(
   const database = db();
   const at = input.at ?? nowIso();
   const purchaseId = uuidv7();
-  const total = input.lines.reduce((sum, line) => sum + Math.round(line.totalCost), 0);
+  // Landed cost: each line carries its share of the transport, so the product's
+  // average cost (and every later sale's profit) includes getting it here.
+  const transport = Math.max(0, Math.round(input.transport ?? 0));
+  const shares = spreadTransport(input.lines.map((l) => ({ totalCost: Math.round(l.totalCost), qty: l.qty })), transport);
+  const landed = input.lines.map((line, i) => ({ ...line, totalCost: Math.round(line.totalCost) + shares[i]! }));
+  const total = landed.reduce((sum, line) => sum + line.totalCost, 0);
 
   const purchase: Purchase = {
     id: purchaseId,
     businessId: input.businessId,
     supplierId: input.supplierId ?? null,
     total,
+    transport,
     paidAmount: Math.round(input.paidAmount ?? total),
     method: input.method ?? 'cash',
     note: input.note ?? null,
@@ -550,7 +558,7 @@ export async function recordPurchase(
     deletedAt: null,
   };
 
-  const lines: PurchaseLine[] = input.lines.map((line) => ({
+  const lines: PurchaseLine[] = landed.map((line) => ({
     id: uuidv7(),
     businessId: input.businessId,
     purchaseId,
@@ -565,7 +573,7 @@ export async function recordPurchase(
   const movements: StockMovement[] = [];
   const updatedProducts: Product[] = [];
 
-  for (const line of input.lines) {
+  for (const line of landed) {
     const product = await database.products.get(line.productId);
     if (!product) continue;
 

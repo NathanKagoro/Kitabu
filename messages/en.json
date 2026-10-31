@@ -431,7 +431,9 @@
     "marginHint": "You sell at {price} — {profit} profit per {unit}",
     "marginLoss": "Careful: you sell at {price}, below the {cost} it cost you",
     "noPrice": "This product has no selling price yet",
-    "addPackHint": "Add buying sizes on the product to get a price per unit"
+    "addPackHint": "Add buying sizes on the product to get a price per unit",
+    "transportLabel": "Transport for this trip",
+    "transportHint": "Optional. It is added to the cost of these goods, so profit comes out right."
   },
   "suppliers": {
     "title": "Suppliers",

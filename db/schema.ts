@@ -390,6 +390,8 @@ export const purchases = pgTable(
       .references(() => businesses.id, { onDelete: 'cascade' }),
     supplierId: uuid('supplier_id').references(() => suppliers.id),
     total: money('total').notNull(),
+    /** Transport for this trip, already spread into the lines' cost (landed cost); part of total. */
+    transport: money('transport').notNull().default(0),
     paidAmount: money('paid_amount').notNull().default(0),
     method: paymentMethod('method').notNull().default('cash'),
     note: text('note'),

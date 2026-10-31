@@ -459,6 +459,23 @@ describe('every shop type starts with its own things', () => {
   }, 30_000);
 });
 
+describe('buying stock with transport', () => {
+  it("transport goes into the products' cost, so a later sale's profit counts it", async () => {
+    const product = await firstProduct();
+    const purchase = await actions.recordPurchase({
+      businessId,
+      lines: [{ productId: product.id, qty: 10, totalCost: 6000 }],
+      transport: 2000,
+    });
+    expect(purchase.total).toBe(8000);
+    expect(purchase.transport).toBe(2000);
+    const updated = (await db().products.get(product.id))!;
+    expect(updated.cost).toBe(800);
+    const line = (await db().purchaseLines.where('purchaseId').equals(purchase.id).first())!;
+    expect(line.totalCost).toBe(8000);
+  });
+});
+
 describe('cash in the tin', () => {
   it('a day cannot close on a negative count', async () => {
     const day = businessDay();

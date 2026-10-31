@@ -431,7 +431,9 @@
     "marginHint": "Unauza {price} — faida {profit} kwa {unit}",
     "marginLoss": "Tahadhari: unauza {price}, chini ya gharama {cost}",
     "noPrice": "Bidhaa hii bado haina bei ya kuuza",
-    "addPackHint": "Weka vipimo vya ununuzi kwenye bidhaa ili kuhesabu bei kwa kipande"
+    "addPackHint": "Weka vipimo vya ununuzi kwenye bidhaa ili kuhesabu bei kwa kipande",
+    "transportLabel": "Usafiri wa safari hii",
+    "transportHint": "Si lazima. Unaongezwa kwenye gharama ya bidhaa hizi, kwa hiyo faida inakuwa sahihi."
   },
   "suppliers": {
     "title": "Wauzaji",
