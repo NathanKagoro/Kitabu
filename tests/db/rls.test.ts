@@ -364,6 +364,38 @@ describe('stock counts', () => {
   });
 });
 
+describe('owner withdrawals', () => {
+  const insert = `INSERT INTO owner_withdrawals (id, business_id, amount, method, purpose, client_created_at) VALUES ($1, $2, $3, $4, $5, now())`;
+
+  it("the owner records one; the cashier can't see it or add one; another business sees nothing", async () => {
+    await as(USER_A, () => pg.query(insert, [id(), BIZ_A, 50000, 'cash', 'bank']));
+    expect(await as(USER_A, () => rows('SELECT amount, purpose FROM owner_withdrawals'))).toEqual([{ amount: 50000, purpose: 'bank' }]);
+    expect(await as(CASHIER, () => rows('SELECT * FROM owner_withdrawals'))).toHaveLength(0);
+    await expect(as(CASHIER, () => pg.query(insert, [id(), BIZ_A, 1000, 'cash', 'personal']))).rejects.toThrow(/row-level security/);
+    expect(await as(USER_B, () => rows('SELECT * FROM owner_withdrawals'))).toHaveLength(0);
+  });
+
+  it('refuses nonsense: no amount, an unknown purpose, or "from the owner\'s pocket"', async () => {
+    await expect(as(USER_A, () => pg.query(insert, [id(), BIZ_A, 0, 'cash', 'bank']))).rejects.toThrow(/owner_withdrawals_amount_check/);
+    await expect(as(USER_A, () => pg.query(insert, [id(), BIZ_A, 100, 'cash', 'party']))).rejects.toThrow(/owner_withdrawals_purpose_check/);
+    await expect(as(USER_A, () => pg.query(insert, [id(), BIZ_A, 100, 'owner', 'bank']))).rejects.toThrow(/owner_withdrawals_method_check/);
+  });
+
+  it('a purchase can be paid from the owner\'s pocket; a day cannot close below zero', async () => {
+    await as(USER_A, () =>
+      pg.query(`INSERT INTO purchases (id, business_id, total, paid_amount, method, client_created_at) VALUES ($1, $2, 5000, 5000, 'owner', now())`, [id(), BIZ_A])
+    );
+    await expect(
+      as(USER_A, () =>
+        pg.query(
+          `INSERT INTO day_closings (id, business_id, date, opening_cash, expected_cash, counted_cash, difference) VALUES ($1, $2, '2026-10-01', 0, -500, -500, 0)`,
+          [id(), BIZ_A]
+        )
+      )
+    ).rejects.toThrow(/day_closings_counted_check/);
+  });
+});
+
 describe('customers and offers', () => {
   it('a customer can be marked "no offers" by anyone in the shop', async () => {
     const customer = id();

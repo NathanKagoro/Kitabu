@@ -9,6 +9,7 @@ import type { EntityTable } from 'dexie';
 import type {
   Customer,
   Expense,
+  OwnerWithdrawal,
   Payment,
   Product,
   ProductPack,
@@ -98,17 +99,18 @@ export async function loadRange(businessId: string, startDay: string, endDay: st
       .between([businessId, start], [businessId, end], true, false)
       .toArray();
 
-  const [sales, payments, expenses, purchases, waste] = await Promise.all([
+  const [sales, payments, expenses, purchases, waste, withdrawals] = await Promise.all([
     range<Sale>(database.sales),
     range<Payment>(database.payments),
     range<Expense>(database.expenses),
     range<Purchase>(database.purchases),
     range<WasteEvent>(database.wasteEvents),
+    range<OwnerWithdrawal>(database.ownerWithdrawals),
   ]);
   const saleIds = sales.map((s) => s.id);
   const saleLines: SaleLine[] = saleIds.length
     ? await database.saleLines.where('saleId').anyOf(saleIds).toArray()
     : [];
 
-  return { sales, payments, expenses, purchases, waste, saleLines };
+  return { sales, payments, expenses, purchases, waste, withdrawals, saleLines };
 }

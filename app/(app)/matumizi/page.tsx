@@ -14,20 +14,20 @@ import { businessDay } from '@/lib/date';
 import { recordExpense } from '@/lib/local/actions';
 import { loadRange } from '@/lib/local/queries';
 import { formatTZS } from '@/lib/money';
-import type { ExpenseCategory, PaymentMethod } from '@/lib/types';
+import { MoneySourcePicker } from '@/components/money-source-picker';
+import type { ExpenseCategory, SpendMethod } from '@/lib/types';
 
 const CATEGORIES: ExpenseCategory[] = ['nauli', 'ushuru', 'kodi', 'umeme', 'chakula', 'mishahara', 'nyingine'];
 
 export default function ExpensesPage() {
   const t = useTranslations('expenses');
-  const tp = useTranslations('payment');
   const tc = useTranslations('common');
   const te = useTranslations('errors');
   const toast = useToast();
   const { businessId, userId } = useApp();
   const [amount, setAmount] = useState('');
   const [category, setCategory] = useState<ExpenseCategory>('nauli');
-  const [method, setMethod] = useState<PaymentMethod>('cash');
+  const [method, setMethod] = useState<SpendMethod>('cash');
   const [note, setNote] = useState('');
 
   const today = businessDay();
@@ -59,12 +59,7 @@ export default function ExpensesPage() {
           <p className="text-sm font-semibold text-ink-soft">{t('categoryLabel')}</p>
           <OptionGrid<ExpenseCategory> value={category} onChange={setCategory} options={CATEGORIES.map((c) => ({ value: c, label: t(`categories.${c}`) }))} />
         </div>
-        <OptionGrid<PaymentMethod>
-          value={method}
-          onChange={setMethod}
-          columns={3}
-          options={(['cash', 'mpesa', 'bank'] as const).map((m) => ({ value: m, label: tp(`methods.${m}`) }))}
-        />
+        <MoneySourcePicker value={method} onChange={setMethod} />
         <Field label={tc('note')} hint={tc('optional')}>
           {(id) => <TextInput id={id} value={note} onChange={(e) => setNote(e.target.value)} />}
         </Field>

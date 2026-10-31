@@ -185,6 +185,63 @@ describe('summariseDay', () => {
   });
 });
 
+describe('cash the owner takes out, and money from elsewhere', () => {
+  const base = {
+    sales: [sale('s1', 30000)],
+    saleLines: [saleLine('s1', 'p1', 30, 1000, 600)],
+    payments: [pay({ saleId: 's1', method: 'cash', amount: 30000 })],
+    waste: [],
+    openingCash: 50000,
+  };
+  const withdrawal = (amount: number, method: 'cash' | 'mpesa' | 'bank', purpose: 'personal' | 'bank', deletedAt: string | null = null) => ({
+    id: `w${++n}`,
+    businessId: 'b',
+    amount,
+    method,
+    purpose,
+    clientCreatedAt: at,
+    createdAt: at,
+    deletedAt,
+  });
+
+  const plain = summariseDay({ ...base, expenses: [], purchases: [] });
+  const withdrawn = summariseDay({
+    ...base,
+    expenses: [],
+    purchases: [],
+    withdrawals: [withdrawal(10000, 'cash', 'personal'), withdrawal(40000, 'cash', 'bank'), withdrawal(5000, 'mpesa', 'personal'), withdrawal(99999, 'cash', 'bank', at)],
+  });
+
+  it('a withdrawal from the tin lowers expected cash; one from mobile money does not', () => {
+    expect(plain.expectedCash).toBe(80000);
+    expect(withdrawn.cashWithdrawals).toBe(50000);
+    expect(withdrawn.expectedCash).toBe(30000);
+    expect(withdrawn.withdrawalsTotal).toBe(55000);
+  });
+
+  it('taking money out never changes sales or profit', () => {
+    expect(withdrawn.salesTotal).toBe(plain.salesTotal);
+    expect(withdrawn.estimatedProfit).toBe(plain.estimatedProfit);
+  });
+
+  it("paying from the owner's pocket or by mobile money leaves the tin alone, but still counts as spending", () => {
+    const fromPocket = summariseDay({
+      ...base,
+      expenses: [expense(3000, 'owner'), expense(2000, 'cash')],
+      purchases: [{ ...purchase(70000), method: 'owner' }, { ...purchase(20000), method: 'mpesa' }],
+    });
+    expect(fromPocket.expectedCash).toBe(80000 - 2000);
+    expect(fromPocket.cashSpent).toBe(2000);
+    expect(fromPocket.expensesTotal).toBe(5000);
+    expect(fromPocket.purchasesTotal).toBe(90000);
+  });
+
+  it('the parts shown on screen add up to expected cash', () => {
+    const s = summariseDay({ ...base, expenses: [expense(3000)], purchases: [purchase(10000)], withdrawals: [withdrawal(5000, 'cash', 'bank')] });
+    expect(base.openingCash + s.cashIn - s.cashSpent - s.cashWithdrawals).toBe(s.expectedCash);
+  });
+});
+
 describe('history', () => {
   it('keeps empty days in the series', () => {
     const points = salesByDay([sale('a', 100), sale('b', 50, 'void')], ['2026-03-09', '2026-03-10'], () => '2026-03-10');

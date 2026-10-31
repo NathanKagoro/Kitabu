@@ -2,7 +2,8 @@
 
 import { productLabel } from '@/lib/products';
 import { useLiveQuery } from 'dexie-react-hooks';
-import { Info, Lock } from '@/components/icons';
+import { Info, Lock, TriangleAlert } from '@/components/icons';
+import { WithdrawSheet } from '@/components/summary/withdraw-sheet';
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 
@@ -29,6 +30,7 @@ export default function SummaryPage() {
   const [range, setRange] = useState<7 | 30>(7);
   const [closing, setClosing] = useState(false);
   const [counted, setCounted] = useState('');
+  const [withdrawing, setWithdrawing] = useState(false);
 
   const today = businessDay();
 
@@ -105,6 +107,9 @@ export default function SummaryPage() {
         <Row label={t('expenses')} value={<Money value={-summary.expensesTotal} />} tone="loss" />
         <Row label={t('purchases')} value={<Money value={-summary.purchasesTotal} />} tone="soft" />
         <Row label={t('waste')} value={<Money value={-summary.wasteTotal} />} tone="loss" />
+        {summary.withdrawalsTotal > 0 && can('withdrawCash') ? (
+          <Row label={t('withdrawals')} value={<Money value={-summary.withdrawalsTotal} />} tone="soft" />
+        ) : null}
       </section>
 
       {can('viewProfit') && (
@@ -128,10 +133,21 @@ export default function SummaryPage() {
 
       <section className="card mx-3 mb-3 p-4">
         <p className="text-sm font-medium text-ink-soft">{t('expectedCash')}</p>
-        <Money value={summary.expectedCash} symbol className="text-3xl font-bold" />
-        <p className="text-xs text-ink-faint">
-          {t('openingCash')}: {formatTZS(openingCash)} · {t('expectedCashHint')}
-        </p>
+        <Money value={summary.expectedCash} symbol className={cn('text-3xl font-bold', summary.expectedCash < 0 && 'text-loss')} />
+        <div className="mt-2 border-t border-line">
+          <Row label={t('openingCash')} value={<Money value={openingCash} />} tone="soft" />
+          <Row label={t('cashIn')} value={<Money value={summary.cashIn} signed />} tone="brand" />
+          <Row label={t('cashSpent')} value={<Money value={-summary.cashSpent} />} tone="loss" />
+          {summary.cashWithdrawals > 0 ? (
+            <Row label={t('withdrawals')} value={<Money value={-summary.cashWithdrawals} />} tone="soft" />
+          ) : null}
+        </div>
+        {summary.expectedCash < 0 ? (
+          <p className="mt-2 flex gap-1.5 rounded-[10px] bg-loss-tint px-3 py-2 text-sm text-loss" role="status">
+            <TriangleAlert size={16} className="mt-0.5 shrink-0" />
+            {t('negativeCash')}
+          </p>
+        ) : null}
         {todayClose ? (
           <p className="mt-3 flex items-center gap-2 rounded-[10px] bg-brand-tint px-3 py-2 text-sm font-semibold text-brand-dark">
             <Lock size={16} />
@@ -143,6 +159,11 @@ export default function SummaryPage() {
           <Lock size={20} />
           {t('closeDay')}
         </Button>
+        )}
+        {can('withdrawCash') && (
+          <Button size="lg" block variant="secondary" className="mt-2" onClick={() => setWithdrawing(true)}>
+            {t('withdrawButton')}
+          </Button>
         )}
       </section>
 
@@ -179,6 +200,8 @@ export default function SummaryPage() {
           ))}
         </section>
       )}
+
+      <WithdrawSheet open={withdrawing} onClose={() => setWithdrawing(false)} />
 
       <Sheet open={closing} onClose={() => setClosing(false)} title={t('closeDayTitle', { date: today })}>
         <div className="space-y-4 p-4">

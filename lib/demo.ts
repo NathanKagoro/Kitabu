@@ -4,9 +4,11 @@ import {
   createCustomer,
   recordDebtPayment,
   recordExpense,
+  recordOpeningStock,
   recordPurchase,
   recordSale,
   recordWaste,
+  recordWithdrawal,
   saveProduct,
   saveProductPacks,
 } from './local/actions';
@@ -19,7 +21,7 @@ import { loadRange } from './local/queries';
 import { createBusiness } from './onboarding/create-business';
 import { STARTER_PRODUCTS, type StarterProduct } from './onboarding/starter-products';
 import { productLabel } from './products';
-import type { BusinessType, ExpenseCategory, Member, Product } from './types';
+import type { BusinessType, ExpenseCategory, Member, Product, SpendMethod } from './types';
 import { nowIso } from './date';
 import { persist } from './local/write';
 import { uuidv7 } from './uuid';
@@ -114,35 +116,61 @@ export async function createDemoBusiness(
   const onHand = async () => stockByProduct(await db().stockMovements.where('businessId').equals(businessId).toArray());
 
   // The float in the tin on the first morning; every close carries forward.
-  let openingCash = 20000;
+  const FLOAT = 50000;
+  let openingCash = FLOAT;
+  // Cash in the tin as the day goes, so the demo never pays from money it lacks.
+  let tin = openingCash;
+  /** Pay from the tin when it can; otherwise mobile money or the owner's pocket, as real shops do. */
+  const payFrom = (amount: number): SpendMethod => {
+    if (tin >= amount && random() < 0.6) {
+      tin -= amount;
+      return 'cash';
+    }
+    return random() < 0.6 ? 'mpesa' : 'owner';
+  };
+
+  const costOf = (p: (typeof priced)[number]) => p.starter?.cost ?? Math.round(p.price * 0.7);
+
+  // The shelf as it stood when the shop started using Kitabu: opening stock at
+  // cost, not a purchase -- no money left the tin to buy it.
+  await recordOpeningStock({
+    businessId,
+    userId,
+    at: at(addDays(today, -13), 6),
+    lines: priced.map((p) => ({
+      productId: p.id,
+      qty: p.starter?.pack ? packToUnits(1, p.starter.pack.units) : between(pace.restock) * 5,
+      unitCost: costOf(p),
+    })),
+  });
+
   for (let daysAgo = 13; daysAgo >= 0; daysAgo--) {
     const day = addDays(today, -daysAgo);
+    tin = openingCash;
 
-    // Restock: everything on the first morning, then a few lines each day.
-    const restock = daysAgo === 13 ? priced : priced.filter((_, index) => index % 3 === daysAgo % 3).slice(0, 3);
-    await recordPurchase({
-      businessId,
-      userId,
-      at: at(day, 7),
-      lines: await Promise.all(
-        restock.map(async (p) => {
-          const cost = p.starter?.cost ?? Math.round(p.price * 0.7);
-          const bulk = p.starter?.pack;
-          if (!bulk) {
-            // The first morning stocks the shelf for the fortnight; later mornings top up.
-            const qty = between(pace.restock) * (daysAgo === 13 ? 5 : 1);
-            return { productId: p.id, qty, totalCost: qty * cost };
-          }
-          const packQty = daysAgo === 13 ? 1 : random() < 0.6 ? 0.5 : 1;
-          const qty = packToUnits(packQty, bulk.units);
-          const pack = await db().productPacks.where('productId').equals(p.id).filter((row) => row.active).first();
-          return { productId: p.id, qty, totalCost: Math.round(qty * cost), packId: pack?.id ?? null, packLabel: bulk.label, packQty };
-        })
-      ),
-    });
+    // Restock a few lines most mornings.
+    const restock = priced.filter((_, index) => index % 3 === daysAgo % 3).slice(0, 3);
+    const lines = await Promise.all(
+      restock.map(async (p) => {
+        const cost = costOf(p);
+        const bulk = p.starter?.pack;
+        if (!bulk) {
+          const qty = between(pace.restock);
+          return { productId: p.id, qty, totalCost: qty * cost };
+        }
+        const packQty = random() < 0.6 ? 0.5 : 1;
+        const qty = packToUnits(packQty, bulk.units);
+        const pack = await db().productPacks.where('productId').equals(p.id).filter((row) => row.active).first();
+        return { productId: p.id, qty, totalCost: Math.round(qty * cost), packId: pack?.id ?? null, packLabel: bulk.label, packQty };
+      })
+    );
+    const restockTotal = lines.reduce((sum, l) => sum + l.totalCost, 0);
+    await recordPurchase({ businessId, userId, at: at(day, 7), lines, method: payFrom(restockTotal) });
 
-    await recordExpense({ businessId, userId, at: at(day, 7.5), category: 'nauli', amount: 3000 });
-    if (daysAgo % 7 === 0) await recordExpense({ businessId, userId, at: at(day, 12), category: 'kodi' as ExpenseCategory, amount: 15000 });
+    await recordExpense({ businessId, userId, at: at(day, 7.5), category: 'nauli', amount: 3000, method: payFrom(3000) });
+    if (daysAgo % 7 === 0) {
+      await recordExpense({ businessId, userId, at: at(day, 12), category: 'kodi' as ExpenseCategory, amount: 15000, method: payFrom(15000) });
+    }
 
     const salesToday = between(pace.perDay);
     for (let i = 0; i < salesToday; i++) {
@@ -201,9 +229,20 @@ export async function createDemoBusiness(
 
     // Funga siku for every finished day, usually a few hundred shillings out.
     if (daysAgo > 0) {
+      // Evening: the owner takes something for home now and then, and banks
+      // the takings above the float every few days.
+      const before = summariseDay({ ...(await loadRange(businessId, day, day)), openingCash });
+      if (daysAgo % 5 === 0 && before.expectedCash > FLOAT) {
+        await recordWithdrawal({ businessId, userId, at: at(day, 18.5), amount: 10000, purpose: 'personal' });
+      }
+      const afterPersonal = summariseDay({ ...(await loadRange(businessId, day, day)), openingCash });
+      if (daysAgo % 3 === 0 && afterPersonal.expectedCash > FLOAT * 2) {
+        const bank = Math.floor((afterPersonal.expectedCash - FLOAT) / 10000) * 10000;
+        await recordWithdrawal({ businessId, userId, at: at(day, 18.75), amount: bank, purpose: 'bank' });
+      }
       const summary = summariseDay({ ...(await loadRange(businessId, day, day)), openingCash });
       const shortBy = random() < 0.6 ? 0 : Math.round(random() * 10) * 100;
-      const counted = summary.expectedCash - shortBy;
+      const counted = Math.max(0, summary.expectedCash - shortBy);
       await closeDay({ businessId, userId, day, openingCash, expectedCash: summary.expectedCash, countedCash: counted });
       openingCash = counted;
     }

@@ -5,6 +5,9 @@ import type {
   Customer,
   DayClosing,
   Expense,
+  OwnerWithdrawal,
+  SpendMethod,
+  WithdrawalPurpose,
   ExpenseCategory,
   Payment,
   PaymentMethod,
@@ -272,6 +275,33 @@ export async function addProductsInBulk(
   return products;
 }
 
+/**
+ * Stock that was already on the shelf when the shop started using Kitabu. It
+ * enters the ledger at cost, as setup's bulk entry does, and is not a purchase:
+ * no money left the tin today to buy it.
+ */
+export async function recordOpeningStock(
+  input: Actor & { lines: readonly { productId: string; qty: number; unitCost: number | null }[]; at?: string }
+): Promise<void> {
+  const at = input.at ?? nowIso();
+  const movements: StockMovement[] = input.lines
+    .filter((line) => line.qty > 0)
+    .map((line) => ({
+      id: uuidv7(),
+      businessId: input.businessId,
+      productId: line.productId,
+      qty: Math.round(line.qty * 1000) / 1000,
+      type: 'adjust',
+      reason: null,
+      refId: null,
+      unitCost: line.unitCost,
+      note: 'opening',
+      createdAt: at,
+      createdBy: input.userId ?? null,
+    }));
+  if (movements.length) await persistAll([{ table: 'stockMovements', rows: movements }]);
+}
+
 export async function archiveProduct(product: Product): Promise<void> {
   await persist('products', { ...product, active: false, updatedAt: nowIso() });
 }
@@ -407,7 +437,7 @@ export async function recordExpense(
   input: Actor & {
     category: ExpenseCategory;
     amount: number;
-    method?: PaymentMethod;
+    method?: SpendMethod;
     note?: string | null;
     at?: string;
   }
@@ -427,6 +457,41 @@ export async function recordExpense(
   };
   await persist('expenses', expense);
   return expense;
+}
+
+/**
+ * The owner took money out of the business: for themselves, or to the bank.
+ * Not a cost -- profit is untouched -- and never a receipt. When taken from the
+ * tin ('cash') it lowers the cash expected there.
+ */
+export async function recordWithdrawal(
+  input: Actor & {
+    amount: number;
+    purpose: WithdrawalPurpose;
+    method?: OwnerWithdrawal['method'];
+    memberId?: string | null;
+    note?: string | null;
+    at?: string;
+  }
+): Promise<OwnerWithdrawal> {
+  const amount = Math.round(input.amount);
+  if (!Number.isFinite(amount) || amount <= 0) throw new Error('A withdrawal needs an amount above zero');
+  const at = input.at ?? nowIso();
+  const withdrawal: OwnerWithdrawal = {
+    id: uuidv7(),
+    businessId: input.businessId,
+    amount,
+    method: input.method ?? 'cash',
+    purpose: input.purpose,
+    note: input.note ?? null,
+    createdBy: input.userId ?? null,
+    memberId: input.memberId ?? null,
+    clientCreatedAt: at,
+    createdAt: at,
+    deletedAt: null,
+  };
+  await persist('ownerWithdrawals', withdrawal);
+  return withdrawal;
 }
 
 export interface PurchaseLineInput {
@@ -450,7 +515,8 @@ export async function recordPurchase(
     lines: readonly PurchaseLineInput[];
     supplierId?: string | null;
     paidAmount?: number;
-    method?: PaymentMethod;
+    /** Where the money came from. Only 'cash' leaves the shop's tin. */
+    method?: SpendMethod;
     note?: string | null;
     at?: string;
   }
@@ -568,6 +634,11 @@ export async function closeDay(
     note?: string | null;
   }
 ): Promise<DayClosing> {
+  // Cash in a tin can't be below zero. A negative "expected" means money came
+  // from somewhere unrecorded; the count is what is really there.
+  if (!Number.isFinite(input.countedCash) || input.countedCash < 0) {
+    throw new Error('Counted cash cannot be negative');
+  }
   const existing = await db()
     .dayClosings.where('[businessId+date]')
     .equals([input.businessId, input.day])

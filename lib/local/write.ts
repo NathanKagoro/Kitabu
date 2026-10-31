@@ -21,6 +21,7 @@ export const PG_TABLE: Record<string, string> = {
   saleLines: 'sale_lines',
   payments: 'payments',
   expenses: 'expenses',
+  ownerWithdrawals: 'owner_withdrawals',
   purchases: 'purchases',
   purchaseLines: 'purchase_lines',
   wasteEvents: 'waste_events',

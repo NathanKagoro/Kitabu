@@ -181,7 +181,8 @@
       "airtel": "Airtel Money",
       "halopesa": "HaloPesa",
       "bank": "Benki",
-      "credit": "Deni"
+      "credit": "Deni",
+      "owner": "Mfukoni mwa mwenye duka"
     },
     "reference": "Namba ya muamala",
     "referenceHint": "si lazima",
@@ -441,7 +442,6 @@
     "purchases": "Manunuzi",
     "waste": "Hasara",
     "expectedCash": "Pesa unayopaswa kuwa nayo",
-    "expectedCashHint": "Pesa ya kuanzia + taslimu iliyoingia − matumizi ya taslimu",
     "profit": "Faida ya leo",
     "profitEstimate": "makisio",
     "profitPartial": "Baadhi ya bidhaa hazina gharama, kwa hiyo faida hii si kamili.",
@@ -464,7 +464,21 @@
     "noSalesHint": "Mauzo ya kwanza yataonekana hapa",
     "openingCash": "Pesa ya kuanzia",
     "average": "Wastani",
-    "best": "Siku bora"
+    "best": "Siku bora",
+    "cashIn": "Taslimu iliyoingia",
+    "cashSpent": "Taslimu iliyotumika",
+    "withdrawals": "Pesa uliyotoa",
+    "negativeCash": "Hii iko chini ya sifuri. Huenda kuna pesa iliyotumika bila kuandikwa ilikotoka, kama ulilipa kwa pesa yako ya mfukoni.",
+    "withdrawButton": "Toa pesa",
+    "withdrawTitle": "Toa pesa kwenye biashara",
+    "withdrawHint": "Haipunguzi faida. Inaandika tu pesa uliyotoa.",
+    "withdrawPurpose": "Ni ya nini?",
+    "withdrawFrom": "Umetoa wapi?",
+    "purposes": {
+      "personal": "Matumizi yangu",
+      "bank": "Kupeleka benki"
+    },
+    "withdrawn": "Imehifadhiwa"
   },
   "documents": {
     "title": "Hati",
@@ -849,5 +863,15 @@
     "pinSaved": "PIN ya {name} imehifadhiwa",
     "phoneOptional": "si lazima; kwa anayetumia simu yake",
     "addAndSetPin": "Ongeza na uweke PIN yake"
+  },
+  "money": {
+    "sourceLabel": "Pesa ilitoka wapi?",
+    "sourceHint": "Pesa ya dukani tu ndiyo inapunguza pesa unayopaswa kuwa nayo.",
+    "sources": {
+      "cash": "Pesa ya dukani",
+      "mpesa": "Pesa ya simu",
+      "bank": "Benki",
+      "owner": "Mfukoni mwangu"
+    }
   }
 }

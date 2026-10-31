@@ -181,7 +181,8 @@
       "airtel": "Airtel Money",
       "halopesa": "HaloPesa",
       "bank": "Bank",
-      "credit": "Credit"
+      "credit": "Credit",
+      "owner": "Owner's pocket"
     },
     "reference": "Transaction reference",
     "referenceHint": "optional",
@@ -441,7 +442,6 @@
     "purchases": "Stock bought",
     "waste": "Losses",
     "expectedCash": "Cash you should have",
-    "expectedCashHint": "Opening cash + cash in − cash out",
     "profit": "Today's profit",
     "profitEstimate": "estimate",
     "profitPartial": "Some products have no cost recorded, so this profit is incomplete.",
@@ -464,7 +464,21 @@
     "noSalesHint": "Your first sale will show up here",
     "openingCash": "Opening cash",
     "average": "Average",
-    "best": "Best day"
+    "best": "Best day",
+    "cashIn": "Cash in",
+    "cashSpent": "Cash spent",
+    "withdrawals": "Money taken out",
+    "negativeCash": "This is below zero. Something was probably paid without saying where the money came from, such as from your own pocket.",
+    "withdrawButton": "Take money out",
+    "withdrawTitle": "Take money out of the business",
+    "withdrawHint": "This doesn't lower profit. It only records what you took out.",
+    "withdrawPurpose": "What is it for?",
+    "withdrawFrom": "Taken from",
+    "purposes": {
+      "personal": "For me",
+      "bank": "To the bank"
+    },
+    "withdrawn": "Saved"
   },
   "documents": {
     "title": "Documents",
@@ -849,5 +863,15 @@
     "pinSaved": "{name}'s PIN is saved",
     "phoneOptional": "optional; for someone using their own phone",
     "addAndSetPin": "Add and set their PIN"
+  },
+  "money": {
+    "sourceLabel": "Where did the money come from?",
+    "sourceHint": "Only the shop's cash comes off the cash you should have.",
+    "sources": {
+      "cash": "Shop's cash",
+      "mpesa": "Mobile money",
+      "bank": "Bank",
+      "owner": "My own pocket"
+    }
   }
 }

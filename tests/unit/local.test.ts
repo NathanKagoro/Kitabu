@@ -459,6 +459,45 @@ describe('every shop type starts with its own things', () => {
   }, 30_000);
 });
 
+describe('cash in the tin', () => {
+  it('a day cannot close on a negative count', async () => {
+    const day = businessDay();
+    await expect(
+      actions.closeDay({ businessId, day, openingCash: 0, expectedCash: -5000, countedCash: -5000 })
+    ).rejects.toThrow(/negative/);
+    const closing = await actions.closeDay({ businessId, day, openingCash: 0, expectedCash: -5000, countedCash: 0 });
+    expect(closing.difference).toBe(5000);
+  });
+
+  it('a withdrawal is saved, synced, and needs an amount above zero', async () => {
+    await expect(actions.recordWithdrawal({ businessId, amount: 0, purpose: 'personal' })).rejects.toThrow();
+    await actions.recordWithdrawal({ businessId, amount: 20000, purpose: 'bank' });
+    const today = businessDay();
+    const rows = await loadRange(businessId, today, today);
+    expect(rows.withdrawals).toHaveLength(1);
+    await sync();
+    expect(server.tables.get('owner_withdrawals')?.size).toBe(1);
+  });
+
+  it('the demo shop never has less than nothing in the tin', async () => {
+    const { createDemoBusiness } = await import('@/lib/demo');
+    const id = await createDemoBusiness('u1', 'Baraka Hardware', 'sw', 'hardware');
+    const closings = await db().dayClosings.where('businessId').equals(id).toArray();
+    expect(closings.length).toBeGreaterThan(10);
+    for (const c of closings) {
+      expect(c.openingCash).toBeGreaterThanOrEqual(0);
+      expect(c.expectedCash).toBeGreaterThanOrEqual(0);
+      expect(c.countedCash).toBeGreaterThanOrEqual(0);
+    }
+    const today = businessDay();
+    const opening = await actions.openingCashFor(id, today);
+    const summary = summariseDay({ ...(await loadRange(id, today, today)), openingCash: opening });
+    expect(summary.expectedCash).toBeGreaterThanOrEqual(0);
+    // Real shops bank their takings: the demo does too.
+    expect(await db().ownerWithdrawals.where('businessId').equals(id).count()).toBeGreaterThan(0);
+  }, 30_000);
+});
+
 describe('a count is right even when another phone syncs late', () => {
   /** Setup day was an hour ago, as in a real shop: the stock existed before the count. */
   const backdate = async (productId: string) => {
@@ -559,6 +598,8 @@ describe('0.5: who sold it, and offers consent, reach the server', () => {
       tenders: [{ method: 'cash', amount: 1000 }, { method: 'credit', amount: 1000 }],
     });
     await actions.recordStockCount({ businessId, kind: 'check', items: [{ productId: product.id, counted: 5 }] });
+    await actions.recordWithdrawal({ businessId, amount: 5000, purpose: 'personal' });
+    await actions.recordPurchase({ businessId, lines: [{ productId: product.id, qty: 2, totalCost: 1200 }], method: 'owner' });
     await sync();
 
     const columns = new Map<string, Set<string>>();

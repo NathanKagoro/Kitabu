@@ -9,6 +9,7 @@ import type {
   DayClosing,
   DocumentLine,
   Expense,
+  OwnerWithdrawal,
   Member,
   OutboxEntry,
   Payment,
@@ -52,6 +53,7 @@ export class HesabuDB extends Dexie {
   saleLines!: EntityTable<SaleLine, 'id'>;
   payments!: EntityTable<Payment, 'id'>;
   expenses!: EntityTable<Expense, 'id'>;
+  ownerWithdrawals!: EntityTable<OwnerWithdrawal, 'id'>;
   purchases!: EntityTable<Purchase, 'id'>;
   purchaseLines!: EntityTable<PurchaseLine, 'id'>;
   wasteEvents!: EntityTable<WasteEvent, 'id'>;
@@ -100,6 +102,11 @@ export class HesabuDB extends Dexie {
     // v3: stock-check reports.
     this.version(3).stores({
       stockCounts: 'id, businessId, clientCreatedAt, [businessId+clientCreatedAt]',
+    });
+
+    // v4: money the owner took out (for themselves or to the bank).
+    this.version(4).stores({
+      ownerWithdrawals: 'id, businessId, clientCreatedAt, [businessId+clientCreatedAt]',
     });
   }
 }

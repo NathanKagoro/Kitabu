@@ -99,6 +99,8 @@ export type Permission =
   | 'manageCustomers'
   | 'manageDocuments'
   | 'closeDay'
+  /** Record money the owner took out. The owner's draws are not the till's business. */
+  | 'withdrawCash'
   | 'countStock'
   | 'viewStaffSales'
   /** The whole customer list, offers and exports. Not cashiers: the list is the shop's asset. */
@@ -118,6 +120,7 @@ const ROLE_PERMISSIONS: Record<MemberRole, ReadonlySet<Permission>> = {
     'manageCustomers',
     'manageDocuments',
     'closeDay',
+    'withdrawCash',
     'countStock',
     'viewStaffSales',
     'customerList',
@@ -135,6 +138,7 @@ const ROLE_PERMISSIONS: Record<MemberRole, ReadonlySet<Permission>> = {
     'manageCustomers',
     'manageDocuments',
     'closeDay',
+    'withdrawCash',
     'countStock',
     'viewStaffSales',
     'customerList',

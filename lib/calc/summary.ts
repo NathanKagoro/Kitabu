@@ -1,6 +1,7 @@
 import { MOBILE_MONEY_METHODS } from '../types';
 import type {
   Expense,
+  OwnerWithdrawal,
   Payment,
   Purchase,
   Sale,
@@ -17,6 +18,8 @@ export interface DaySummaryInput {
   expenses: readonly Expense[];
   purchases: readonly Purchase[];
   waste: readonly WasteEvent[];
+  /** Money the owner took out. Optional so older callers keep working. */
+  withdrawals?: readonly OwnerWithdrawal[];
   openingCash: number;
 }
 
@@ -31,10 +34,19 @@ export interface DaySummary {
   expensesTotal: number;
   purchasesTotal: number;
   wasteTotal: number;
+  /** Everything the owner took out today, however it was taken. Not a cost. */
+  withdrawalsTotal: number;
+  /** The parts of expectedCash, so the screen can show them as a list. */
+  cashIn: number;
+  cashSpent: number;
+  cashWithdrawals: number;
   costOfGoodsSold: number;
   /** Labelled in the UI as an estimate -- costs are often unknown. */
   estimatedProfit: number;
-  /** What should physically be in the tin right now. */
+  /**
+   * What should physically be in the tin right now. Below zero means money came
+   * from somewhere that wasn't recorded (the screen says so).
+   */
   expectedCash: number;
   /** True when some sold item had no known cost, so profit understates costs. */
   profitIsPartial: boolean;
@@ -50,6 +62,9 @@ const isMobile = (method: string) => MOBILE_MONEY_METHODS.includes(method as nev
  */
 export function summariseDay(input: DaySummaryInput): DaySummary {
   const { sales, saleLines, payments, expenses, purchases, waste, openingCash } = input;
+  const withdrawals = (input.withdrawals ?? []).filter((w) => !w.deletedAt);
+  const withdrawalsTotal = withdrawals.reduce((sum, w) => sum + w.amount, 0);
+  const cashWithdrawals = withdrawals.filter((w) => w.method === 'cash').reduce((sum, w) => sum + w.amount, 0);
 
   const liveSales = sales.filter((s) => s.status === 'complete');
   const saleIds = new Set(liveSales.map((s) => s.id));
@@ -110,7 +125,11 @@ export function summariseDay(input: DaySummaryInput): DaySummary {
     wasteTotal,
     costOfGoodsSold,
     estimatedProfit: salesTotal - costOfGoodsSold - expensesTotal - wasteTotal,
-    expectedCash: openingCash + cash + cashDebtCollected - cashExpenses - cashPurchases,
+    withdrawalsTotal,
+    cashIn: cash + cashDebtCollected,
+    cashSpent: cashExpenses + cashPurchases,
+    cashWithdrawals,
+    expectedCash: openingCash + cash + cashDebtCollected - cashExpenses - cashPurchases - cashWithdrawals,
     profitIsPartial,
   };
 }

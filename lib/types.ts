@@ -34,6 +34,15 @@ export type WasteReason = 'imeoza' | 'imeibiwa' | 'imeharibika' | 'nyingine';
 export type SaleStatus = 'complete' | 'void';
 export type PaymentMethod = 'cash' | 'mpesa' | 'mixx' | 'airtel' | 'halopesa' | 'bank' | 'credit';
 export type PaymentDirection = 'in' | 'out';
+/**
+ * Where the money for a purchase or expense came from. Only 'cash' leaves the
+ * shop's tin; 'owner' is the owner paying from their own pocket, which never
+ * touches the shop's cash (and is not "working capital" to be verified).
+ */
+export type SpendMethod = PaymentMethod | 'owner';
+export const SPEND_SOURCES = ['cash', 'mpesa', 'bank', 'owner'] as const satisfies readonly SpendMethod[];
+/** Why the owner took money out of the business. Never a cost: profit is untouched. */
+export type WithdrawalPurpose = 'personal' | 'bank';
 export type ExpenseCategory =
   | 'nauli'
   | 'ushuru'
@@ -267,7 +276,7 @@ export interface Expense {
   businessId: string;
   category: ExpenseCategory;
   amount: number;
-  method: PaymentMethod;
+  method: SpendMethod;
   note?: string | null;
   createdBy?: string | null;
   clientCreatedAt: string;
@@ -281,7 +290,7 @@ export interface Purchase {
   supplierId?: string | null;
   total: number;
   paidAmount: number;
-  method: PaymentMethod;
+  method: SpendMethod;
   note?: string | null;
   createdBy?: string | null;
   clientCreatedAt: string;
@@ -328,6 +337,25 @@ export interface DayClosing {
   note?: string | null;
   createdBy?: string | null;
   createdAt: string;
+}
+
+/**
+ * Money the owner took out of the business: for themselves, or to the bank.
+ * It lowers the cash expected in the tin when taken from the tin ('cash'), and
+ * nothing else: not sales, not profit, never a TRA receipt.
+ */
+export interface OwnerWithdrawal {
+  id: string;
+  businessId: string;
+  amount: number;
+  method: 'cash' | 'mpesa' | 'bank';
+  purpose: WithdrawalPurpose;
+  note?: string | null;
+  createdBy?: string | null;
+  memberId?: string | null;
+  clientCreatedAt: string;
+  createdAt: string;
+  deletedAt?: string | null;
 }
 
 export type StockCountKind = 'check' | 'opening';

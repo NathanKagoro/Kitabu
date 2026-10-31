@@ -14,6 +14,8 @@ import { useToast } from '@/components/ui/toast';
 import { costPerUnit, LOOSE_PACK_ID, packChoices, packToUnits, unitMargin } from '@/lib/calc/packs';
 import { businessDay } from '@/lib/date';
 import { recordPurchase, type PurchaseLineInput } from '@/lib/local/actions';
+import { MoneySourcePicker } from '@/components/money-source-picker';
+import type { SpendMethod } from '@/lib/types';
 import { db } from '@/lib/local/db';
 import { loadRange, usePacks, useProducts } from '@/lib/local/queries';
 import { formatTZS, parseTZS } from '@/lib/money';
@@ -46,6 +48,7 @@ export default function PurchasesPage() {
   const [cost, setCost] = useState('');
   const [supplierId, setSupplierId] = useState('');
   const [paid, setPaid] = useState('');
+  const [method, setMethod] = useState<SpendMethod>('cash');
 
   const today = businessDay();
   const todays = useLiveQuery(
@@ -113,7 +116,7 @@ export default function PurchasesPage() {
   const save = async () => {
     if (!businessId || lines.length === 0) return;
     const paidAmount = show('suppliers') && paid.trim() ? Math.min(parseTZS(paid) ?? total, total) : total;
-    await recordPurchase({ businessId, userId, lines, supplierId: supplierId || null, paidAmount });
+    await recordPurchase({ businessId, userId, lines, supplierId: supplierId || null, paidAmount, method });
     toast(t('costUpdated'));
     setLines([]);
     setPaid('');
@@ -251,6 +254,7 @@ export default function PurchasesPage() {
                 )}
               </>
             )}
+            <MoneySourcePicker value={method} onChange={setMethod} />
             <Button size="xl" block onClick={() => void save()}>
               {tc('save')}
             </Button>

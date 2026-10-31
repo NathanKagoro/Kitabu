@@ -52,6 +52,8 @@ export const paymentMethod = pgEnum('payment_method', [
   'halopesa',
   'bank',
   'credit',
+  /** Purchases and expenses only: the owner paid from their own pocket, not the shop's money. */
+  'owner',
 ]);
 export const paymentDirection = pgEnum('payment_direction', ['in', 'out']);
 export const expenseCategory = pgEnum('expense_category', [
@@ -569,3 +571,30 @@ export const feedback = pgTable('feedback', {
   context: jsonb('context').$type<Record<string, unknown>>(),
   createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
 });
+
+/**
+ * Money the owner took out of the business, for themselves or to the bank.
+ * Lowers the cash expected in the tin (when taken as cash) and nothing else:
+ * it is not a cost, so profit is untouched, and it never becomes a receipt.
+ * Owners and managers only (RLS in 0009); never deleted, only soft-deleted.
+ */
+export const ownerWithdrawals = pgTable(
+  'owner_withdrawals',
+  {
+    id: uuid('id').primaryKey(),
+    syncedAt: timestamp('synced_at', { withTimezone: true }).defaultNow().notNull(),
+    businessId: uuid('business_id')
+      .notNull()
+      .references(() => businesses.id, { onDelete: 'cascade' }),
+    amount: money('amount').notNull(),
+    method: paymentMethod('method').notNull().default('cash'),
+    purpose: text('purpose').notNull().default('personal'),
+    note: text('note'),
+    createdBy: uuid('created_by'),
+    memberId: uuid('member_id'),
+    clientCreatedAt: timestamp('client_created_at', { withTimezone: true }).notNull(),
+    createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
+    deletedAt: timestamp('deleted_at', { withTimezone: true }),
+  },
+  (t) => [index('owner_withdrawals_time_idx').on(t.businessId, t.clientCreatedAt)]
+);
