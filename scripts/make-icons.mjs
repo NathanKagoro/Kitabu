@@ -15,7 +15,8 @@ const root = fileURLToPath(new URL('..', import.meta.url));
 const outDir = join(root, 'public', 'icons');
 mkdirSync(outDir, { recursive: true });
 
-const BRAND = [0x0f, 0x6b, 0x3f];
+// Daftari's build draws the same book in its notebook blue (lib/edition).
+const BRAND = process.env.NEXT_PUBLIC_EDITION === 'daftari' ? [0x1d, 0x5c, 0x8c] : [0x0f, 0x6b, 0x3f];
 const SPINE = [0xc9, 0xc2, 0xb4]; // page edges, the line colour from the app
 const PAPER = [0xfa, 0xf8, 0xf4];
 
