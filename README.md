@@ -8,6 +8,8 @@ A business app for Tanzanian shops (cosmetics, clothes, hardware, dukas, genges)
 
 Live demo (data stays in your browser): **https://nathankagoro.github.io/Kitabu/**, sign in with any Tanzanian mobile number and the setup code **KTAB-2468**.
 
+**Also builds Daftari**, the simple sales book for one-owner shops: `NEXT_PUBLIC_EDITION=daftari npm run build` (published from [NathanKagoro/Daftari](https://github.com/NathanKagoro/Daftari)).
+
 Deploying and setting up shops: [docs/DEPLOY.md](docs/DEPLOY.md) · TRA receipts: [docs/TRA.md](docs/TRA.md) · What's built: [docs/CHANGELOG.md](docs/CHANGELOG.md) · Original spec: [docs/MVP_SPEC.md](docs/MVP_SPEC.md)
 
 The code before Kitabu became a multi-shop template (Hesabu) is kept in [finance-trackers-legacy](https://github.com/NathanKagoro/finance-trackers-legacy/tree/hesabu-original).

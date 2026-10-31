@@ -11,6 +11,8 @@ Both modes are the **same app**. The business type chosen at onboarding decides 
 
 **Kitabu is a template.** One build serves many shops; an operator creates each shop and customises it. Everything that differs per shop lives in `lib/shop-config.ts` (presets per shop type: cosmetics, clothes, hardware, duka, genge, pharmacy, wholesale, services, other) and `businesses.settings` (colour, address, payment methods + Lipa Namba, feature on/off overrides). Never hard-code a per-shop choice in a screen: read it from `useApp()` (`show(feature)`, `business`) or the shop-config helpers.
 
+**Two products, one codebase.** `NEXT_PUBLIC_EDITION=daftari` builds Daftari (one owner, simple sales book; published from NathanKagoro/Daftari, whose workflow builds this repo); anything else builds Kitabu. Edition choices live in `lib/edition` and `DAFTARI_LEAVES_OUT` (lib/shop-config.ts); Daftari-only wording in `messages/daftari`. Never fork the maths per edition: both apps must compute the same numbers.
+
 Full product spec: `docs/MVP_SPEC.md`. Build order: `docs/BUILD_PLAN.md`. Read both before starting a phase.
 
 ## Non-negotiable product principles

@@ -1,5 +1,26 @@
 # Changelog
 
+## 0.7.0 — Daftari joins: one codebase, two products, one set of maths (2026-10-31)
+
+### Daftari is an edition of this code
+- `NEXT_PUBLIC_EDITION=daftari` builds Daftari (`lib/edition`); anything else builds Kitabu. The Daftari repo's workflow checks out this repo and builds it that way, so the two apps can't drift apart on maths.
+- **Daftari:** named Daftari, notebook blue (icons too), opens on **Leo**; tabs Leo, Mauzo, Manunuzi, Wateja, Zaidi. Staff, invoices, suppliers, VAT, TRA receipts, product codes and daily prices can't exist in a Daftari build, whatever the settings say.
+- **Leo:** the profit for today, this week, this month, last month, this year or all time as one big number, and one "Andika mauzo" button. Below: money owed, how the profit is worked out (folded), where the profit goes, and regulars due or late for their usual order with call and WhatsApp buttons.
+- **Mgawanyo wa faida:** the owner's split (tithe, reinvest, personal, savings, or their own), checked to add up to 100% and saved with the shop's settings.
+- Daftari's wording (`messages/daftari`) is swapped in only for the Daftari build; Kitabu's bundle is unchanged (209.7 KB).
+- The Daftari demo is a one-owner shop, Duka la Mama Asha.
+
+### The same maths in both
+- **Transport is part of what stock costs** (landed cost): a purchase can carry the trip's transport, shared over the lines by value in whole shillings and added to each product's cost (`spreadTransport`, `purchases.transport`, migration 0014). Daftari always worked this way; Kitabu now does too.
+- Daftari's own sums, now shared and tested: the profit split (`lib/calc/profit-split.ts`; reproduces the live Daftari's figures to the shilling), regular customers (`lib/calc/regulars.ts`), and periods with weeks from Monday (`lib/calc/periods.ts`).
+- Profit means the same in both: sales − cost of what was sold (fixed at the moment of sale, transport included) − expenses − losses. Daftari version 1 recalculated past profit whenever new stock was bought; this doesn't.
+
+### The console
+- The operator picks **Kitabu or Daftari** when creating a shop (`settings.edition`); the console counts each product's shops and labels every shop.
+
+### Tests
+271 unit and database tests, 4 end-to-end tests.
+
 ## 0.6.0 — shared foundations: honest cash, light and dark, icons, TRA-ready, the console (2026-10-31)
 
 Kitabu moved to its own repo (NathanKagoro/Kitabu); Hesabu and the first Daftari are in finance-trackers-legacy.
