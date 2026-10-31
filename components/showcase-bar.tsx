@@ -18,10 +18,10 @@ export function ShowcaseBar() {
   const on = useSyncExternalStore(noSubscribe, isShowcase, () => false);
   if (!on) return null;
   return (
-    <div className="flex min-h-10 items-center gap-2 bg-ink px-4 text-sm text-paper">
+    <div className="flex min-h-10 items-center gap-2 bg-accent px-4 text-sm font-semibold text-band">
       <span className="min-w-0 flex-1 truncate">{t('banner')}</span>
       <button
-        className="h-10 shrink-0 px-2 font-semibold underline"
+        className="h-8 shrink-0 rounded-full bg-band px-3 text-xs font-bold text-band-ink"
         onClick={() =>
           void (async () => {
             const { signOut } = await import('@/lib/auth/session');

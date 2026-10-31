@@ -9,7 +9,8 @@ import { useState } from 'react';
 
 import { useApp } from '@/components/app-provider';
 import { BarChart } from '@/components/summary/bar-chart';
-import { Badge, Money, PageHeader, Row } from '@/components/ui/bits';
+import { Money, PageHeader, Row } from '@/components/ui/bits';
+import { Segmented } from '@/components/ui/segmented';
 import { Button } from '@/components/ui/button';
 import { Keypad, parseKeypad } from '@/components/ui/keypad';
 import { Sheet } from '@/components/ui/sheet';
@@ -81,46 +82,45 @@ export default function SummaryPage() {
         back={false}
       />
 
-      <section className="card m-3 p-4">
-        <p className="text-sm font-medium text-ink-soft">{t('salesTotal')}</p>
-        <Money value={summary.salesTotal} symbol className="text-4xl font-bold tracking-tight" />
-        <p className="text-sm text-ink-soft">{t('salesCount', { count: summary.salesCount })}</p>
-
-        <div className="mt-3 grid grid-cols-3 gap-2 border-t border-line pt-3 text-center">
-          <div>
-            <p className="text-xs font-medium text-ink-soft">{t('cash')}</p>
-            <Money value={summary.cash} className="font-bold" />
-          </div>
-          <div>
-            <p className="text-xs font-medium text-ink-soft">{t('mobile')}</p>
-            <Money value={summary.mobile + summary.bank} className="font-bold" />
-          </div>
-          <div>
-            <p className="text-xs font-medium text-ink-soft">{t('credit')}</p>
-            <Money value={summary.credit} className="font-bold text-debt" />
-          </div>
+      {/* The day's takings: gold on black in Kitabu, the one loud thing on the screen. */}
+      <section className="m-3 overflow-hidden rounded-[14px] bg-band text-band-ink">
+        <div className="px-5 pt-4 pb-4">
+          <p className="font-label text-[15px] text-band-soft">{t('salesTotal')}</p>
+          <p className="mt-1 flex items-baseline gap-2">
+            <span className="font-label text-lg text-band-soft">TSh</span>
+            <Money value={summary.salesTotal} className="font-display text-[44px] leading-none text-accent" />
+          </p>
+          <p className="mt-1.5 text-sm text-band-soft">{t('salesCount', { count: summary.salesCount })}</p>
         </div>
-      </section>
-
-      <section className="card mx-3 mb-3 px-4 py-1">
-        <Row label={t('debtCollected')} value={<Money value={summary.debtCollected} signed />} tone="brand" />
-        <Row label={t('expenses')} value={<Money value={-summary.expensesTotal} />} tone="loss" />
-        <Row label={t('purchases')} value={<Money value={-summary.purchasesTotal} />} tone="soft" />
-        <Row label={t('waste')} value={<Money value={-summary.wasteTotal} />} tone="loss" />
-        {summary.withdrawalsTotal > 0 && can('withdrawCash') ? (
-          <Row label={t('withdrawals')} value={<Money value={-summary.withdrawalsTotal} />} tone="soft" />
-        ) : null}
+        <dl className="grid grid-cols-3 border-t border-band-line">
+          {[
+            { label: t('cash'), value: summary.cash },
+            { label: t('mobile'), value: summary.mobile + summary.bank },
+            { label: t('credit'), value: summary.credit },
+          ].map((item, i) => (
+            <div key={item.label} className={cn('px-3 py-3', i > 0 && 'border-l border-band-line')}>
+              <dt className="font-label text-[13px] text-band-soft">{item.label}</dt>
+              <dd>
+                <Money value={item.value} className="font-display text-xl" />
+              </dd>
+            </div>
+          ))}
+        </dl>
       </section>
 
       {can('viewProfit') && (
         <section className="card mx-3 mb-3 p-4">
-          <div className="flex items-center gap-2">
-            <p className="text-sm font-medium text-ink-soft">{t('profit')}</p>
-            <Badge tone="info">{t('profitEstimate')}</Badge>
+          <div className="flex items-baseline justify-between gap-3">
+            <h2 className="font-label text-[17px]">{t('profit')}</h2>
+            <span className="text-xs text-ink-faint">{t('profitEstimate')}</span>
           </div>
-          <Money value={summary.estimatedProfit} className={cn('text-3xl font-bold', summary.estimatedProfit < 0 ? 'text-loss' : 'text-brand')} />
-          <p className="mt-1 text-xs text-ink-faint">
-            {t('costOfGoods')}: {formatTZS(summary.costOfGoodsSold)}
+          <Money
+            value={summary.estimatedProfit}
+            symbol
+            className={cn('mt-1 block font-display text-[36px] leading-tight', summary.estimatedProfit < 0 ? 'text-loss' : 'text-brand')}
+          />
+          <p className="mt-1 text-sm text-ink-soft">
+            {t('costOfGoods')} <Money value={summary.costOfGoodsSold} className="font-semibold text-ink" />
           </p>
           {summary.profitIsPartial ? (
             <p className="mt-2 flex gap-1.5 text-xs text-ink-soft">
@@ -131,15 +131,37 @@ export default function SummaryPage() {
         </section>
       )}
 
+      <section className="card mx-3 mb-3 px-4 pt-3 pb-1">
+        <h2 className="font-label text-[17px]">{t('moneyMoves')}</h2>
+        <Row label={t('debtCollected')} value={<Money value={summary.debtCollected} signed />} tone="brand" />
+        <Row label={t('expenses')} value={<Money value={-summary.expensesTotal} />} tone="loss" />
+        <Row label={t('purchases')} value={<Money value={-summary.purchasesTotal} />} tone="soft" />
+        <Row label={t('waste')} value={<Money value={-summary.wasteTotal} />} tone="loss" />
+        {summary.withdrawalsTotal > 0 && can('withdrawCash') ? (
+          <Row label={t('withdrawals')} value={<Money value={-summary.withdrawalsTotal} />} tone="soft" />
+        ) : null}
+      </section>
+
       <section className="card mx-3 mb-3 p-4">
-        <p className="text-sm font-medium text-ink-soft">{t('expectedCash')}</p>
-        <Money value={summary.expectedCash} symbol className={cn('text-3xl font-bold', summary.expectedCash < 0 && 'text-loss')} />
+        <div className="flex items-start justify-between gap-3">
+          <h2 className="font-label text-[17px]">{t('expectedCash')}</h2>
+          {todayClose ? (
+            <span className="flex items-center gap-1 rounded-full bg-brand-tint px-2.5 py-1 text-xs font-semibold text-brand-dark">
+              <Lock size={12} />
+              {t('closed')}
+            </span>
+          ) : null}
+        </div>
+        <Money value={summary.expectedCash} symbol className={cn('mt-1 block font-display text-[36px] leading-tight', summary.expectedCash < 0 && 'text-loss')} />
         <div className="mt-2 border-t border-line">
           <Row label={t('openingCash')} value={<Money value={openingCash} />} tone="soft" />
           <Row label={t('cashIn')} value={<Money value={summary.cashIn} signed />} tone="brand" />
           <Row label={t('cashSpent')} value={<Money value={-summary.cashSpent} />} tone="loss" />
           {summary.cashWithdrawals > 0 ? (
             <Row label={t('withdrawals')} value={<Money value={-summary.cashWithdrawals} />} tone="soft" />
+          ) : null}
+          {todayClose ? (
+            <Row label={t('countedLabel')} value={<Money value={todayClose.countedCash} />} strong />
           ) : null}
         </div>
         {summary.expectedCash < 0 ? (
@@ -148,56 +170,76 @@ export default function SummaryPage() {
             {t('negativeCash')}
           </p>
         ) : null}
-        {todayClose ? (
-          <p className="mt-3 flex items-center gap-2 rounded-[10px] bg-brand-tint px-3 py-2 text-sm font-semibold text-brand-dark">
-            <Lock size={16} />
-            {t('closed')} · {formatTZS(todayClose.countedCash)} ({formatTZS(todayClose.difference, { signed: true })})
-          </p>
-        ) : null}
-        {can('closeDay') && (
-        <Button size="lg" block className="mt-3" variant={todayClose ? 'secondary' : 'primary'} onClick={() => { setCounted(todayClose ? String(todayClose.countedCash) : ''); setClosing(true); }}>
-          <Lock size={20} />
-          {t('closeDay')}
-        </Button>
-        )}
-        {can('withdrawCash') && (
-          <Button size="lg" block variant="secondary" className="mt-2" onClick={() => setWithdrawing(true)}>
-            {t('withdrawButton')}
-          </Button>
-        )}
+        <div className="mt-3 grid grid-cols-2 gap-2">
+          {can('closeDay') && (
+            <Button
+              size="lg"
+              variant={todayClose ? 'secondary' : 'primary'}
+              className={cn('whitespace-nowrap px-3', !can('withdrawCash') && 'col-span-2')}
+              onClick={() => {
+                setCounted(todayClose ? String(todayClose.countedCash) : '');
+                setClosing(true);
+              }}
+            >
+              <Lock size={18} />
+              {t('closeDay')}
+            </Button>
+          )}
+          {can('withdrawCash') && (
+            <Button size="lg" variant="secondary" className={cn(!can('closeDay') && 'col-span-2')} onClick={() => setWithdrawing(true)}>
+              {t('withdrawButton')}
+            </Button>
+          )}
+        </div>
       </section>
 
       <section className="card mx-3 mb-3 p-4">
-        <div className="mb-3 flex gap-2">
-          {([7, 30] as const).map((days) => (
-            <button
-              key={days}
-              onClick={() => setRange(days)}
-              className={cn('h-10 rounded-full border px-4 text-sm font-semibold', range === days ? 'border-brand bg-brand-tint text-brand-dark' : 'border-line-strong text-ink-soft')}
-            >
-              {days === 7 ? t('last7') : t('last30')}
-            </button>
-          ))}
+        <div className="mb-3 flex items-center justify-between gap-3">
+          <h2 className="font-label min-w-0 text-[17px] leading-tight">{t('salesByDay')}</h2>
+          <Segmented
+            className="w-40 shrink-0"
+            label={t('salesByDay')}
+            value={String(range) as '7' | '30'}
+            onChange={(v) => setRange(v === '7' ? 7 : 30)}
+            options={[
+              { value: '7', label: t('last7') },
+              { value: '30', label: t('last30') },
+            ]}
+          />
         </div>
         {history ? <BarChart points={history.points} today={today} /> : <div className="h-40" />}
-        <div className="mt-3 grid grid-cols-2 gap-2 text-sm">
+        <dl className="mt-3 grid grid-cols-2 gap-2 border-t border-line pt-3">
           <div>
-            <p className="text-ink-soft">{t('average')}</p>
-            <Money value={Math.round(total / range)} className="font-bold" />
+            <dt className="text-sm text-ink-soft">{t('average')}</dt>
+            <dd>
+              <Money value={Math.round(total / range)} className="font-display text-xl" />
+            </dd>
           </div>
           <div>
-            <p className="text-ink-soft">{t('best')}</p>
-            <Money value={best?.total ?? 0} className="font-bold" />
+            <dt className="text-sm text-ink-soft">{t('best')}</dt>
+            <dd>
+              <Money value={best?.total ?? 0} className="font-display text-xl" />
+            </dd>
           </div>
-        </div>
+        </dl>
       </section>
 
       {history && history.top.length > 0 && (
-        <section className="card mx-3 mb-3 px-4 py-2">
-          <h2 className="pt-2 pb-1 text-sm font-bold text-ink-soft">{t('topProducts')}</h2>
-          {history.top.map((p) => (
-            <Row key={p.productId} label={`${p.name} · ${formatQty(p.qty)}`} value={<Money value={p.total} />} />
-          ))}
+        <section className="card mx-3 mb-3 p-4">
+          <h2 className="font-label text-[17px]">{t('topProducts')}</h2>
+          {/* A ranking, so it is numbered. */}
+          <ol className="mt-2 divide-y divide-line">
+            {history.top.map((p, i) => (
+              <li key={p.productId} className="flex items-center gap-3 py-2.5">
+                <span className="w-5 font-display text-lg text-ink-faint">{i + 1}</span>
+                <span className="min-w-0 flex-1">
+                  <span className="block truncate font-semibold">{p.name}</span>
+                  <span className="text-xs text-ink-faint">{formatQty(p.qty)}</span>
+                </span>
+                <Money value={p.total} className="font-semibold" />
+              </li>
+            ))}
+          </ol>
         </section>
       )}
 

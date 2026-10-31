@@ -1,5 +1,25 @@
 # Changelog
 
+## 0.8.0 — Two looks, light by default, no product pictures (2026-11-01)
+
+### Kitabu and Daftari no longer look alike
+- **Kitabu** takes the old Daftari (Big Rabbit) look, cleaned up: a black band across the top and along the bottom tabs, a red rule under the header, gold for the active tab and the day's takings, and condensed display type (Anton for figures and titles, Barlow Condensed for labels; both bundled in `app/fonts`, about 40 KB, no outside requests).
+- **Daftari** is plain and calm: white header, notebook blue, the phone's own font. Its home figure sits on a ruled exercise-book page with a red margin line.
+- The look is set per edition in CSS (`html[data-edition]`); a shop's own colour still overrides the brand colour in both.
+
+### Light is the default
+- Both apps open in light mode. Dark, or following the phone, is still one tap away in Zaidi → Mwonekano.
+
+### Product pictures are gone
+- The drawn product icons are removed everywhere (sales grid, products, stock, losses, profit, prices, setup). Sales tiles are now text: name, price in large figures, unit and stock.
+
+### Tidier screens
+- **No sideways sliding.** Category chips are now one "Kundi" button that opens a sheet of large tiles (`CategoryPicker`, loaded on first open). Period, chart range, document kind and theme choices use one segmented control that wraps instead of truncating.
+- **Kitabu's Hesabu ya leo:** money in as a black hero card with cash, mobile and credit beneath; profit in large red figures; money in and out, the cash drawer, sales by day and best sellers as distinct cards.
+- **Daftari's Leo:** a coloured circle for money owed, a stacked bar for where the profit goes, initials and call and WhatsApp buttons for regulars.
+- The demo strip is shorter and no longer cut off.
+- Sales screen first load still 209.7 KB.
+
 ## 0.7.0 — Daftari joins: one codebase, two products, one set of maths (2026-10-31)
 
 ### Daftari is an edition of this code

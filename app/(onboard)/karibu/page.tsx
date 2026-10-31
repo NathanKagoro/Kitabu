@@ -18,7 +18,6 @@ import { STARTER_PRODUCTS, type StarterProduct } from '@/lib/onboarding/starter-
 import type { BusinessType } from '@/lib/types';
 import { useSetLocale } from '@/components/locale-provider';
 import { SHOP_TYPE_OPTIONS } from '@/components/shop-types';
-import { ProductIcon } from '@/components/products/product-icon';
 import { HOME } from '@/lib/edition';
 
 const TYPES = SHOP_TYPE_OPTIONS;
@@ -225,7 +224,6 @@ function OnboardingPage() {
                       : 'border-line bg-paper text-ink-faint line-through'
                   )}
                 >
-                  <ProductIcon icon={item.icon} size={20} />
                   <span className="min-w-0 flex-1">
                     {item.name}
                     {item.variant ? <span className="block text-xs font-normal text-ink-soft">{item.variant}</span> : null}

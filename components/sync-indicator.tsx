@@ -55,7 +55,7 @@ export function SyncIndicator({ className }: { className?: string }) {
 
   let icon = <Check size={16} />;
   let label = t('synced');
-  let tone = 'text-ink-faint';
+  let tone = 'text-band-soft';
 
   if (!isSupabaseConfigured()) {
     // Phone-only mode: everything is saved, and the queue is kept so that
@@ -69,7 +69,7 @@ export function SyncIndicator({ className }: { className?: string }) {
   } else if (state.status === 'syncing') {
     icon = <RefreshCw size={16} className="animate-spin" />;
     label = t('syncing');
-    tone = 'text-ink-soft';
+    tone = 'text-band-soft';
   } else if (state.status === 'error') {
     icon = <TriangleAlert size={16} />;
     label = t('pending', { count: pending });
@@ -77,7 +77,7 @@ export function SyncIndicator({ className }: { className?: string }) {
   } else if (pending > 0) {
     icon = <RefreshCw size={16} />;
     label = t('pending', { count: pending });
-    tone = 'text-ink-soft';
+    tone = 'text-band-soft';
   }
 
   return (

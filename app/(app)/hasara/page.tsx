@@ -16,7 +16,6 @@ import { recordWaste } from '@/lib/local/actions';
 import { loadRange, useProducts } from '@/lib/local/queries';
 import { allowsDecimals, formatQty } from '@/lib/units';
 import type { WasteReason } from '@/lib/types';
-import { ProductIcon } from '@/components/products/product-icon';
 
 const REASONS: WasteReason[] = ['imeoza', 'imeibiwa', 'imeharibika', 'nyingine'];
 
@@ -61,7 +60,6 @@ export default function WastePage() {
                 onClick={() => setProductId(p.id)}
                 className={cn('flex min-h-16 flex-col items-center justify-center rounded-[10px] border px-1 text-sm font-semibold', p.id === productId ? 'border-loss bg-loss-tint' : 'border-line bg-surface')}
               >
-                <ProductIcon icon={p.icon} size={20} tile={false} />
                 <span className="line-clamp-1">{productLabel(p)}</span>
               </button>
             ))}

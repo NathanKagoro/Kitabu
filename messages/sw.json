@@ -493,7 +493,9 @@
       "personal": "Matumizi yangu",
       "bank": "Kupeleka benki"
     },
-    "withdrawn": "Imehifadhiwa"
+    "withdrawn": "Imehifadhiwa",
+    "moneyMoves": "Pesa iliyoingia na kutoka",
+    "salesByDay": "Mauzo ya kila siku"
   },
   "documents": {
     "title": "Hati",
@@ -660,7 +662,7 @@
     "openingHint": "Duka la vifaa vya ujenzi lenye wiki mbili za mauzo. Mara ya kwanza huchukua sekunde chache.",
     "failed": "Imeshindikana kufungua duka la mfano.",
     "retry": "Jaribu tena",
-    "banner": "Duka la mfano: data hii ni ya kuonyesha tu",
+    "banner": "Duka la mfano, la kuangalia tu",
     "leave": "Toka"
   },
   "errors": {

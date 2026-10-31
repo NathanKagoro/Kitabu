@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import type { ReactNode } from 'react';
 
 import { cn } from '@/lib/cn';
+import { Band, BandTitle } from './band';
 import { formatTZS } from '@/lib/money';
 
 /** The one way money appears on screen. */
@@ -37,24 +38,23 @@ export function PageHeader({
 }) {
   const router = useRouter();
   return (
-    <header className="sticky top-0 z-30 border-b border-line bg-paper/95 backdrop-blur-[2px]">
-      <div className="flex items-center gap-1 px-2 py-2">
+    <Band>
+      <div className="flex min-h-14 items-center gap-1 px-2 py-2">
         {back && (
           <button
             onClick={() => router.back()}
             aria-label="Back"
-            className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full text-ink-soft active:bg-line/40"
+            className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full text-band-soft active:bg-band-line"
           >
             <ChevronLeft size={26} />
           </button>
         )}
-        <div className={cn('min-w-0 flex-1', !back && 'pl-2')}>
-          <h1 className="truncate text-lg leading-tight font-bold">{title}</h1>
-          {subtitle ? <p className="line-clamp-2 text-sm leading-snug text-ink-soft">{subtitle}</p> : null}
+        <div className={cn('flex min-w-0 flex-1', !back && 'pl-2')}>
+          <BandTitle title={title} subtitle={subtitle} />
         </div>
-        {action}
+        {action ? <div className="band-action flex shrink-0 items-center">{action}</div> : null}
       </div>
-    </header>
+    </Band>
   );
 }
 

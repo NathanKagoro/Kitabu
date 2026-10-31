@@ -16,5 +16,5 @@ export const APP_TAGLINE = IS_DAFTARI ? 'Daftari lako la mauzo, mkononi' : 'Bias
 /** Where the app opens after sign-in: Daftari's summary, Kitabu's till. */
 export const HOME = IS_DAFTARI ? '/leo' : '/mauzo';
 
-/** A shop with no colour of its own: Kitabu green, Daftari notebook blue. */
-export const EDITION_BRAND = IS_DAFTARI ? '#1d5c8c' : '#0f6b3f';
+/** A shop with no colour of its own: Kitabu red (the first Daftari's), Daftari notebook blue. */
+export const EDITION_BRAND = IS_DAFTARI ? '#1d5c8c' : '#c8211e';

@@ -9,17 +9,13 @@ import { useApp } from '@/components/app-provider';
 import { OptionGrid } from '@/components/ui/bits';
 import { Button } from '@/components/ui/button';
 import { AmountInput, Field, TextInput } from '@/components/ui/field';
-import { cn } from '@/lib/cn';
 import { parseTZS } from '@/lib/money';
-import { iconsFor } from '@/lib/onboarding/starter-products';
-import { DEFAULT_PRODUCT_ICON, productIconKey } from '@/lib/product-icons';
 import { PRODUCT_UNITS } from '@/lib/units';
 import { useProducts } from '@/lib/local/queries';
 import { categoriesOf } from '@/lib/products';
 import { presetOf, type ProductField } from '@/lib/shop-config';
 import type { Product, ProductPack, ProductUnit, VatType } from '@/lib/types';
 import { PackEditor, type PackDraft } from './pack-editor';
-import { ProductIcon } from '@/components/products/product-icon';
 
 export interface ProductDraft {
   packs: PackDraft[];
@@ -60,7 +56,7 @@ export function draftFrom(
     cost: product?.cost ?? null,
     trackStock: product?.trackStock ?? defaults.trackStock ?? false,
     lowStockLevel: product?.lowStockLevel ?? null,
-    icon: productIconKey(product?.icon ?? defaults.icon ?? DEFAULT_PRODUCT_ICON),
+    icon: product?.icon ?? defaults.icon ?? null,
     sku: product?.sku ?? null,
     barcode: product?.barcode ?? null,
     category: product?.category ?? null,
@@ -150,26 +146,6 @@ export function ProductForm({
           )}
         </Field>
       )}
-
-      <div className="space-y-1.5">
-        <p className="text-sm font-semibold text-ink-soft">{t('iconLabel')}</p>
-        <div className="flex flex-wrap gap-1.5">
-          {iconsFor(business?.type).slice(0, 36).map((icon) => (
-            <button
-              key={icon}
-              onClick={() => set('icon', icon)}
-              aria-pressed={productIconKey(draft.icon) === icon}
-              aria-label={icon}
-              className={cn(
-                'flex h-12 w-12 items-center justify-center rounded-[10px] border',
-                productIconKey(draft.icon) === icon ? 'border-brand bg-brand-tint text-brand-dark' : 'border-line bg-surface text-ink-soft'
-              )}
-            >
-              <ProductIcon icon={icon} size={24} tile={false} className="text-current" />
-            </button>
-          ))}
-        </div>
-      </div>
 
       <div className="space-y-1.5">
         <p className="text-sm font-semibold text-ink-soft">{t('unitLabel')}</p>

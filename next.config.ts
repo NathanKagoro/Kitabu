@@ -33,8 +33,6 @@ const withSerwist = withSerwistInit({
   // ones a trader opens so the installed app opens with no signal from day one.
   additionalPrecacheEntries: [
     '/', '/ingia/', '/mauzo/', '/manunuzi/', '/madeni/', '/hesabu/', '/zaidi/', '/bei/', '/offline/',
-    // Every product picture, in one file (scripts/make-product-sprite.mjs).
-    '/product-icons.svg',
   ].map((url) => ({ url: `${basePath}${url}`, revision: process.env.GITHUB_SHA ?? String(Date.now()) })),
 });
 

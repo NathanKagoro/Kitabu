@@ -15,13 +15,14 @@ import type { Business, BusinessSettings, BusinessType, PaymentMethod, ProductUn
  *   - Features    -> per-shop on/off overrides on top of the preset.
  */
 
-/** The stylesheet's own green (app/globals.css). A shop with no colour gets its edition's (EDITION_BRAND). */
-export const DEFAULT_BRAND = '#0f6b3f';
+/** The edition's own colour, which the stylesheet already holds (app/globals.css). */
+export const DEFAULT_BRAND = EDITION_BRAND;
 
 /** Colours offered in the picker: all hold up in sunlight against white text. */
 export const BRAND_COLOURS = [
-  '#0f6b3f', // Kitabu green
-  '#1c5c8a', // blue
+  '#c8211e', // Kitabu red
+  '#1d5c8c', // Daftari blue
+  '#0f6b3f', // green
   '#6b2fa3', // purple
   '#b0225f', // berry (cosmetics shops like this one)
   '#a32020', // red

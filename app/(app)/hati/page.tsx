@@ -8,9 +8,9 @@ import { useState } from 'react';
 
 import { useApp } from '@/components/app-provider';
 import { Badge, EmptyState, Money, PageHeader } from '@/components/ui/bits';
-import { cn } from '@/lib/cn';
 import { db } from '@/lib/local/db';
 import type { DocumentKind } from '@/lib/types';
+import { Segmented } from '@/components/ui/segmented';
 
 const KINDS: DocumentKind[] = ['proforma', 'delivery_note', 'invoice'];
 
@@ -38,16 +38,8 @@ export default function DocumentsPage() {
           </Link>
         }
       />
-      <div className="flex gap-2 overflow-x-auto px-3 py-3">
-        {KINDS.map((k) => (
-          <button
-            key={k}
-            onClick={() => setKind(k)}
-            className={cn('h-11 shrink-0 rounded-full border px-4 text-sm font-semibold', k === kind ? 'border-brand bg-brand-tint text-brand-dark' : 'border-line-strong text-ink-soft')}
-          >
-            {t(k)}
-          </button>
-        ))}
+      <div className="px-3 py-3">
+        <Segmented label={t('title')} value={kind} onChange={setKind} options={KINDS.map((k) => ({ value: k, label: t(k) }))} />
       </div>
       {rows && rows.length === 0 ? <EmptyState icon={<FileText size={44} />} title={t('empty')} /> : null}
       <ul className="divide-y divide-line">

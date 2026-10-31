@@ -14,7 +14,6 @@ import { db } from '@/lib/local/db';
 import { loadRange } from '@/lib/local/queries';
 import { formatTZS } from '@/lib/money';
 import { formatQty } from '@/lib/units';
-import { ProductIcon } from '@/components/products/product-icon';
 
 /**
  * Which products actually earn. A daily total says whether today was good;
@@ -85,7 +84,6 @@ export default function ProfitPage() {
               return (
                 <li key={line.productId} className="card p-3.5">
                   <div className="flex items-start gap-2.5">
-                    <ProductIcon icon={line.icon} size={20} />
                     <div className="min-w-0 flex-1">
                       <p className="truncate font-bold">{line.name}</p>
                       <p className="text-xs text-ink-faint">

@@ -493,7 +493,9 @@
       "personal": "For me",
       "bank": "To the bank"
     },
-    "withdrawn": "Saved"
+    "withdrawn": "Saved",
+    "moneyMoves": "Money in and out",
+    "salesByDay": "Sales by day"
   },
   "documents": {
     "title": "Documents",
@@ -660,7 +662,7 @@
     "openingHint": "A hardware shop with two weeks of trading. The first time takes a few seconds.",
     "failed": "Could not open the sample shop.",
     "retry": "Try again",
-    "banner": "Sample shop: this data is for showing only",
+    "banner": "Sample shop, for viewing only",
     "leave": "Leave"
   },
   "errors": {

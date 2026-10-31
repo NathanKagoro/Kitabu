@@ -21,7 +21,7 @@ describe('one codebase, two products', () => {
     expect(edition.HOME).toBe('/mauzo');
     expect(config.shopHasFeature(shop, 'staff')).toBe(true);
     expect(config.shopHasFeature(shop, 'traReceipts')).toBe(true);
-    expect(config.brandColorOf({ settings: {} })).toBe('#0f6b3f');
+    expect(config.brandColorOf({ settings: {} })).toBe('#c8211e');
   });
 
   it('Daftari leaves out staff, invoices and TRA receipts whatever the settings say, and opens on Leo', async () => {

@@ -66,6 +66,15 @@
       "message": "Habari {name}, ni {shop}. Tuna mzigo mpya, tukuwekee oda yako ya kawaida?"
     },
     "unpaid": "Bado hawajalipa",
-    "seeAll": "Ona wote"
+    "seeAll": "Ona wote",
+    "profitFor": {
+      "today": "Faida ya leo",
+      "week": "Faida ya wiki hii",
+      "month": "Faida ya mwezi huu",
+      "lastMonth": "Faida ya mwezi uliopita",
+      "year": "Faida ya mwaka huu",
+      "all": "Faida tangu mwanzo"
+    },
+    "owedPeople": "{count, plural, one {mteja 1} other {wateja #}}"
   }
 }

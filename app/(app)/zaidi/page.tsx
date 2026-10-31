@@ -98,7 +98,7 @@ export default function MorePage() {
         if (items.length === 0) return null;
         return (
           <section key={section.title} className="px-3 pt-4">
-            <h2 className="px-1 pb-1.5 text-sm font-bold text-ink-soft">{section.title}</h2>
+            <h2 className="font-label px-1 pb-1.5 text-[15px] font-bold text-ink-soft">{section.title}</h2>
             <ul className="card divide-y divide-line overflow-hidden">
               {items.map((item) => (
                 <li key={item.href}>

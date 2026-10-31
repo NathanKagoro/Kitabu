@@ -19,6 +19,7 @@ import { useSyncState } from '@/components/sync-indicator';
 import { useProducts, useStock } from '@/lib/local/queries';
 import { categoriesOf, groupByCategory, matchesQuery, productLabel } from '@/lib/products';
 import { formatQty } from '@/lib/units';
+import { CategoryPicker } from '@/components/pos/category-picker';
 
 /**
  * Count a shelf. Pick a category (or everything), type what is actually there,
@@ -176,21 +177,7 @@ export default function CountPage() {
           </div>
         )}
         {categories.length > 1 && (
-          <div className="flex gap-2 overflow-x-auto pb-0.5" role="group" aria-label={t('shelf')}>
-            {[null, ...categories].map((name) => (
-              <button
-                key={name ?? '__all'}
-                onClick={() => setCategory(name)}
-                aria-pressed={category === name}
-                className={cn(
-                  'h-10 shrink-0 rounded-full border px-3.5 text-sm font-semibold whitespace-nowrap',
-                  category === name ? 'border-brand bg-brand text-on-fill' : 'border-line-strong bg-surface text-ink-soft'
-                )}
-              >
-                {name ?? tc('all')}
-              </button>
-            ))}
-          </div>
+          <CategoryPicker categories={categories} value={category} onChange={setCategory} />
         )}
       </div>
 

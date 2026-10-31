@@ -66,6 +66,15 @@
       "message": "Hello {name}, it's {shop}. Fresh stock is in. Shall we put your usual order aside?"
     },
     "unpaid": "Not paid yet",
-    "seeAll": "See all"
+    "seeAll": "See all",
+    "profitFor": {
+      "today": "Today's profit",
+      "week": "Profit this week",
+      "month": "Profit this month",
+      "lastMonth": "Profit last month",
+      "year": "Profit this year",
+      "all": "Profit since the start"
+    },
+    "owedPeople": "{count, plural, one {1 customer} other {# customers}}"
   }
 }

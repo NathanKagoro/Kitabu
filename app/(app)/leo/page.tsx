@@ -2,14 +2,16 @@
 
 import { useLiveQuery } from 'dexie-react-hooks';
 import Link from 'next/link';
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
 
 import { useApp } from '@/components/app-provider';
 import { ShopLogo } from '@/components/brand/shop-logo';
-import { ChevronRight, MessageCircle, Smartphone, Wallet } from '@/components/icons';
+import { ChevronDown, ChevronRight, HandCoins, MessageCircle, Phone, Wallet } from '@/components/icons';
 import { SyncIndicator } from '@/components/sync-indicator';
-import { Badge, Money, Row } from '@/components/ui/bits';
+import { Band, BandTitle } from '@/components/ui/band';
+import { Money, Row } from '@/components/ui/bits';
+import { Segmented } from '@/components/ui/segmented';
 import { periodRange, type Period } from '@/lib/calc/periods';
 import { splitOf, splitProfit } from '@/lib/calc/profit-split';
 import { regularStats } from '@/lib/calc/regulars';
@@ -40,6 +42,7 @@ function savedPeriod(): Period {
  */
 export default function LeoPage() {
   const t = useTranslations('daftari');
+  const locale = useLocale();
   const { business, businessId } = useApp();
   const [period, setPeriodState] = useState<Period>('today');
   useEffect(() => {
@@ -89,137 +92,176 @@ export default function LeoPage() {
   const buckets = splitOf(business?.settings.profitSplit);
   const shares = splitProfit(profit, buckets);
 
+  const owedCount = customers?.filter((c) => c.balance > 0).length ?? 0;
+  const dateLine = new Date().toLocaleDateString(locale === 'en' ? 'en-GB' : 'sw-TZ', {
+    weekday: 'long',
+    day: 'numeric',
+    month: 'long',
+    timeZone: 'Africa/Dar_es_Salaam',
+  });
+
   return (
     <>
-      <header className="sticky top-0 z-30 border-b border-line bg-paper">
-        <div className="flex items-center gap-2 py-1.5 pr-1 pl-4">
-          <ShopLogo src={business?.settings.logoUrl} size={32} />
-          <h1 className="min-w-0 flex-1 truncate text-lg font-bold">{business?.name ?? t('title')}</h1>
-          <SyncIndicator />
+      <Band>
+        <div className="flex min-h-14 items-center gap-2 py-1.5 pr-1 pl-4">
+          <ShopLogo src={business?.settings.logoUrl} size={36} />
+          <BandTitle title={business?.name ?? t('title')} subtitle={dateLine} />
+          <div className="band-action flex shrink-0 items-center">
+            <SyncIndicator />
+          </div>
         </div>
-      </header>
+      </Band>
 
-      <div className="flex gap-2 overflow-x-auto px-3 pt-3 pb-1" role="tablist" aria-label={t('title')}>
-        {PERIODS.map((p) => (
-          <button
-            key={p}
-            role="tab"
-            aria-selected={period === p}
-            onClick={() => setPeriod(p)}
-            className={cn(
-              'h-10 shrink-0 rounded-full border px-4 text-sm font-semibold',
-              period === p ? 'border-brand bg-brand-tint text-brand-dark' : 'border-line-strong bg-surface text-ink-soft'
-            )}
-          >
-            {t(`periods.${p}`)}
-          </button>
-        ))}
+      <div className="px-3 pt-3">
+        <Segmented
+          label={t('title')}
+          columns={3}
+          value={period}
+          onChange={setPeriod}
+          options={PERIODS.map((p) => ({ value: p, label: t(`periods.${p}`) }))}
+        />
       </div>
 
-      <section className="card m-3 p-5">
-        <p className="text-sm font-semibold text-ink-soft">{t('profit')}</p>
+      {/* The exercise-book page: the one figure that matters, written on ruled lines. */}
+      <section className="page-ruled mx-3 mt-3 overflow-hidden rounded-[14px] border border-line pt-3 pr-4 pb-4 pl-11">
+        <p className="leading-8 font-semibold text-ink-soft">{t(`profitFor.${period}`)}</p>
         <Money
           value={profit}
           symbol
-          className={cn('block text-5xl leading-tight font-bold tracking-tight', profit < 0 ? 'text-loss' : 'text-brand')}
+          className={cn('block text-[44px] leading-[64px] font-bold tracking-tight', profit < 0 ? 'text-loss' : 'text-ink')}
         />
-        <p className="mt-1 text-sm text-ink-soft">
-          {t('sales')}: <Money value={summary?.salesTotal ?? 0} /> · {t('salesCount', { count: summary?.salesCount ?? 0 })}
+        <p className="leading-8 text-ink-soft">
+          {t('sales')} <Money value={summary?.salesTotal ?? 0} symbol className="font-semibold text-ink" />
         </p>
+        <p className="leading-8 text-ink-soft">{t('salesCount', { count: summary?.salesCount ?? 0 })}</p>
+      </section>
+
+      <div className="px-3 pt-3">
         <Link
           href="/mauzo"
-          className="mt-4 flex h-16 w-full items-center justify-center gap-2 rounded-[12px] bg-brand text-xl font-bold text-on-fill active:bg-brand-dark"
+          className="flex h-16 w-full items-center justify-center gap-2 rounded-[14px] bg-brand text-xl font-bold text-on-fill active:bg-brand-dark"
         >
           <Wallet size={24} />
           {t('sell')}
         </Link>
-      </section>
+      </div>
 
-      <Link href="/madeni" className="card mx-3 mb-3 flex min-h-14 items-center gap-3 px-4 py-3 active:bg-paper">
-        <span className="flex-1">
-          <span className="block text-sm font-semibold text-ink-soft">{t('owed')}</span>
-          {owed > 0 ? <Money value={owed} symbol className="text-xl font-bold text-debt" /> : <span className="font-semibold">{t('owedNone')}</span>}
+      <Link href="/madeni" className="card mx-3 mt-3 flex items-center gap-3 p-4 active:bg-paper">
+        <span
+          className={cn(
+            'flex h-11 w-11 shrink-0 items-center justify-center rounded-full',
+            owed > 0 ? 'bg-debt-tint text-debt' : 'bg-brand-tint text-brand-dark'
+          )}
+        >
+          <HandCoins size={22} />
+        </span>
+        <span className="min-w-0 flex-1">
+          <span className="block text-sm text-ink-soft">{t('owed')}</span>
+          {owed > 0 ? (
+            <span className="block">
+              <Money value={owed} symbol className="text-xl font-bold text-debt" />
+              <span className="ml-2 text-sm text-ink-faint">{t('owedPeople', { count: owedCount })}</span>
+            </span>
+          ) : (
+            <span className="block font-semibold">{t('owedNone')}</span>
+          )}
         </span>
         <ChevronRight size={20} className="text-ink-faint" />
       </Link>
 
       {summary ? (
-        <details className="card mx-3 mb-3 px-4 py-1">
-          <summary className="flex min-h-12 cursor-pointer items-center font-semibold">{t('howWorked')}</summary>
-          <Row label={t('sales')} value={<Money value={summary.salesTotal} />} />
-          <Row label={t('costOfGoods')} value={<Money value={-summary.costOfGoodsSold} />} tone="loss" />
-          <Row label={t('expenses')} value={<Money value={-summary.expensesTotal} />} tone="loss" />
-          <Row label={t('losses')} value={<Money value={-summary.wasteTotal} />} tone="loss" />
-          <Row label={t('profit')} value={<Money value={summary.estimatedProfit} />} strong />
+        <details className="card group mx-3 mt-3 px-4">
+          <summary className="flex min-h-14 cursor-pointer list-none items-center justify-between gap-2 font-semibold [&::-webkit-details-marker]:hidden">
+            {t('howWorked')}
+            <ChevronDown size={20} className="text-ink-faint transition-transform group-open:rotate-180" />
+          </summary>
+          <div className="border-t border-line pb-1">
+            <Row label={t('sales')} value={<Money value={summary.salesTotal} />} />
+            <Row label={t('costOfGoods')} value={<Money value={-summary.costOfGoodsSold} />} tone="loss" />
+            <Row label={t('expenses')} value={<Money value={-summary.expensesTotal} />} tone="loss" />
+            <Row label={t('losses')} value={<Money value={-summary.wasteTotal} />} tone="loss" />
+            <Row label={t('profit')} value={<Money value={summary.estimatedProfit} />} strong />
+          </div>
         </details>
       ) : null}
 
-      <section className="card mx-3 mb-3 p-4">
-        <div className="mb-2 flex items-center justify-between gap-2">
-          <h2 className="font-bold">{t('split.title')}</h2>
-          <Link href="/leo/mgawanyo" className="text-sm font-semibold text-brand">
+      <section className="card mx-3 mt-3 p-4">
+        <div className="flex items-center justify-between gap-2">
+          <h2 className="text-[17px] font-bold">{t('split.title')}</h2>
+          <Link href="/leo/mgawanyo" className="rounded-full border border-line-strong px-3 py-1.5 text-sm font-semibold text-brand">
             {t('split.change')}
           </Link>
         </div>
         {shares.length === 0 ? (
-          <p className="text-sm text-ink-soft">{t('split.none')}</p>
+          <p className="mt-2 text-sm text-ink-soft">{t('split.none')}</p>
         ) : (
-          <ul className="space-y-3">
-            {buckets.map((bucket) => {
-              const amount = shares.find((s) => s.id === bucket.id)?.amount ?? 0;
-              return (
-                <li key={bucket.id}>
-                  <div className="flex justify-between gap-3 text-sm">
-                    <span>
-                      {bucket.key ? t(`split.keys.${bucket.key}`) : bucket.label} <span className="text-ink-faint">{bucket.pct}%</span>
+          <>
+            {/* One bar, cut into the owner's shares. */}
+            <div className="mt-3 flex h-3 overflow-hidden rounded-full" aria-hidden>
+              {buckets.map((bucket, i) => (
+                <span key={bucket.id} style={{ width: `${bucket.pct}%`, background: shadeFor(i) }} />
+              ))}
+            </div>
+            <ul className="mt-3 divide-y divide-line">
+              {buckets.map((bucket, i) => {
+                const amount = shares.find((x) => x.id === bucket.id)?.amount ?? 0;
+                return (
+                  <li key={bucket.id} className="flex items-center gap-3 py-2.5">
+                    <span aria-hidden className="h-3 w-3 shrink-0 rounded-sm" style={{ background: shadeFor(i) }} />
+                    <span className="min-w-0 flex-1">
+                      <span className="block truncate font-semibold">{bucket.key ? t(`split.keys.${bucket.key}`) : bucket.label}</span>
+                      <span className="text-xs text-ink-faint">{bucket.pct}%</span>
                     </span>
-                    <Money value={amount} className="font-bold" />
-                  </div>
-                  <div className="mt-1 h-2 overflow-hidden rounded-full bg-line">
-                    <div className="h-full rounded-full bg-brand" style={{ width: `${Math.min(100, bucket.pct)}%` }} />
-                  </div>
-                </li>
-              );
-            })}
-          </ul>
+                    <Money value={amount} symbol className="font-bold" />
+                  </li>
+                );
+              })}
+            </ul>
+          </>
         )}
       </section>
 
-      <section className="card mx-3 mb-6 p-4">
-        <h2 className="font-bold">{t('regulars.title')}</h2>
-        <p className="mb-2 text-sm text-ink-soft">{t('regulars.hint')}</p>
+      <section className="card mx-3 mt-3 mb-6 p-4">
+        <h2 className="text-[17px] font-bold">{t('regulars.title')}</h2>
+        <p className="text-sm text-ink-soft">{t('regulars.hint')}</p>
         {dueList.length === 0 ? (
-          <p className="text-sm text-ink-faint">{t('regulars.none')}</p>
+          <p className="mt-3 rounded-[10px] bg-paper px-3 py-3 text-sm text-ink-soft">{t('regulars.none')}</p>
         ) : (
-          <ul className="divide-y divide-line">
+          <ul className="mt-2 divide-y divide-line">
             {dueList.map(({ customer, stats }) => (
-              <li key={customer!.id} className="flex items-center gap-2 py-2.5">
+              <li key={customer!.id} className="flex items-center gap-3 py-3">
+                <span
+                  aria-hidden
+                  className={cn(
+                    'flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-sm font-bold',
+                    stats.due === 'late' ? 'bg-loss-tint text-loss' : 'bg-debt-tint text-debt'
+                  )}
+                >
+                  {initials(customer!.name)}
+                </span>
                 <span className="min-w-0 flex-1">
-                  <span className="flex items-center gap-2">
-                    <span className="truncate font-semibold">{customer!.name}</span>
-                    {stats.due === 'late' ? <Badge tone="loss">{t('regulars.late')}</Badge> : <Badge tone="debt">{t('regulars.due')}</Badge>}
-                  </span>
-                  <span className="block text-xs text-ink-faint">
-                    {t(`regulars.rhythm.${stats.rhythm}`)} · {t('regulars.lastBought', { days: stats.since ?? 0 })}
+                  <span className="block truncate font-semibold">{customer!.name}</span>
+                  <span className="block text-xs text-ink-soft">
+                    {stats.due === 'late' ? t('regulars.late') : t('regulars.due')}: {t('regulars.lastBought', { days: stats.since ?? 0 })}
                   </span>
                 </span>
                 {customer!.phone ? (
-                  <>
+                  <span className="flex gap-1.5">
                     <a
                       href={`tel:${customer!.phone}`}
                       aria-label={t('regulars.call')}
                       className="flex h-11 w-11 items-center justify-center rounded-full border border-line-strong text-ink-soft"
                     >
-                      <Smartphone size={20} />
+                      <Phone size={19} />
                     </a>
                     <a
                       href={whatsappLink(t('regulars.message', { name: customer!.name, shop: business?.name ?? '' }), customer!.phone)}
                       aria-label={t('regulars.whatsapp')}
-                      className="flex h-11 w-11 items-center justify-center rounded-full border border-brand text-brand"
+                      className="flex h-11 w-11 items-center justify-center rounded-full bg-brand text-on-fill"
                     >
-                      <MessageCircle size={20} />
+                      <MessageCircle size={19} />
                     </a>
-                  </>
+                  </span>
                 ) : null}
               </li>
             ))}
@@ -228,4 +270,19 @@ export default function LeoPage() {
       </section>
     </>
   );
+}
+
+/** Shares of the profit bar: the brand colour, lighter for each later share. */
+function shadeFor(index: number): string {
+  const strength = [100, 70, 45, 25, 15, 10][index] ?? 10;
+  return `color-mix(in srgb, var(--color-brand) ${strength}%, var(--color-surface))`;
+}
+
+function initials(name: string): string {
+  return name
+    .split(/\s+/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((w) => w[0]!.toUpperCase())
+    .join('');
 }

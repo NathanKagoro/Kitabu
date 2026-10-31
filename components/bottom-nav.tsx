@@ -36,7 +36,7 @@ export function BottomNav() {
   return (
     <nav
       aria-label={t('nav.more')}
-      className="fixed inset-x-0 bottom-0 z-40 border-t border-line bg-surface pb-[env(safe-area-inset-bottom,0px)]"
+      className="fixed inset-x-0 bottom-0 z-40 border-t border-band-line bg-band pb-[env(safe-area-inset-bottom,0px)]"
     >
       <ul className="mx-auto flex max-w-lg">
         {ITEMS.map(({ href, key, Icon }) => {
@@ -51,12 +51,21 @@ export function BottomNav() {
                 prefetch={false}
                 aria-current={active ? 'page' : undefined}
                 className={cn(
-                  'flex h-[68px] flex-col items-center justify-center gap-0.5 px-0.5',
-                  active ? 'text-brand' : 'text-ink-faint'
+                  'relative flex h-[68px] flex-col items-center justify-center gap-1 px-0.5',
+                  active ? (IS_DAFTARI ? 'text-brand' : 'text-accent') : 'text-band-soft'
                 )}
               >
-                <Icon size={23} strokeWidth={active ? 2.4 : 2} />
-                <span className={cn('text-[11px] leading-tight', active ? 'font-bold' : 'font-medium')}>
+                {/* Kitabu marks the open tab with a gold bar along the top edge; Daftari with a soft pill. */}
+                {active && !IS_DAFTARI ? <span aria-hidden className="absolute inset-x-3 top-0 h-[3px] rounded-b bg-accent" /> : null}
+                <span
+                  className={cn(
+                    'flex h-8 w-14 items-center justify-center rounded-full',
+                    active && IS_DAFTARI && 'bg-brand-tint'
+                  )}
+                >
+                  <Icon size={22} strokeWidth={active ? 2.4 : 2} />
+                </span>
+                <span className={cn('text-[11px] leading-none', IS_DAFTARI ? (active ? 'font-bold' : 'font-medium') : 'font-label text-[13px]')}>
                   {t(key)}
                 </span>
               </Link>

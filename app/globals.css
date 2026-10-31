@@ -5,9 +5,10 @@
  *   1. Readable in direct sunlight at a roadside stall. That rules out low
  *      contrast, thin weights, and shadows -- a shadow is invisible outdoors,
  *      so separation is done with real 1px lines.
- *   2. No webfont. A font file is 40-100KB of somebody's data bundle for zero
- *      functional gain; the system stack is already installed and renders
- *      Swahili perfectly.
+ *   2. Text in the phone's own font. Daftari uses no webfont at all. Kitabu,
+ *      the paid product, adds two small display faces (Anton for figures and
+ *      headings, Barlow Condensed for labels; ~41KB once, cached) because its
+ *      look is part of what shops pay for. Body text stays the system font.
  *   3. Thumb-sized targets. 48px is the floor, 56px for anything on the sales
  *      screen, which gets used at speed with one hand.
  */
@@ -40,6 +41,17 @@
   /* Text on a solid brand, loss or debt fill: white in light mode, near-black in dark. */
   --color-on-fill: #ffffff;
 
+  /* The frame around screens (Kitabu: warm black; Daftari: white) and its text. */
+  --color-band: #1a1714;
+  --color-band-ink: #f5f1ea;
+  --color-band-soft: #b9b1a7;
+  --color-band-line: #34302b;
+  /* Kitabu: gold for the day's takings on black. Daftari: its blue. */
+  --color-accent: #f2b705;
+  /* Daftari's exercise-book page. */
+  --color-margin: #d9534f;
+  --color-rule: #d4e1ec;
+
   --radius-card: 12px;
   --radius-control: 10px;
 
@@ -51,33 +63,12 @@
 }
 
 /*
- * Dark mode. Follows the phone unless the person picked one in Zaidi
- * (html[data-theme]). The surfaces are warm near-blacks, not pure black, and the
- * colours are lighter tones with dark text on fills -- white on a light green
- * would not read. The shop's own brand shades are set by <ThemeColor> for
- * whichever mode is showing (lib/color.ts keeps them at 4.5:1 or better).
+ * Light is the default; html[data-theme] says what is showing (lib/theme.ts,
+ * set before first paint by lib/theme-boot.ts). Dark surfaces are warm
+ * near-blacks with lighter colours and dark text on fills.
  */
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme='light']) {
-    color-scheme: dark;
-    --color-paper: #121411;
-    --color-surface: #1b1e1a;
-    --color-line: #2e322c;
-    --color-line-strong: #464b43;
-    --color-ink: #f1efe9;
-    --color-ink-soft: #bdb8ad;
-    --color-ink-faint: #8f8a7f;
-    --color-brand: #4cbf83;
-    --color-brand-dark: #a5e3c1;
-    --color-brand-tint: #1f3a2b;
-    --color-debt: #e8a957;
-    --color-debt-tint: #3a2c15;
-    --color-loss: #f08a84;
-    --color-loss-tint: #3d1f1d;
-    --color-info: #7db8e8;
-    --color-info-tint: #182b3b;
-    --color-on-fill: #10120f;
-  }
+:root[data-theme='light'] {
+  color-scheme: light;
 }
 
 :root[data-theme='dark'] {
@@ -101,8 +92,95 @@
   --color-on-fill: #10120f;
 }
 
-:root[data-theme='light'] {
-  color-scheme: light;
+/*
+ * Kitabu: the paid product, built on the first Daftari's look. A warm black
+ * band frames every screen (top and bottom), a stripe of the shop's colour
+ * runs under the top band, figures are set in Anton, labels in Barlow
+ * Condensed, and the day's takings show in gold on black. Default colour: the
+ * first Daftari's red. (lib/color.ts keeps every shade readable.)
+ */
+@font-face {
+  font-family: 'Anton';
+  src: url('./fonts/anton-400.woff2') format('woff2');
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Barlow Condensed';
+  src: url('./fonts/barlow-condensed-600.woff2') format('woff2');
+  font-weight: 600;
+  font-display: swap;
+}
+
+:root[data-edition='kitabu'] {
+  --color-band: #1a1714;
+  --color-band-ink: #f5f1ea;
+  --color-band-soft: #b9b1a7;
+  --color-band-line: #34302b;
+  --color-accent: #f2b705;
+  --color-paper: #f3f1ee;
+  --color-line: #e0dcd6;
+  --color-line-strong: #c8c1b8;
+  --color-brand: #c8211e;
+  --color-brand-dark: #901816;
+  --color-brand-tint: #f8e4e4;
+  --font-display: 'Anton', 'Arial Narrow', Impact, sans-serif;
+  --font-label: 'Barlow Condensed', 'Arial Narrow', system-ui, sans-serif;
+}
+:root[data-edition='kitabu'][data-theme='dark'] {
+  --color-band: #0d0b0a;
+  --color-band-line: #2a2622;
+  --color-paper: #141210;
+  --color-surface: #1d1a17;
+  --color-line: #322d28;
+  --color-line-strong: #4a443d;
+  --color-brand: #d75f5d;
+  --color-brand-dark: #e38f8e;
+  --color-brand-tint: #3d2a26;
+}
+
+/*
+ * Daftari: the simple sales book. Light, calm, the phone's own font, and the
+ * colour of a school exercise-book cover: notebook blue. Its one flourish is
+ * the main figure drawn on a ruled page with a red margin line (.page-ruled).
+ */
+:root[data-edition='daftari'] {
+  --color-band: #ffffff;
+  --color-band-ink: #17202b;
+  --color-band-soft: #5b6672;
+  --color-band-line: #dfe4ea;
+  --color-accent: #1d5c8c;
+  --color-paper: #f4f6f8;
+  --color-line: #dfe4ea;
+  --color-line-strong: #c3ccd6;
+  --color-ink: #17202b;
+  --color-ink-soft: #4b5663;
+  --color-ink-faint: #7a8591;
+  --color-brand: #1d5c8c;
+  --color-brand-dark: #154265;
+  --color-brand-tint: #e4ebf1;
+  --color-margin: #d9534f;
+  --color-rule: #d4e1ec;
+  --font-display: var(--font-sans);
+  --font-label: var(--font-sans);
+}
+:root[data-edition='daftari'][data-theme='dark'] {
+  --color-band: #1b1e1a;
+  --color-band-ink: #f1efe9;
+  --color-band-soft: #bdb8ad;
+  --color-band-line: #2e322c;
+  --color-accent: #8dadc5;
+  --color-paper: #121411;
+  --color-line: #2e322c;
+  --color-line-strong: #464b43;
+  --color-ink: #f1efe9;
+  --color-ink-soft: #bdb8ad;
+  --color-ink-faint: #8f8a7f;
+  --color-brand: #5c8aac;
+  --color-brand-dark: #8dadc5;
+  --color-brand-tint: #273134;
+  --color-margin: #b5524f;
+  --color-rule: #263039;
 }
 
 @layer base {
@@ -161,6 +239,48 @@
 }
 
 @layer components {
+  /* Figures and headings in the edition's display face (Anton in Kitabu). */
+  .font-display {
+    font-family: var(--font-display);
+    font-weight: 400;
+    letter-spacing: 0.01em;
+  }
+  /* Short labels in the edition's label face (Barlow Condensed in Kitabu). */
+  .font-label {
+    font-family: var(--font-label);
+    font-weight: 600;
+    letter-spacing: 0.02em;
+  }
+  :root[data-edition='daftari'] .font-display {
+    font-weight: 750;
+    letter-spacing: -0.02em;
+  }
+  :root[data-edition='daftari'] .font-label {
+    letter-spacing: 0;
+  }
+
+  /* The chosen option in a <Segmented> control. */
+  .seg-on {
+    background: var(--color-brand);
+    color: var(--color-on-fill);
+  }
+  :root[data-edition='kitabu'] .seg-on {
+    background: var(--color-band);
+    color: var(--color-accent);
+    font-family: var(--font-label);
+    font-size: 16px;
+    letter-spacing: 0.03em;
+  }
+
+  /* Daftari's exercise-book page: faint ruled lines and a red margin line. */
+  .page-ruled {
+    background-color: var(--color-surface);
+    background-image:
+      linear-gradient(90deg, transparent 27px, var(--color-margin) 27px, var(--color-margin) 29px, transparent 29px),
+      repeating-linear-gradient(180deg, transparent 0, transparent 31px, var(--color-rule) 31px, var(--color-rule) 32px);
+    background-position: 0 0, 0 20px;
+  }
+
   .card {
     background: var(--color-surface);
     border: 1px solid var(--color-line);
@@ -197,4 +317,17 @@
       opacity: 1;
     }
   }
+}
+
+/*
+ * Buttons placed on the band (header actions, the till's tools) take the
+ * band's colours. Unlayered on purpose: it must win over a button's own
+ * utility classes, which are written for the light page.
+ */
+.band-action :where(button:not(.band-keep), a:not(.band-keep)) {
+  color: var(--color-band-ink);
+  background-color: transparent;
+}
+.band-action :where(button, a):active {
+  background-color: var(--color-band-line);
 }

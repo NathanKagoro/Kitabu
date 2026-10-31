@@ -27,7 +27,8 @@ import { allowsDecimals, formatQty } from '@/lib/units';
 import type { Product } from '@/lib/types';
 import { categoriesOf, matchesQuery } from '@/lib/products';
 import { paymentMethodsOf } from '@/lib/shop-config';
-import { ProductIcon } from '@/components/products/product-icon';
+import { Band, BandTitle } from '@/components/ui/band';
+import { CategoryPicker } from '@/components/pos/category-picker';
 
 const SEARCH_THRESHOLD = 12;
 
@@ -144,18 +145,19 @@ export default function SalesPage() {
 
   return (
     <>
-      <header className="sticky top-0 z-30 border-b border-line bg-paper">
-        <div className="flex items-center gap-1 py-1.5 pr-1 pl-4">
+      <Band>
+        <div className="flex min-h-14 items-center gap-1 py-1.5 pr-1 pl-4">
           <ShopLogo src={business?.settings.logoUrl} size={32} className="mr-2 shrink-0 rounded-[8px] bg-white object-contain" />
-          <h1 className="min-w-0 flex-1 truncate text-lg font-bold">{business?.name ?? t('title')}</h1>
+          <BandTitle title={business?.name ?? t('title')} />
+          <div className="band-action flex shrink-0 items-center">
           {tillPeople.length > 1 && (
             // Who is selling: tap to hand the till to someone else (their PIN).
             <button
               onClick={() => setSwitching(true)}
               aria-label={tt('switchPerson')}
-              className="flex h-10 max-w-28 items-center gap-1 rounded-full border border-line-strong bg-surface px-2.5 text-sm font-semibold"
+              className="flex h-10 max-w-28 items-center gap-1 rounded-full border border-band-line px-2.5 text-sm font-semibold"
             >
-              <UserRound size={16} className="shrink-0 text-brand" />
+              <UserRound size={16} className="shrink-0" />
               <span className="truncate">{personName(member, '—')}</span>
             </button>
           )}
@@ -164,10 +166,11 @@ export default function SalesPage() {
             href="/mauzo/historia"
             prefetch={false}
             aria-label={t('todaySales')}
-            className="flex h-12 w-12 items-center justify-center rounded-full text-ink-soft active:bg-line/40"
+            className="flex h-12 w-12 items-center justify-center rounded-full"
           >
             <History size={22} />
           </Link>
+          </div>
         </div>
         {(show('quickAmountSale') || (products?.length ?? 0) > SEARCH_THRESHOLD) && (
           <div className="flex gap-2 px-3 pb-2.5">
@@ -185,7 +188,7 @@ export default function SalesPage() {
             {show('quickAmountSale') && (
               <Button
                 variant="secondary"
-                className={cn((products?.length ?? 0) <= SEARCH_THRESHOLD && 'flex-1')}
+                className={cn('border-band-line', (products?.length ?? 0) <= SEARCH_THRESHOLD && 'flex-1')}
                 onClick={() => setQuickOpen(true)}
               >
                 <Zap size={20} className="text-brand" />
@@ -194,23 +197,11 @@ export default function SalesPage() {
             )}
           </div>
         )}
-      </header>
+      </Band>
 
       {categories.length > 1 && (
-        <div className="flex gap-2 overflow-x-auto px-3 pt-3 pb-0.5" role="group" aria-label={tp('categoryLabel')}>
-          {[null, ...categories].map((name) => (
-            <button
-              key={name ?? '__all'}
-              onClick={() => setCategory(name)}
-              aria-pressed={category === name}
-              className={cn(
-                'h-10 shrink-0 rounded-full border px-3.5 text-sm font-semibold whitespace-nowrap',
-                category === name ? 'border-brand bg-brand text-on-fill' : 'border-line-strong bg-surface text-ink-soft'
-              )}
-            >
-              {name ?? tc('all')}
-            </button>
-          ))}
+        <div className="px-3 pt-3">
+          <CategoryPicker categories={categories} value={category} onChange={setCategory} />
         </div>
       )}
 
@@ -255,8 +246,8 @@ export default function SalesPage() {
                   addProduct(product);
                 }}
                 className={cn(
-                  'relative flex min-h-[104px] flex-col items-center justify-center gap-1 rounded-[12px] border px-1.5 py-2 text-center select-none',
-                  qty > 0 ? 'border-brand bg-brand-tint' : 'border-line bg-surface active:bg-paper'
+                  'relative flex min-h-[112px] flex-col justify-between gap-2 rounded-[12px] border p-2.5 text-left select-none',
+                  qty > 0 ? 'border-brand bg-brand-tint ring-1 ring-brand' : 'border-line bg-surface active:bg-paper'
                 )}
               >
                 {qty > 0 && (
@@ -264,20 +255,27 @@ export default function SalesPage() {
                     {formatQty(qty)}
                   </span>
                 )}
-                <ProductIcon icon={product.icon} size={26} tile={false} />
-                <span className="line-clamp-2 text-[15px] leading-tight font-semibold">{product.name}</span>
-                {product.variant ? (
-                  <span className="line-clamp-1 rounded-full bg-paper px-2 text-xs font-semibold text-ink-soft">{product.variant}</span>
-                ) : null}
-                <span className="tnum text-sm font-medium text-ink-soft">
-                  {product.price > 0 ? <Money value={product.price} /> : <span className="text-debt">{tc('price')}?</span>}
-                  <span className="text-ink-faint"> /{product.unit === 'custom' ? product.unitLabel ?? tp('unitsShort.custom') : tp(`unitsShort.${product.unit}`)}</span>
+                <span className="pr-6">
+                  <span className="line-clamp-3 text-[15px] leading-tight font-semibold break-words hyphens-auto">{product.name}</span>
+                  {product.variant ? <span className="mt-0.5 line-clamp-1 text-xs text-ink-soft">{product.variant}</span> : null}
                 </span>
-                {product.trackStock && show('stockTracking') && (
-                  <span className={cn('text-[11px] font-semibold', onHand <= 0 ? 'text-loss' : low ? 'text-debt' : 'text-ink-faint')}>
-                    {onHand <= 0 ? tp('outOfStock') : tp('inStock', { qty: formatQty(onHand) })}
+                <span>
+                  <span className="block leading-none">
+                    {product.price > 0 ? (
+                      <Money value={product.price} className="font-display text-lg" />
+                    ) : (
+                      <span className="text-sm font-semibold text-debt">{tc('price')}?</span>
+                    )}
+                    <span className="text-xs text-ink-faint">
+                      {' '}/{product.unit === 'custom' ? product.unitLabel ?? tp('unitsShort.custom') : tp(`unitsShort.${product.unit}`)}
+                    </span>
                   </span>
-                )}
+                  {product.trackStock && show('stockTracking') && (
+                    <span className={cn('mt-1 block text-[11px] font-semibold', onHand <= 0 ? 'text-loss' : low ? 'text-debt' : 'text-ink-faint')}>
+                      {onHand <= 0 ? tp('outOfStock') : tp('inStock', { qty: formatQty(onHand) })}
+                    </span>
+                  )}
+                </span>
               </button>
             );
           })}
