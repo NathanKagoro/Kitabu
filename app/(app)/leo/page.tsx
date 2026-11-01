@@ -17,7 +17,8 @@ import { splitOf, splitProfit } from '@/lib/calc/profit-split';
 import { regularStats } from '@/lib/calc/regulars';
 import { summariseDay } from '@/lib/calc/summary';
 import { cn } from '@/lib/cn';
-import { businessDay } from '@/lib/date';
+import { addDays, businessDay } from '@/lib/date';
+import { formatTZS } from '@/lib/money';
 import { db } from '@/lib/local/db';
 import { loadRange, useCustomers } from '@/lib/local/queries';
 import { whatsappLink } from '@/lib/receipt';
@@ -65,6 +66,12 @@ export default function LeoPage() {
     if (!businessId) return null;
     return summariseDay({ ...(await loadRange(businessId, range.start, range.end)), openingCash: 0 });
   }, [businessId, range.start, range.end]);
+
+  // The last seven days, for the summary the owner sends on WhatsApp (to themselves, a partner or a lender).
+  const week = useLiveQuery(async () => {
+    if (!businessId) return null;
+    return summariseDay({ ...(await loadRange(businessId, addDays(today, -6), today)), openingCash: 0 });
+  }, [businessId, today]);
 
   const customers = useCustomers(businessId);
   const owed = customers?.reduce((sum, c) => sum + Math.max(0, c.balance), 0) ?? 0;
@@ -194,6 +201,35 @@ export default function LeoPage() {
         </details>
       ) : null}
 
+      {week ? (
+        <a
+          href={whatsappLink(
+            t('weekly.message', {
+              shop: business?.name ?? '',
+              from: shortDate(addDays(today, -6), locale),
+              to: shortDate(today, locale),
+              sales: formatTZS(week.salesTotal, { symbol: true }),
+              count: week.salesCount,
+              profit: formatTZS(week.estimatedProfit, { symbol: true }),
+              expenses: formatTZS(week.expensesTotal, { symbol: true }),
+              owed: formatTZS(owed, { symbol: true }),
+            })
+          )}
+          target="_blank"
+          rel="noreferrer"
+          className="card mx-3 mt-3 flex items-center gap-3 p-4 active:bg-paper"
+        >
+          <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-brand-tint text-brand-dark">
+            <MessageCircle size={22} />
+          </span>
+          <span className="min-w-0 flex-1">
+            <span className="block font-semibold">{t('weekly.button')}</span>
+            <span className="block text-sm text-ink-soft">{t('weekly.hint')}</span>
+          </span>
+          <ChevronRight size={20} className="text-ink-faint" />
+        </a>
+      ) : null}
+
       <section className="card mx-3 mt-3 p-4">
         <div className="flex items-center justify-between gap-2">
           <h2 className="text-[17px] font-bold">{t('split.title')}</h2>
@@ -285,6 +321,11 @@ export default function LeoPage() {
 function shadeFor(index: number): string {
   const strength = [100, 70, 45, 25, 15, 10][index] ?? 10;
   return `color-mix(in srgb, var(--color-brand) ${strength}%, var(--color-surface))`;
+}
+
+/** "26 Okt": a date in the message, the way people write it. */
+function shortDate(day: string, locale: string): string {
+  return new Date(`${day}T12:00:00Z`).toLocaleDateString(locale === 'en' ? 'en-GB' : 'sw-TZ', { day: 'numeric', month: 'short', timeZone: 'UTC' });
 }
 
 function initials(name: string): string {

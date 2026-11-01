@@ -15,8 +15,8 @@ const root = fileURLToPath(new URL('..', import.meta.url));
 const outDir = join(root, 'public', 'icons');
 mkdirSync(outDir, { recursive: true });
 
-// Kitabu's petrol and Daftari's red (lib/edition EDITION_BRAND).
-const BRAND = process.env.NEXT_PUBLIC_EDITION === 'daftari' ? [0xc8, 0x21, 0x1e] : [0x0b, 0x55, 0x63];
+// Kitabu's navy and Daftari's red (lib/edition EDITION_BRAND).
+const BRAND = process.env.NEXT_PUBLIC_EDITION === 'daftari' ? [0xc8, 0x21, 0x1e] : [0x1b, 0x3a, 0x6b];
 const SPINE = [0xc9, 0xc2, 0xb4]; // page edges, the line colour from the app
 const PAPER = [0xfa, 0xf8, 0xf4];
 

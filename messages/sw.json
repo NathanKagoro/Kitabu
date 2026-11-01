@@ -41,6 +41,7 @@
     "perDay": "kwa siku"
   },
   "nav": {
+    "stock": "Stoo",
     "home": "Muhtasari",
     "sales": "Mauzo",
     "credit": "Madeni",
@@ -165,7 +166,9 @@
     "voidNotAllowed": "Huna ruhusa ya kubatilisha mauzo",
     "amountOnlyLabel": "Mauzo bila orodha",
     "payCash": "Lipa taslimu",
-    "otherPayment": "Njia nyingine"
+    "otherPayment": "Njia nyingine",
+    "wholesaleApplied": "Bei ya jumla",
+    "print": "Chapisha risiti"
   },
   "payment": {
     "title": "Malipo",
@@ -226,7 +229,8 @@
       "failed": "Haikutumwa TRA. Tutajaribu tena.",
       "verify": "Hakiki kwenye tovuti ya TRA",
       "demoNote": "Hii ni risiti ya mfano: haijatumwa TRA. Risiti halisi zitaanza duka likishasajiliwa."
-    }
+    },
+    "print": "Chapisha"
   },
   "products": {
     "title": "Bidhaa",
@@ -613,7 +617,8 @@
       "staff": "Wafanyakazi",
       "documents": "Ankara na proforma",
       "vat": "VAT na TIN",
-      "traReceipts": "Risiti za TRA"
+      "traReceipts": "Risiti za TRA",
+      "wholesalePrices": "Bei ya jumla"
     },
     "featureHints": {
       "stockTracking": "Hesabu kilichobaki, onyo kikikaribia kuisha",
@@ -626,7 +631,8 @@
       "staff": "Wafanyakazi wenye akaunti zao",
       "documents": "Ankara, proforma, delivery note",
       "vat": "Kodi ya VAT kwenye bei na risiti",
-      "traReceipts": "Kila mauzo yanapata risiti ya TRA. Ni za mfano mpaka duka lisajiliwe na TRA."
+      "traReceipts": "Kila mauzo yanapata risiti ya TRA. Ni za mfano mpaka duka lisajiliwe na TRA.",
+      "wholesalePrices": "Bei ya chini kwa anayenunua kwa wingi"
     }
   },
   "more": {
@@ -643,7 +649,8 @@
       "light": "Mwanga",
       "dark": "Giza"
     },
-    "admin": "Maduka yote"
+    "admin": "Maduka yote",
+    "stockCheckTitle": "Hesabu ya stoo"
   },
   "feedback": {
     "title": "Tuma maoni",
@@ -731,67 +738,6 @@
       "badPhone": "Namba ya simu si sahihi.",
       "server": "Kuna tatizo upande wa seva. Jaribu tena."
     }
-  },
-  "stockCheck": {
-    "title": "Hesabu ya stoo",
-    "subtitle": "Hesabu kilichopo rafuni, uone kilichopotea",
-    "neverCounted": "Bado hujahesabu stoo",
-    "lastCounted": "{days, plural, =0 {Umehesabu leo} one {Umehesabu jana} other {Umehesabu siku # zilizopita}}",
-    "dueHint": "Hesabu angalau kila siku {days}, ujue mapema kama kuna kinachopotea.",
-    "notDueHint": "Vizuri. Hesabu tena ukiona kitu hakiko sawa.",
-    "startCount": "Anza kuhesabu",
-    "noHistory": "Bado hakuna hesabu",
-    "noHistoryBody": "Ukihesabu rafu moja, utaona hapa kilichopungua na thamani yake.",
-    "history": "Hesabu zilizopita",
-    "itemsCounted": "{count, plural, one {bidhaa 1 imehesabiwa} other {bidhaa # zimehesabiwa}}",
-    "countTitle": "Hesabu rafu",
-    "countSubtitle": "Andika idadi uliyoikuta. Bidhaa usizoandika haziguswi.",
-    "search": "Tafuta bidhaa",
-    "shelf": "Rafu / kundi",
-    "noCategory": "Bila kundi",
-    "nothingTracked": "Hakuna bidhaa zinazohesabiwa stoo",
-    "nothingTrackedBody": "Washa \"Hesabu stoo\" kwenye bidhaa, au ingiza bidhaa kwa pamoja na idadi zake.",
-    "records": "Kumbukumbu: {qty}",
-    "missing": "Zimepungua {qty}",
-    "extra": "Zimezidi {qty}",
-    "matches": "Sawa",
-    "countedFor": "Idadi uliyokuta ya {name}",
-    "countedSoFar": "{count, plural, one {Bidhaa 1 imehesabiwa} other {Bidhaa # zimehesabiwa}}",
-    "shortSoFar": "Zimepungua {units}",
-    "allMatchSoFar": "Zote ziko sawa",
-    "finish": "Maliza na uone ripoti",
-    "reportTitle": "Ripoti ya stoo",
-    "notFound": "Ripoti hii haipo kwenye simu hii",
-    "countAnother": "Hesabu rafu nyingine",
-    "checkLead": "Hesabu ya stoo",
-    "openingLead": "Hesabu ya kwanza",
-    "headlineShort": "{units, plural, one {Bidhaa 1 imepotea} other {Bidhaa # zimepotea}}",
-    "headlineWorth": "yenye thamani ya",
-    "headlineNone": "Hakuna kilichopotea. Kila kitu kiko sawa.",
-    "atCost": "kwa bei uliyonunulia",
-    "atPrice": "kwa bei ya kuuza (gharama haijulikani)",
-    "wouldHaveSold": "ungeziuza {value}",
-    "statCounted": "Zimehesabiwa",
-    "statShortLines": "Zimepungua",
-    "statOverLines": "Zimezidi",
-    "noCostWarning": "{count, plural, one {Bidhaa 1 iliyopungua haina gharama, kwa hiyo haiko kwenye jumla.} other {Bidhaa # zilizopungua hazina gharama, kwa hiyo haziko kwenye jumla.}}",
-    "missingList": "Kilichopungua",
-    "expectedCounted": "Ilitakiwa {expected} · imekutwa {counted}",
-    "overList": "Zimezidi kumbukumbu",
-    "overHint": "Mara nyingi ni mzigo ulioingia bila kuandikwa. Stoo imesahihishwa.",
-    "recountNote": "Hesabu tena tarehe {date}. Hapo ndipo tutaona kilichopotea tangu leo.",
-    "share": "Tuma ripoti kwa WhatsApp",
-    "shareTitle": "Ripoti ya stoo – {shop} ({date})",
-    "shareCounted": "Bidhaa zilizohesabiwa: {count}",
-    "shareShort": "Zimepungua: {units} ({lines} aina), thamani {value}",
-    "shareNoneShort": "Hakuna kilichopungua.",
-    "shareLine": "zimepungua {qty}",
-    "shareRecount": "Tutahesabu tena tarehe {date}.",
-    "continueSetup": "Endelea: weka bei na anza kuuza",
-    "syncingFirst": "Inaleta mauzo ya simu nyingine kwanza...",
-    "notSynced": "Simu hii haijasawazishwa. Kama kuna simu nyingine dukani, ziwashe mtandao kwanza. Mauzo yatakayofika baadaye yatasahihisha ripoti.",
-    "syncedHint": "Mauzo ya simu zote zilizo na mtandao yameingia. Ya simu zisizo na mtandao yatasahihisha ripoti yakifika.",
-    "correctedNote": "{count, plural, one {Bidhaa 1 imesahihishwa: mauzo yaliyofanyika kabla ya kuhesabu yamefika baadaye, hayakupotea.} other {Bidhaa # zimesahihishwa: mauzo yaliyofanyika kabla ya kuhesabu yamefika baadaye, hayakupotea.}}"
   },
   "clients": {
     "title": "Wateja",

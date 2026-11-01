@@ -23,6 +23,10 @@ interface Props {
   onClose: () => void;
   onSave: (qty: number, unitPrice: number) => void;
   onRemove: () => void;
+  /** For a line still at a list price: the product's price at a quantity (wholesale from its minimum). */
+  priceAt?: (qty: number) => number;
+  /** The retail price, so the editor can say when wholesale applies. */
+  retail?: number;
 }
 
 export function LineEditor(props: Props) {
@@ -37,21 +41,29 @@ function Editor({
   onClose,
   onSave,
   onRemove,
+  priceAt,
+  retail,
 }: {
   line: CartLine;
   decimals: boolean;
   onClose: () => void;
   onSave: (qty: number, unitPrice: number) => void;
   onRemove: () => void;
+  priceAt?: (qty: number) => number;
+  retail?: number;
 }) {
   const t = useTranslations('sales');
   const tc = useTranslations('common');
   const [field, setField] = useState<'qty' | 'price'>(line.unitPrice === 0 ? 'price' : 'qty');
   const [qty, setQty] = useState(formatQty(line.qty));
-  const [price, setPrice] = useState(line.unitPrice ? String(line.unitPrice) : '');
+  const [typedPrice, setPrice] = useState<string | null>(null);
 
   const nextQty = parseKeypad(qty);
+  // Until the seller types a price, a list-priced line follows its quantity.
+  const followed = priceAt && nextQty > 0 ? priceAt(nextQty) : line.unitPrice;
+  const price = typedPrice ?? (followed ? String(followed) : '');
   const nextPrice = Math.round(parseKeypad(price));
+  const wholesale = typedPrice === null && retail != null && nextPrice > 0 && nextPrice < retail;
 
   return (
     <Sheet open onClose={onClose} title={line.description}>
@@ -68,6 +80,7 @@ function Editor({
             >
               <span className="block text-xs font-semibold text-ink-soft">
                 {key === 'qty' ? t('setQuantity') : t('priceOverride')}
+                {key === 'price' && wholesale ? <span className="ml-1.5 rounded-full bg-up/10 px-1.5 text-up">{t('wholesaleApplied')}</span> : null}
               </span>
               <span className="tnum block text-2xl font-bold">{key === 'qty' ? qty || '0' : price || '0'}</span>
             </button>

@@ -1,3 +1,4 @@
+import { priceFor } from './calc/pricing';
 import { summariseDay } from './calc/summary';
 import {
   closeDay,
@@ -78,6 +79,11 @@ const PACE: Partial<Record<BusinessType, { perDay: [number, number]; restock: [n
 /** What a customer pays off a debt at a time: a shop settling with its wholesaler pays far more than a neighbour at a duka. */
 const DEBT_INSTALMENT: Partial<Record<BusinessType, number>> = { wholesale: 50000, hardware: 20000, clothes: 10000 };
 
+const BULK_PRICE: Partial<Record<BusinessType, { off: number; from: number }>> = {
+  hardware: { off: 0.04, from: 10 },
+  wholesale: { off: 0.03, from: 5 },
+};
+
 function prng(seed: number) {
   let state = seed;
   return () => {
@@ -120,7 +126,18 @@ export async function createDemoBusiness(
   const priced: (Product & { starter: StarterProduct | undefined })[] = [];
   for (const product of products) {
     const starter = starters.get(keyOf(product));
-    const next = { ...product, price: starter?.price ?? 1000, trackStock: true, lowStockLevel: 3 };
+    const price = starter?.price ?? 1000;
+    // Hardware and wholesale shops give a bulk price: 4% off from 10 pieces, 3% off from 5 bags or cartons.
+    const bulk = BULK_PRICE[type];
+    const next = {
+      ...product,
+      price,
+      trackStock: true,
+      lowStockLevel: 3,
+      // Packaged goods carry barcodes, so the till's camera scan has something to find.
+      barcode: product.barcode ?? `620${String(priced.length + 1).padStart(10, '0')}`,
+      ...(bulk ? { wholesalePrice: Math.round((price * (1 - bulk.off)) / 100) * 100, wholesaleMinQty: bulk.from } : {}),
+    };
     await saveProduct(next);
     if (starter?.pack) await saveProductPacks({ businessId, productId: product.id, packs: [starter.pack] });
     priced.push({ ...next, starter });
@@ -201,12 +218,13 @@ export async function createDemoBusiness(
       const items = 1 + Math.floor(random() * 2);
       const lines = Array.from({ length: items }, () => {
         const p = pick(priced);
+        const qty = 1 + (random() < 0.25 ? 1 : 0) + (pace.bulk ? Math.floor(random() * pace.bulk) : 0);
         return {
           id: crypto.randomUUID(),
           productId: p.id,
           description: productLabel(p),
-          qty: 1 + (random() < 0.25 ? 1 : 0) + (pace.bulk ? Math.floor(random() * pace.bulk) : 0),
-          unitPrice: p.price,
+          qty,
+          unitPrice: priceFor(p, qty),
           unitCost: p.starter?.cost ?? null,
           vatType: p.vatType,
         };

@@ -60,7 +60,7 @@ export default function SummaryPage() {
     return { points, top: top.map((p, i) => ({ ...p, name: products[i] ? productLabel(products[i]) : '—' })) };
   }, [businessId, today, range]);
 
-  if (!data) return <PageHeader title={t('title')} back={false} />;
+  if (!data) return <PageHeader title={t('title')} />;
   const { summary, openingCash, todayClose } = data;
   const countedValue = Math.round(parseKeypad(counted));
   const difference = cashDifference(summary.expectedCash, countedValue);
@@ -79,7 +79,6 @@ export default function SummaryPage() {
       <PageHeader
         title={t('title')}
         subtitle={new Date().toLocaleDateString('sw-TZ', { weekday: 'long', day: 'numeric', month: 'long', timeZone: 'Africa/Dar_es_Salaam' })}
-        back={false}
       />
 
       {/* The day's takings: gold on black in Kitabu, the one loud thing on the screen. */}

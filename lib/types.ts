@@ -135,6 +135,9 @@ export interface Product {
   unitLabel?: string | null;
   price: number;
   cost?: number | null;
+  /** A lower unit price for bulk: applies when one sale line has at least wholesaleMinQty. */
+  wholesalePrice?: number | null;
+  wholesaleMinQty?: number | null;
   trackStock: boolean;
   lowStockLevel?: number | null;
   icon?: string | null;

@@ -76,6 +76,11 @@
       "year": "Profit this year",
       "all": "Profit since the start"
     },
-    "owedPeople": "{count, plural, one {1 customer} other {# customers}}"
+    "owedPeople": "{count, plural, one {1 customer} other {# customers}}",
+    "weekly": {
+      "button": "Send the week's summary",
+      "hint": "The last 7 days, on WhatsApp",
+      "message": "{shop}: summary of the last 7 days ({from} to {to})\nSales: {sales} ({count} sales)\nProfit: {profit}\nExpenses: {expenses}\nCustomers owe: {owed}\n\nFrom Daftari"
+    }
   }
 }

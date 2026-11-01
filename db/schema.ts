@@ -142,6 +142,9 @@ export const products = pgTable(
     unitLabel: text('unit_label'),
     price: money('price').notNull().default(0),
     cost: money('cost'),
+    /** A lower price per unit for buying in bulk, from wholesale_min_qty units on one line. */
+    wholesalePrice: money('wholesale_price'),
+    wholesaleMinQty: qtyCol('wholesale_min_qty'),
     trackStock: boolean('track_stock').notNull().default(false),
     lowStockLevel: qtyCol('low_stock_level'),
     icon: text('icon'),

@@ -1,3 +1,4 @@
+import { isListPrice, priceFor } from '../calc/pricing';
 import type { CartLine } from '../calc/sale';
 import { productLabel } from '../products';
 import type { Product } from '../types';
@@ -10,7 +11,8 @@ export interface CartState {
 
 export type CartAction =
   | { type: 'add'; product: Product; qty?: number; lineId?: string }
-  | { type: 'setQty'; lineId: string; qty: number }
+  /** With `product`, a line still at a list price is re-priced for the new quantity (wholesale from its minimum). */
+  | { type: 'setQty'; lineId: string; qty: number; product?: Product }
   | { type: 'setPrice'; lineId: string; unitPrice: number }
   | { type: 'remove'; lineId: string }
   | { type: 'addAmount'; amount: number; description: string }
@@ -22,20 +24,22 @@ export const EMPTY_CART: CartState = { lines: [], discount: 0 };
 /**
  * Tapping a tile twice means two of it, on the same line -- unless the price on
  * that line was bargained, in which case the new unit is at list price and gets
- * its own line so the bargain does not silently spread.
+ * its own line so the bargain does not silently spread. A line at a list price
+ * follows its quantity: wholesale from the product's minimum, retail below.
  */
 export function cartReducer(state: CartState, action: CartAction): CartState {
   switch (action.type) {
     case 'add': {
       const qty = action.qty ?? 1;
       const existing = state.lines.find(
-        (line) => line.productId === action.product.id && line.unitPrice === action.product.price
+        (line) => line.productId === action.product.id && isListPrice(action.product, line.unitPrice)
       );
       if (existing) {
+        const next = round3(existing.qty + qty);
         return {
           ...state,
           lines: state.lines.map((line) =>
-            line.id === existing.id ? { ...line, qty: round3(line.qty + qty) } : line
+            line.id === existing.id ? { ...line, qty: next, unitPrice: priceFor(action.product, next) } : line
           ),
         };
       }
@@ -48,7 +52,7 @@ export function cartReducer(state: CartState, action: CartAction): CartState {
             productId: action.product.id,
             description: productLabel(action.product),
             qty,
-            unitPrice: action.product.price,
+            unitPrice: priceFor(action.product, qty),
             unitCost: action.product.cost ?? null,
             vatType: action.product.vatType,
           },
@@ -59,9 +63,12 @@ export function cartReducer(state: CartState, action: CartAction): CartState {
       if (action.qty <= 0) return cartReducer(state, { type: 'remove', lineId: action.lineId });
       return {
         ...state,
-        lines: state.lines.map((line) =>
-          line.id === action.lineId ? { ...line, qty: round3(action.qty) } : line
-        ),
+        lines: state.lines.map((line) => {
+          if (line.id !== action.lineId) return line;
+          const qty = round3(action.qty);
+          const relist = action.product && line.productId === action.product.id && isListPrice(action.product, line.unitPrice);
+          return { ...line, qty, unitPrice: relist ? priceFor(action.product!, qty) : line.unitPrice };
+        }),
       };
     case 'setPrice':
       return {
@@ -100,7 +107,7 @@ export function cartReducer(state: CartState, action: CartAction): CartState {
 /** The line a tap on this product would land on, or null for a new line. */
 export function lineFor(state: CartState, product: Product): string | null {
   return (
-    state.lines.find((line) => line.productId === product.id && line.unitPrice === product.price)?.id ??
+    state.lines.find((line) => line.productId === product.id && isListPrice(product, line.unitPrice))?.id ??
     null
   );
 }

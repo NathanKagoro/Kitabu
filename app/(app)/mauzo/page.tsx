@@ -1,11 +1,12 @@
 'use client';
 
+import { isListPrice, priceFor } from '@/lib/calc/pricing';
 import { History, Plus, Search, ShoppingBasket, Tag, UserRound, Zap } from '@/components/icons';
 import { personName } from '@/lib/auth/till-person';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
-import { useMemo, useReducer, useRef, useState } from 'react';
+import { useCallback, useMemo, useReducer, useRef, useState } from 'react';
 
 import { ShopLogo } from '@/components/brand/shop-logo';
 import { useApp } from '@/components/app-provider';
@@ -38,6 +39,8 @@ const SEARCH_THRESHOLD = 12;
 const LineEditor = dynamic(() => import('@/components/pos/line-editor').then((m) => m.LineEditor));
 const PaymentSheet = dynamic(() => import('@/components/pos/payment-sheet').then((m) => m.PaymentSheet));
 const SuccessSheet = dynamic(() => import('@/components/pos/success-sheet').then((m) => m.SuccessSheet));
+// The camera scanner (and its button) arrive after the till has shown.
+const BarcodeScan = dynamic(() => import('@/components/pos/barcode-scan').then((m) => m.BarcodeScan), { ssr: false });
 const CartSheet = dynamic(() => import('@/components/pos/cart-sheet').then((m) => m.CartSheet));
 const WhoSelling = dynamic(() => import('@/components/who-selling').then((m) => m.WhoSelling));
 const QuickSaleSheet = dynamic(() => import('@/components/pos/quick-sale-sheet').then((m) => m.QuickSaleSheet));
@@ -88,6 +91,18 @@ export default function SalesPage() {
     [products, query, category]
   );
   const takesCash = paymentMethodsOf(business).includes('cash');
+
+  const hasBarcodes = useMemo(() => (products ?? []).some((p) => p.barcode), [products]);
+  /** A scanned code: add the product that has it; false when none does, so the scanner keeps looking. */
+  const addByBarcode = useCallback(
+    (code: string) => {
+      const product = products?.find((p) => p.active && p.barcode?.trim() === code.trim());
+      if (!product) return false;
+      dispatch({ type: 'add', product });
+      return true;
+    },
+    [products]
+  );
 
   const addProduct = (product: Product, openEditor = false) => {
     const lineId = lineFor(cart, product) ?? uuidv7();
@@ -172,7 +187,7 @@ export default function SalesPage() {
           </Link>
           </div>
         </div>
-        {(show('quickAmountSale') || (products?.length ?? 0) > SEARCH_THRESHOLD) && (
+        {(show('quickAmountSale') || (products?.length ?? 0) > SEARCH_THRESHOLD || hasBarcodes) && (
           <div className="flex gap-2 px-3 pb-2.5">
             {(products?.length ?? 0) > SEARCH_THRESHOLD && (
               <div className="relative flex-1">
@@ -185,6 +200,7 @@ export default function SalesPage() {
                 />
               </div>
             )}
+            {hasBarcodes ? <BarcodeScan onCode={addByBarcode} /> : null}
             {show('quickAmountSale') && (
               <Button
                 variant="secondary"
@@ -326,10 +342,12 @@ export default function SalesPage() {
       <LineEditor
         line={editingLine}
         decimals={editingProduct ? allowsDecimals(editingProduct.unit) : false}
+        priceAt={editingProduct && editingLine && isListPrice(editingProduct, editingLine.unitPrice) ? (qty) => priceFor(editingProduct, qty) : undefined}
+        retail={editingProduct?.price}
         onClose={() => setEditingLineId(null)}
         onSave={(qty, unitPrice) => {
           if (!editingLine) return;
-          dispatch({ type: 'setQty', lineId: editingLine.id, qty });
+          dispatch({ type: 'setQty', lineId: editingLine.id, qty, product: editingProduct });
           dispatch({ type: 'setPrice', lineId: editingLine.id, unitPrice });
           setEditingLineId(null);
         }}

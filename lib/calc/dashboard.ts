@@ -71,3 +71,19 @@ export function stockAlerts<P extends { id: string; trackStock: boolean; active:
   }
   return alerts.sort((a, b) => (a.status === b.status ? a.onHand - b.onHand : a.status === 'out' ? -1 : 1));
 }
+
+/**
+ * What the stock on the shelves cost: each product's quantity on hand at its
+ * average buying cost. Products with no known cost are counted separately so
+ * the screen can say the figure leaves them out; nothing below zero counts.
+ */
+export function inventoryValue(items: readonly { onHand: number; unitCost: number | null }[]): { value: number; uncosted: number } {
+  let value = 0;
+  let uncosted = 0;
+  for (const item of items) {
+    if (item.onHand <= 0) continue;
+    if (item.unitCost == null || item.unitCost <= 0) uncosted++;
+    else value += Math.round(item.onHand * item.unitCost);
+  }
+  return { value, uncosted };
+}

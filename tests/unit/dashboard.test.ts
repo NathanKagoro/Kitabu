@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { averageSale, marginPercent, paymentMix, percentChange, stockAlerts } from '@/lib/calc/dashboard';
+import { averageSale, inventoryValue, marginPercent, paymentMix, percentChange, stockAlerts } from '@/lib/calc/dashboard';
 import { previousRange } from '@/lib/calc/periods';
 
 describe('the business dashboard', () => {
@@ -44,5 +44,17 @@ describe('the business dashboard', () => {
     // March 31st against February: capped at the end of February.
     expect(previousRange('month', '2026-03-31')).toEqual({ start: '2026-02-01', end: '2026-02-28' });
     expect(previousRange('month', '2026-01-15')).toEqual({ start: '2025-12-01', end: '2025-12-15' });
+  });
+
+  it('values the shelves at buying cost, leaving out what has no cost and what is below zero', () => {
+    expect(
+      inventoryValue([
+        { onHand: 40, unitCost: 15_500 },
+        { onHand: 12.5, unitCost: 3_500 },
+        { onHand: 3, unitCost: null },
+        { onHand: -2, unitCost: 1_000 },
+        { onHand: 0, unitCost: null },
+      ])
+    ).toEqual({ value: 40 * 15_500 + 43_750, uncosted: 1 });
   });
 });

@@ -1,5 +1,33 @@
 # Changelog
 
+## 0.10.0 — Navy Kitabu, a Stoo tab, wholesale prices, scanning and printing (2026-11-01)
+
+**Deploy note:** run migration `0015_wholesale_prices` on the server (`npm run db:migrate`) before shops set wholesale prices. Until a product has one, nothing new is sent.
+
+### Kitabu looks navy
+- The bar, the shop colour and the app icon move from petrol to navy (#1b3a6b), with lighter navy in dark mode.
+
+### The chart answers back
+- Tap (or point at) a bar for that day's date and takings. On the dashboard each bar also carries a dashed mark for the same weekday last week, and the readout gives that figure.
+
+### Stock has its own tab
+- Kitabu's tabs: Muhtasari, Mauzo, **Stoo**, Madeni, Zaidi. Stoo shows what the shelves are worth at buying cost, how many lines are in stock, low or out (tap one to filter), the jobs that change stock (buy, count, losses, add many) and every product with its quantity. Buying, counting and losses light the Stoo tab. Manunuzi moves from a tab to Stoo, the dashboard and Zaidi; Madeni stays a tab.
+- The dashboard's "stock to reorder" opens Stoo on the low or out filter.
+
+### Wholesale prices (bei ya jumla)
+- A product can have a wholesale price from a minimum quantity. The till applies it by itself as a line reaches that quantity, and back to retail below it; a price bargained by hand is left alone. On for duka and biashara shops, switchable per shop; left out of Daftari. Demo hardware and wholesale shops have them.
+- `lib/calc/pricing.ts` with tests, including the cart re-pricing.
+
+### Scanning and printing
+- **Scan barcode** on the till: the camera reads a product's barcode and adds it to the sale (phones with a built-in reader, i.e. Chrome on Android; the button stays away elsewhere). Loaded after the till shows.
+- **Chapisha risiti** after a sale, and a print button on the receipt page: prints only the receipt, through the phone's print service, which is how Bluetooth receipt printers work on Android.
+
+### Daftari
+- **Tuma muhtasari wa wiki:** the last 7 days (sales, profit, expenses, money owed) as a WhatsApp message, to send to yourself, a partner or a lender.
+
+### Size
+- Stock-count, stock and scanner wording load with their screens. Sales screen first load: 209.4 KB.
+
 ## 0.9.0 — Kitabu opens on a business dashboard; Daftari takes the black and gold (2026-11-01)
 
 ### The looks swap

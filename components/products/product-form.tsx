@@ -24,6 +24,12 @@ export interface ProductDraft {
   unitLabel: string | null;
   price: number;
   cost: number | null;
+  /**
+   * Left undefined when the shop never set one, so the field is not sent to a
+   * server that has not had migration 0015 yet; null clears one that was set.
+   */
+  wholesalePrice?: number | null;
+  wholesaleMinQty?: number | null;
   trackStock: boolean;
   lowStockLevel: number | null;
   icon: string | null;
@@ -54,6 +60,8 @@ export function draftFrom(
     unitLabel: product?.unitLabel ?? null,
     price: product?.price ?? 0,
     cost: product?.cost ?? null,
+    wholesalePrice: product?.wholesalePrice ?? undefined,
+    wholesaleMinQty: product?.wholesaleMinQty ?? undefined,
     trackStock: product?.trackStock ?? defaults.trackStock ?? false,
     lowStockLevel: product?.lowStockLevel ?? null,
     icon: product?.icon ?? defaults.icon ?? null,
@@ -79,6 +87,7 @@ export function ProductForm({
   submitLabel: string;
 }) {
   const t = useTranslations('products');
+  const ti = useTranslations('inventory');
   const tc = useTranslations('common');
   const { show, business } = useApp();
   const preset = presetOf(business);
@@ -89,10 +98,21 @@ export function ProductForm({
   const [price, setPrice] = useState(initial.price ? String(initial.price) : '');
   const [cost, setCost] = useState(initial.cost ? String(initial.cost) : '');
   const [low, setLow] = useState(initial.lowStockLevel != null ? String(initial.lowStockLevel) : '');
+  const [bulkPrice, setBulkPrice] = useState(initial.wholesalePrice ? String(initial.wholesalePrice) : '');
+  const [bulkQty, setBulkQty] = useState(initial.wholesaleMinQty ? String(initial.wholesaleMinQty) : '');
+  const hadWholesale = initial.wholesalePrice != null;
   const [error, setError] = useState<string | null>(null);
 
   const set = <K extends keyof ProductDraft>(key: K, value: ProductDraft[K]) =>
     setDraft((current) => ({ ...current, [key]: value }));
+
+  /** Both or neither: a wholesale price needs the quantity it starts at. */
+  const wholesaleFields = (): Pick<ProductDraft, 'wholesalePrice' | 'wholesaleMinQty'> => {
+    const amount = parseTZS(bulkPrice);
+    const from = Number(bulkQty);
+    if (amount && amount > 0 && from > 0) return { wholesalePrice: amount, wholesaleMinQty: from };
+    return hadWholesale ? { wholesalePrice: null, wholesaleMinQty: null } : { wholesalePrice: undefined, wholesaleMinQty: undefined };
+  };
 
   const submit = () => {
     if (!draft.name.trim()) return setError(t('nameLabel'));
@@ -104,6 +124,7 @@ export function ProductForm({
       price: parseTZS(price) ?? 0,
       cost: parseTZS(cost),
       lowStockLevel: low.trim() ? Number(low) : null,
+      ...wholesaleFields(),
       packs: draft.packs.filter((pack) => pack.label.trim() && Number(pack.units) > 0),
     });
   };
@@ -169,6 +190,20 @@ export function ProductForm({
         </Field>
       </div>
       <p className="-mt-3 text-xs text-ink-faint">{t('costHint')}</p>
+
+      {show('wholesalePrices') && (
+        <div className="space-y-1.5">
+          <div className="grid grid-cols-2 gap-3">
+            <Field label={ti('wholesale.label')} hint={tc('optional')}>
+              {(id) => <AmountInput id={id} value={bulkPrice} onChange={(e) => setBulkPrice(e.target.value)} />}
+            </Field>
+            <Field label={ti('wholesale.minLabel')}>
+              {(id) => <AmountInput id={id} value={bulkQty} onChange={(e) => setBulkQty(e.target.value)} />}
+            </Field>
+          </div>
+          <p className="text-xs text-ink-faint">{ti('wholesale.hint')}</p>
+        </div>
+      )}
 
       <PackEditor
         packs={draft.packs}

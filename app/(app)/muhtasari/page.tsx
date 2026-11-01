@@ -296,7 +296,7 @@ export default function DashboardPage() {
 
       <Panel title={t('trend.title')} aside={<Money value={weekTotal} symbol className="text-sm font-bold" />}>
         <div className="px-4 pt-4 pb-2">
-          <BarChart points={data.thisWeek} today={today} />
+          <BarChart points={data.thisWeek} today={today} compare={data.lastWeek} compareLabel={t('trend.sameDayBefore')} />
         </div>
         <dl className="grid grid-cols-3 border-t border-line text-sm">
           <Cell label={t('trend.average')} value={Math.round(weekTotal / 7)} />
@@ -345,7 +345,7 @@ export default function DashboardPage() {
               </span>
             ) : null
           }
-          footer={{ href: '/bidhaa', label: t('stock.all') }}
+          footer={{ href: outCount || lowCount ? `/bidhaa?onyesha=${outCount ? 'out' : 'low'}` : '/bidhaa', label: t('stock.all') }}
         >
           {alerts.length === 0 ? (
             <p className="flex items-center gap-2 px-4 py-4 text-sm text-ink-soft">

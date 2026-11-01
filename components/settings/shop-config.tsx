@@ -31,6 +31,7 @@ const OWNER_FEATURES: readonly Feature[] = [
   'suppliers',
   'waste',
   'dailyPriceUpdate',
+  'wholesalePrices',
   'staff',
   'documents',
   'vat',

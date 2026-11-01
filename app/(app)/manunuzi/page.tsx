@@ -1,5 +1,6 @@
 'use client';
 
+import { IS_DAFTARI } from '@/lib/edition';
 import { productLabel } from '@/lib/products';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { Plus, Trash2, TriangleAlert } from '@/components/icons';
@@ -127,7 +128,7 @@ export default function PurchasesPage() {
 
   return (
     <>
-      <PageHeader title={t('title')} subtitle={t('subtitle')} back={false} />
+      <PageHeader title={t('title')} subtitle={t('subtitle')} back={!IS_DAFTARI} />
       <div className="space-y-4 p-3">
         <section className="card space-y-3 p-4">
           <Field label={t('chooseProducts')}>

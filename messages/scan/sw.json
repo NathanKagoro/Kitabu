@@ -1,0 +1,10 @@
+{
+  "scanner": {
+    "scan": "Soma barcode",
+    "scanStatus": {
+      "aim": "Elekeza kamera kwenye barcode ya bidhaa.",
+      "unknown": "Barcode hii haipo kwenye bidhaa zako. Iongeze kwenye bidhaa kwanza.",
+      "noCamera": "Kamera haikufunguka. Ruhusu kamera kwenye mipangilio ya simu."
+    }
+  }
+}

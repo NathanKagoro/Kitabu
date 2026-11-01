@@ -76,6 +76,11 @@
       "year": "Faida ya mwaka huu",
       "all": "Faida tangu mwanzo"
     },
-    "owedPeople": "{count, plural, one {mteja 1} other {wateja #}}"
+    "owedPeople": "{count, plural, one {mteja 1} other {wateja #}}",
+    "weekly": {
+      "button": "Tuma muhtasari wa wiki",
+      "hint": "Siku 7 zilizopita, kwa WhatsApp",
+      "message": "{shop}: muhtasari wa siku 7 ({from} hadi {to})\nMauzo: {sales} (mauzo {count})\nFaida: {profit}\nMatumizi: {expenses}\nWateja wanadaiwa: {owed}\n\nKutoka Daftari"
+    }
   }
 }

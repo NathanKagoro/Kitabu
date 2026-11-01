@@ -34,6 +34,8 @@ export type Feature =
   | 'staff'
   | 'vat'
   | 'productCodes'
+  /** A second, lower price for buying in bulk (bei ya jumla). */
+  | 'wholesalePrices'
   | 'receiptPdf'
   | 'export'
   /** TRA receipts on every sale (demo until the shop is registered). Off unless switched on. */
@@ -62,6 +64,7 @@ const MODE_FEATURES: Record<BusinessMode, ReadonlySet<Feature>> = {
     'suppliers',
     'summary',
     'export',
+    'wholesalePrices',
   ]),
   biashara: new Set<Feature>([
     'products',
@@ -78,6 +81,7 @@ const MODE_FEATURES: Record<BusinessMode, ReadonlySet<Feature>> = {
     'productCodes',
     'receiptPdf',
     'export',
+    'wholesalePrices',
   ]),
 };
 

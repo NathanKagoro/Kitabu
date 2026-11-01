@@ -10,6 +10,7 @@ import {
   Package,
   Receipt,
   Settings,
+  ShoppingCart,
   Tag,
   Trash,
   TrendingUp,
@@ -53,7 +54,8 @@ export default function MorePage() {
       title: t('more.sections.shop'),
       items: [
         { href: '/bidhaa', label: t('products.title'), icon: <Package size={22} />, feature: 'products' },
-        { href: '/stoo', label: t('stockCheck.title'), icon: <ClipboardCheck size={22} />, feature: 'stockTracking', permission: 'countStock' },
+        ...(IS_DAFTARI ? [] : [{ href: '/manunuzi', label: t('nav.purchases'), icon: <ShoppingCart size={22} />, permission: 'recordPurchase' as const }]),
+        { href: '/stoo', label: t('more.stockCheckTitle'), icon: <ClipboardCheck size={22} />, feature: 'stockTracking', permission: 'countStock' },
         { href: '/bei', label: t('prices.title'), icon: <Tag size={22} />, feature: 'dailyPriceUpdate', permission: 'managePrices' },
         { href: '/hasara', label: t('waste.title'), icon: <Trash size={22} />, feature: 'waste', permission: 'manageProducts' },
       ],

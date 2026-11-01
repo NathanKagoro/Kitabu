@@ -45,12 +45,12 @@
   --color-up: #157347;
   --color-down: #b42318;
 
-  /* The frame around screens (Daftari: warm black; Kitabu: petrol) and its text. */
+  /* The frame around screens (Daftari: warm black; Kitabu: navy) and its text. */
   --color-band: #1a1714;
   --color-band-ink: #f5f1ea;
   --color-band-soft: #b9b1a7;
   --color-band-line: #34302b;
-  /* Figures on the band: gold on Daftari's black, mint on Kitabu's petrol. */
+  /* Figures on the band: gold on Daftari's black, pale blue on Kitabu's navy. */
   --color-accent: #f2b705;
 
   --radius-card: 12px;
@@ -142,48 +142,48 @@
 
 /*
  * Kitabu: the business book for shops with staff and suppliers. It reads like
- * the back office of a proper firm: a deep petrol bar on top, cool grey paper,
+ * the back office of a proper firm: a deep navy bar on top, cool grey paper,
  * white panels joined by hairlines, and figures in the phone's own font at
  * heavy weight with tabular digits. No display face: the numbers carry it.
  */
 :root[data-edition='kitabu'] {
-  --color-band: #0d3b44;
+  --color-band: #10213f;
   --color-band-ink: #ffffff;
-  --color-band-soft: #a9c4c9;
-  --color-band-line: #1d4f59;
-  /* Figures on the petrol bar (the day's takings on Hesabu). */
-  --color-accent: #8fdccf;
-  --color-paper: #eef1f3;
+  --color-band-soft: #aab7cd;
+  --color-band-line: #22365a;
+  /* Figures on the navy bar (the day's takings on Hesabu). */
+  --color-accent: #a9c7ff;
+  --color-paper: #eef1f6;
   --color-surface: #ffffff;
-  --color-line: #dbe1e5;
-  --color-line-strong: #bcc6cd;
-  --color-ink: #14202b;
-  --color-ink-soft: #4a5866;
-  --color-ink-faint: #7b8794;
-  --color-brand: #0b5563;
-  --color-brand-dark: #073a44;
-  --color-brand-tint: #e1eef0;
+  --color-line: #d9dfe8;
+  --color-line-strong: #b8c2d2;
+  --color-ink: #121a2b;
+  --color-ink-soft: #46546b;
+  --color-ink-faint: #76829a;
+  --color-brand: #1b3a6b;
+  --color-brand-dark: #10264a;
+  --color-brand-tint: #e3e9f3;
   --color-up: #157347;
   --color-down: #b42318;
   --font-display: var(--font-sans);
   --font-label: var(--font-sans);
 }
 :root[data-edition='kitabu'][data-theme='dark'] {
-  --color-band: #0a1f24;
-  --color-band-ink: #eef4f5;
-  --color-band-soft: #93acb1;
-  --color-band-line: #1a3238;
-  --color-accent: #8fdccf;
-  --color-paper: #0d1417;
-  --color-surface: #152125;
-  --color-line: #233338;
-  --color-line-strong: #36494f;
-  --color-ink: #eef2f4;
-  --color-ink-soft: #b3bfc6;
-  --color-ink-faint: #82919a;
-  --color-brand: #5fb7c5;
-  --color-brand-dark: #9fd6de;
-  --color-brand-tint: #17363c;
+  --color-band: #0a1426;
+  --color-band-ink: #eef2f8;
+  --color-band-soft: #93a3bf;
+  --color-band-line: #1c2a45;
+  --color-accent: #a9c7ff;
+  --color-paper: #0b1220;
+  --color-surface: #131c2e;
+  --color-line: #22304a;
+  --color-line-strong: #34445f;
+  --color-ink: #eef2f8;
+  --color-ink-soft: #b2bdd0;
+  --color-ink-faint: #8090aa;
+  --color-brand: #84a9e6;
+  --color-brand-dark: #b8cdf2;
+  --color-brand-tint: #1a2a4a;
   --color-up: #5cc98f;
   --color-down: #f08a84;
 }
@@ -327,3 +327,28 @@
 .band-action :where(button, a):active {
   background-color: var(--color-band-line);
 }
+
+/*
+ * Printing a receipt (/r/?t=…): only the receipt, black on white, full width
+ * of whatever paper the phone's print service gives it (58mm and 80mm
+ * receipt printers included).
+ */
+@media print {
+  @page {
+    margin: 4mm;
+  }
+  html,
+  body,
+  .receipt-page {
+    background: #fff !important;
+    color: #000 !important;
+  }
+  .receipt-page {
+    max-width: none;
+    padding: 0;
+  }
+  .print-hide {
+    display: none !important;
+  }
+}
+

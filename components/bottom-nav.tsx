@@ -1,6 +1,6 @@
 'use client';
 
-import { BookUser, LayoutGrid, Menu, ShoppingCart, Users, Wallet } from '@/components/icons';
+import { BookUser, LayoutGrid, Menu, Package, ShoppingCart, Users, Wallet } from '@/components/icons';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useTranslations } from 'next-intl';
@@ -8,31 +8,42 @@ import { useTranslations } from 'next-intl';
 import { cn } from '@/lib/cn';
 import { IS_DAFTARI } from '@/lib/edition';
 
-/** Kitabu opens on the business dashboard; the till is the next tab. The day's close lives on the dashboard and in Zaidi. */
-const KITABU_ITEMS = [
+/**
+ * Kitabu opens on the business dashboard; the till is the next tab. Stoo is
+ * the stock room: products and quantities, and the jobs that change them
+ * (buying, counting, losses), so it lights up on those screens too. The day's
+ * close lives on the dashboard and in Zaidi.
+ */
+const KITABU_ITEMS: readonly NavItem[] = [
   { href: '/muhtasari', key: 'nav.home', Icon: LayoutGrid },
   { href: '/mauzo', key: 'nav.sales', Icon: Wallet },
-  // Buying stock is the other half of a trading day, so it gets a tab of its
-  // own rather than hiding under "Zaidi".
-  { href: '/manunuzi', key: 'nav.purchases', Icon: ShoppingCart },
+  { href: '/bidhaa', key: 'nav.stock', Icon: Package, also: ['/stoo', '/manunuzi', '/hasara'] },
   { href: '/madeni', key: 'nav.credit', Icon: BookUser },
   { href: '/zaidi', key: 'nav.more', Icon: Menu },
-] as const;
+];
+
+interface NavItem {
+  href: string;
+  key: string;
+  Icon: typeof Wallet;
+  /** Other screens that belong to this tab. */
+  also?: readonly string[];
+}
 
 /** Daftari opens on how the business is going; customers get a tab, money owed shows on Leo. */
-const DAFTARI_ITEMS = [
+const DAFTARI_ITEMS: readonly NavItem[] = [
   { href: '/leo', key: 'daftari.homeTab', Icon: LayoutGrid },
   { href: '/mauzo', key: 'nav.sales', Icon: Wallet },
   { href: '/manunuzi', key: 'nav.purchases', Icon: ShoppingCart },
   { href: '/wateja', key: 'clients.title', Icon: Users },
   { href: '/zaidi', key: 'nav.more', Icon: Menu },
-] as const;
+];
 
 const ITEMS = IS_DAFTARI ? DAFTARI_ITEMS : KITABU_ITEMS;
 
 /**
  * Daftari: the black band again at the bottom, gold for the open tab.
- * Kitabu: a white bar with a petrol rule over the open tab, like an office system.
+ * Kitabu: a white bar with a navy rule over the open tab, like an office system.
  */
 export function BottomNav() {
   const pathname = usePathname();
@@ -47,8 +58,8 @@ export function BottomNav() {
       )}
     >
       <ul className="mx-auto flex max-w-lg">
-        {ITEMS.map(({ href, key, Icon }) => {
-          const active = pathname === href || pathname.startsWith(`${href}/`);
+        {ITEMS.map(({ href, key, Icon, also }) => {
+          const active = [href, ...(also ?? [])].some((path) => pathname === path || pathname.startsWith(`${path}/`));
           return (
             <li key={href} className="flex-1">
               <Link

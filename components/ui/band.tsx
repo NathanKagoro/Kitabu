@@ -5,7 +5,7 @@ import { IS_DAFTARI } from '@/lib/edition';
 
 /**
  * The top of every screen. Daftari: a warm black band with a stripe of the
- * shop's colour under it (the first Daftari's look). Kitabu: a petrol bar like
+ * shop's colour under it (the first Daftari's look). Kitabu: a navy bar like
  * an office system's. Colours come from the edition's tokens (globals.css).
  */
 export function Band({ children, className }: { children: ReactNode; className?: string }) {

@@ -20,7 +20,7 @@ export const DEFAULT_BRAND = EDITION_BRAND;
 
 /** Colours offered in the picker: all hold up in sunlight against white text. */
 export const BRAND_COLOURS = [
-  '#0b5563', // Kitabu petrol
+  '#1b3a6b', // Kitabu navy
   '#c8211e', // Daftari red
   '#1d5c8c', // blue
   '#0f6b3f', // green
@@ -138,6 +138,7 @@ export const DAFTARI_LEAVES_OUT: ReadonlySet<Feature> = new Set<Feature>([
   'vat',
   'traReceipts',
   'productCodes',
+  'wholesalePrices',
   'receiptPdf',
   'dailyPriceUpdate',
 ]);

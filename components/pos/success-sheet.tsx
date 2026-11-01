@@ -1,6 +1,6 @@
 'use client';
 
-import { CircleCheck, MessageCircle, UserPlus } from '@/components/icons';
+import { CircleCheck, MessageCircle, Printer, UserPlus } from '@/components/icons';
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 
@@ -102,6 +102,16 @@ export function SuccessSheet({ done, onClose }: { done: CompletedSale | null; on
         >
           <MessageCircle size={22} className="text-brand" />
           {t('sendWhatsApp')}
+        </a>
+        {/* Printing goes through the phone's print service: Bluetooth receipt printers install one (e.g. RawBT). */}
+        <a
+          href={`${link}&chapisha=1`}
+          target="_blank"
+          rel="noreferrer"
+          className="flex h-12 w-full items-center justify-center gap-2 rounded-[10px] border border-line-strong bg-surface font-semibold"
+        >
+          <Printer size={20} className="text-brand" />
+          {t('print')}
         </a>
         {!capturing && !done.customerPhone ? (
           <button type="button" onClick={() => setCapturing(true)} className="flex h-12 w-full items-center justify-center gap-2 font-semibold text-brand">
