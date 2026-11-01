@@ -41,6 +41,7 @@
     "perDay": "per day"
   },
   "nav": {
+    "home": "Overview",
     "sales": "Sales",
     "credit": "Credit",
     "summary": "Summary",
@@ -659,11 +660,12 @@
     "created": "Demo business ready",
     "businessName": "{type} – demo",
     "opening": "Opening the sample shop…",
-    "openingHint": "A hardware shop with two weeks of trading. The first time takes a few seconds.",
+    "openingHint": "Setting up two weeks of trading. The first time takes a few seconds.",
     "failed": "Could not open the sample shop.",
     "retry": "Try again",
-    "banner": "Sample shop, for viewing only",
-    "leave": "Leave"
+    "banner": "Sample shop",
+    "leave": "Leave",
+    "switch": "Switch"
   },
   "errors": {
     "generic": "Something went wrong. Try again.",

@@ -20,8 +20,9 @@ export const DEFAULT_BRAND = EDITION_BRAND;
 
 /** Colours offered in the picker: all hold up in sunlight against white text. */
 export const BRAND_COLOURS = [
-  '#c8211e', // Kitabu red
-  '#1d5c8c', // Daftari blue
+  '#0b5563', // Kitabu petrol
+  '#c8211e', // Daftari red
+  '#1d5c8c', // blue
   '#0f6b3f', // green
   '#6b2fa3', // purple
   '#b0225f', // berry (cosmetics shops like this one)

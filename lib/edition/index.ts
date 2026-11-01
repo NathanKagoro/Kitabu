@@ -13,8 +13,8 @@ export const IS_DAFTARI = EDITION === 'daftari';
 export const APP_NAME = IS_DAFTARI ? 'Daftari' : 'Kitabu';
 export const APP_TAGLINE = IS_DAFTARI ? 'Daftari lako la mauzo, mkononi' : 'Biashara yako, mkononi';
 
-/** Where the app opens after sign-in: Daftari's summary, Kitabu's till. */
-export const HOME = IS_DAFTARI ? '/leo' : '/mauzo';
+/** Where the app opens after sign-in: Daftari's Leo, Kitabu's business dashboard (the till is one tap away). */
+export const HOME = IS_DAFTARI ? '/leo' : '/muhtasari';
 
-/** A shop with no colour of its own: Kitabu red (the first Daftari's), Daftari notebook blue. */
-export const EDITION_BRAND = IS_DAFTARI ? '#1d5c8c' : '#c8211e';
+/** A shop with no colour of its own: Daftari red (the first Daftari's), Kitabu petrol. */
+export const EDITION_BRAND = IS_DAFTARI ? '#c8211e' : '#0b5563';

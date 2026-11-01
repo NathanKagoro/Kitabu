@@ -5,10 +5,10 @@
  *   1. Readable in direct sunlight at a roadside stall. That rules out low
  *      contrast, thin weights, and shadows -- a shadow is invisible outdoors,
  *      so separation is done with real 1px lines.
- *   2. Text in the phone's own font. Daftari uses no webfont at all. Kitabu,
- *      the paid product, adds two small display faces (Anton for figures and
- *      headings, Barlow Condensed for labels; ~41KB once, cached) because its
- *      look is part of what shops pay for. Body text stays the system font.
+ *   2. Text in the phone's own font. Kitabu uses no webfont at all. Daftari
+ *      adds two small display faces (Anton for figures and headings, Barlow
+ *      Condensed for labels; ~41KB once, cached): the first Daftari's look.
+ *      Body text stays the system font.
  *   3. Thumb-sized targets. 48px is the floor, 56px for anything on the sales
  *      screen, which gets used at speed with one hand.
  */
@@ -41,16 +41,17 @@
   /* Text on a solid brand, loss or debt fill: white in light mode, near-black in dark. */
   --color-on-fill: #ffffff;
 
-  /* The frame around screens (Kitabu: warm black; Daftari: white) and its text. */
+  /* Rises and falls against the last period (Kitabu's dashboard). */
+  --color-up: #157347;
+  --color-down: #b42318;
+
+  /* The frame around screens (Daftari: warm black; Kitabu: petrol) and its text. */
   --color-band: #1a1714;
   --color-band-ink: #f5f1ea;
   --color-band-soft: #b9b1a7;
   --color-band-line: #34302b;
-  /* Kitabu: gold for the day's takings on black. Daftari: its blue. */
+  /* Figures on the band: gold on Daftari's black, mint on Kitabu's petrol. */
   --color-accent: #f2b705;
-  /* Daftari's exercise-book page. */
-  --color-margin: #d9534f;
-  --color-rule: #d4e1ec;
 
   --radius-card: 12px;
   --radius-control: 10px;
@@ -93,10 +94,10 @@
 }
 
 /*
- * Kitabu: the paid product, built on the first Daftari's look. A warm black
+ * Daftari: the simple sales book, in the first Daftari's look. A warm black
  * band frames every screen (top and bottom), a stripe of the shop's colour
  * runs under the top band, figures are set in Anton, labels in Barlow
- * Condensed, and the day's takings show in gold on black. Default colour: the
+ * Condensed, and the main figure shows in gold on black. Default colour: the
  * first Daftari's red. (lib/color.ts keeps every shade readable.)
  */
 @font-face {
@@ -112,7 +113,7 @@
   font-display: swap;
 }
 
-:root[data-edition='kitabu'] {
+:root[data-edition='daftari'] {
   --color-band: #1a1714;
   --color-band-ink: #f5f1ea;
   --color-band-soft: #b9b1a7;
@@ -127,7 +128,7 @@
   --font-display: 'Anton', 'Arial Narrow', Impact, sans-serif;
   --font-label: 'Barlow Condensed', 'Arial Narrow', system-ui, sans-serif;
 }
-:root[data-edition='kitabu'][data-theme='dark'] {
+:root[data-edition='daftari'][data-theme='dark'] {
   --color-band: #0d0b0a;
   --color-band-line: #2a2622;
   --color-paper: #141210;
@@ -140,47 +141,51 @@
 }
 
 /*
- * Daftari: the simple sales book. Light, calm, the phone's own font, and the
- * colour of a school exercise-book cover: notebook blue. Its one flourish is
- * the main figure drawn on a ruled page with a red margin line (.page-ruled).
+ * Kitabu: the business book for shops with staff and suppliers. It reads like
+ * the back office of a proper firm: a deep petrol bar on top, cool grey paper,
+ * white panels joined by hairlines, and figures in the phone's own font at
+ * heavy weight with tabular digits. No display face: the numbers carry it.
  */
-:root[data-edition='daftari'] {
-  --color-band: #ffffff;
-  --color-band-ink: #17202b;
-  --color-band-soft: #5b6672;
-  --color-band-line: #dfe4ea;
-  --color-accent: #1d5c8c;
-  --color-paper: #f4f6f8;
-  --color-line: #dfe4ea;
-  --color-line-strong: #c3ccd6;
-  --color-ink: #17202b;
-  --color-ink-soft: #4b5663;
-  --color-ink-faint: #7a8591;
-  --color-brand: #1d5c8c;
-  --color-brand-dark: #154265;
-  --color-brand-tint: #e4ebf1;
-  --color-margin: #d9534f;
-  --color-rule: #d4e1ec;
+:root[data-edition='kitabu'] {
+  --color-band: #0d3b44;
+  --color-band-ink: #ffffff;
+  --color-band-soft: #a9c4c9;
+  --color-band-line: #1d4f59;
+  /* Figures on the petrol bar (the day's takings on Hesabu). */
+  --color-accent: #8fdccf;
+  --color-paper: #eef1f3;
+  --color-surface: #ffffff;
+  --color-line: #dbe1e5;
+  --color-line-strong: #bcc6cd;
+  --color-ink: #14202b;
+  --color-ink-soft: #4a5866;
+  --color-ink-faint: #7b8794;
+  --color-brand: #0b5563;
+  --color-brand-dark: #073a44;
+  --color-brand-tint: #e1eef0;
+  --color-up: #157347;
+  --color-down: #b42318;
   --font-display: var(--font-sans);
   --font-label: var(--font-sans);
 }
-:root[data-edition='daftari'][data-theme='dark'] {
-  --color-band: #1b1e1a;
-  --color-band-ink: #f1efe9;
-  --color-band-soft: #bdb8ad;
-  --color-band-line: #2e322c;
-  --color-accent: #8dadc5;
-  --color-paper: #121411;
-  --color-line: #2e322c;
-  --color-line-strong: #464b43;
-  --color-ink: #f1efe9;
-  --color-ink-soft: #bdb8ad;
-  --color-ink-faint: #8f8a7f;
-  --color-brand: #5c8aac;
-  --color-brand-dark: #8dadc5;
-  --color-brand-tint: #273134;
-  --color-margin: #b5524f;
-  --color-rule: #263039;
+:root[data-edition='kitabu'][data-theme='dark'] {
+  --color-band: #0a1f24;
+  --color-band-ink: #eef4f5;
+  --color-band-soft: #93acb1;
+  --color-band-line: #1a3238;
+  --color-accent: #8fdccf;
+  --color-paper: #0d1417;
+  --color-surface: #152125;
+  --color-line: #233338;
+  --color-line-strong: #36494f;
+  --color-ink: #eef2f4;
+  --color-ink-soft: #b3bfc6;
+  --color-ink-faint: #82919a;
+  --color-brand: #5fb7c5;
+  --color-brand-dark: #9fd6de;
+  --color-brand-tint: #17363c;
+  --color-up: #5cc98f;
+  --color-down: #f08a84;
 }
 
 @layer base {
@@ -251,11 +256,11 @@
     font-weight: 600;
     letter-spacing: 0.02em;
   }
-  :root[data-edition='daftari'] .font-display {
+  :root[data-edition='kitabu'] .font-display {
     font-weight: 750;
     letter-spacing: -0.02em;
   }
-  :root[data-edition='daftari'] .font-label {
+  :root[data-edition='kitabu'] .font-label {
     letter-spacing: 0;
   }
 
@@ -264,21 +269,12 @@
     background: var(--color-brand);
     color: var(--color-on-fill);
   }
-  :root[data-edition='kitabu'] .seg-on {
+  :root[data-edition='daftari'] .seg-on {
     background: var(--color-band);
     color: var(--color-accent);
     font-family: var(--font-label);
     font-size: 16px;
     letter-spacing: 0.03em;
-  }
-
-  /* Daftari's exercise-book page: faint ruled lines and a red margin line. */
-  .page-ruled {
-    background-color: var(--color-surface);
-    background-image:
-      linear-gradient(90deg, transparent 27px, var(--color-margin) 27px, var(--color-margin) 29px, transparent 29px),
-      repeating-linear-gradient(180deg, transparent 0, transparent 31px, var(--color-rule) 31px, var(--color-rule) 32px);
-    background-position: 0 0, 0 20px;
   }
 
   .card {

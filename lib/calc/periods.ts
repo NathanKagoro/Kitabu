@@ -34,3 +34,18 @@ export function periodRange(period: Period, today: string = businessDay()): DayR
       return { start: '2000-01-01', end: today };
   }
 }
+
+/**
+ * The stretch to compare a period with, the same length and just before it:
+ * yesterday for today, the same days of last week for this week, and the
+ * same days of last month for this month ("1st–12th" against "1st–12th").
+ */
+export function previousRange(period: 'today' | 'week' | 'month', today: string = businessDay()): DayRange {
+  const current = periodRange(period, today);
+  if (period === 'today') return { start: addDays(today, -1), end: addDays(today, -1) };
+  if (period === 'week') return { start: addDays(current.start, -7), end: addDays(current.end, -7) };
+  const last = periodRange('lastMonth', today);
+  const span = Number(today.slice(8)) - 1;
+  const end = addDays(last.start, span);
+  return { start: last.start, end: end > last.end ? last.end : end };
+}

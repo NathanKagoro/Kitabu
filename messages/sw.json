@@ -41,6 +41,7 @@
     "perDay": "kwa siku"
   },
   "nav": {
+    "home": "Muhtasari",
     "sales": "Mauzo",
     "credit": "Madeni",
     "summary": "Hesabu",
@@ -659,11 +660,12 @@
     "created": "Biashara ya mfano iko tayari",
     "businessName": "{type} – mfano",
     "opening": "Inafungua duka la mfano…",
-    "openingHint": "Duka la vifaa vya ujenzi lenye wiki mbili za mauzo. Mara ya kwanza huchukua sekunde chache.",
+    "openingHint": "Wiki mbili za mauzo zinaandaliwa. Mara ya kwanza huchukua sekunde chache.",
     "failed": "Imeshindikana kufungua duka la mfano.",
     "retry": "Jaribu tena",
-    "banner": "Duka la mfano, la kuangalia tu",
-    "leave": "Toka"
+    "banner": "Duka la mfano",
+    "leave": "Toka",
+    "switch": "Badilisha"
   },
   "errors": {
     "generic": "Kuna tatizo. Jaribu tena.",

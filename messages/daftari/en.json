@@ -13,6 +13,7 @@
     "profit": "Profit",
     "sales": "Sales",
     "salesCount": "{count, plural, =0 {No sales yet} one {1 sale} other {# sales}}",
+    "salesCountLabel": "Number of sales",
     "owed": "Customers owe you",
     "owedNone": "Everyone has paid",
     "sell": "Record a sale",

@@ -1,0 +1,24 @@
+{
+  "demoPick": {
+    "pickTitle": "Choose a sample shop",
+    "pickHint": "Each shop has two weeks of sales, purchases, credit and stock checks. Nothing is sent anywhere.",
+    "shops": {
+      "hardware": {
+        "kind": "Hardware",
+        "about": "Cement, steel bars, roofing sheets and paint. Fundis buying on account, the owner and two staff."
+      },
+      "duka": {
+        "kind": "Neighbourhood duka",
+        "about": "Sugar, rice, cooking oil, soda and airtime. Many small daily sales, the owner and one helper."
+      },
+      "wholesale": {
+        "kind": "Wholesaler",
+        "about": "Bags and cartons for small shops. Large orders, many on account, the owner and two staff."
+      },
+      "clothes": {
+        "kind": "Clothes and shoes",
+        "about": "Kitenge dresses, jeans, trainers and handbags by size. The owner and one sales assistant."
+      }
+    }
+  }
+}

@@ -1,5 +1,22 @@
 # Changelog
 
+## 0.9.0 — Kitabu opens on a business dashboard; Daftari takes the black and gold (2026-11-01)
+
+### The looks swap
+- **Daftari** now has the first Daftari's look: black band top and bottom, red stripe, gold for the main figure, Anton and Barlow Condensed. Leo's profit sits on a black card in gold, with sales and the number of sales beneath. Default colour red; app icon red.
+- **Kitabu** has a look of its own, built like an office system: a petrol bar on top, cool grey paper, white panels with ruled title bars, a white tab bar, and figures in the phone's own font at heavy weight. No webfont. Default colour petrol (#0b5563); app icon petrol.
+
+### Kitabu's dashboard (Muhtasari) is the home screen
+- Opens after sign-in, setup and the demo link; the till is one tap away (the "Uza" shortcut or the Mauzo tab). Hesabu ya leo moves from a tab to the dashboard and Zaidi.
+- For today, this week or this month: sales, profit and margin, the average sale, expenses and money customers owe, each against the period before (yesterday, the same days last week, the same days last month).
+- Shortcuts to sell, buy stock, record an expense and close the day; today's cash drawer; the last 7 days against the 7 before; how customers paid; stock that has run out or reached its reorder level; best sellers; the latest sales; and sales by seller in shops with staff.
+- New maths in `lib/calc/dashboard.ts` and `previousRange` in `lib/calc/periods.ts`, with tests. The dashboard's wording loads with the dashboard (`messages/dashboard`), not with the till.
+
+### Four demo shops
+- `/demo` now offers Baraka Hardware, Duka la Upendo, Kariakoo Jumla Traders and Zuhura Fashion; `/demo?shop=hardware|duka|wholesale|clothes` opens one directly. A "Badilisha" button on the demo strip goes back to the choice. Daftari's demo stays Duka la Mama Asha.
+- The wholesaler sells several bags and cartons at a time, a quarter of it on account, to small shops; the hardware's credit customers are fundis and builders. The wholesaler's stock list is longer.
+- The demo strip's code loads only on the demo link. Sales screen first load: 209.7 KB.
+
 ## 0.8.0 — Two looks, light by default, no product pictures (2026-11-01)
 
 ### Kitabu and Daftari no longer look alike

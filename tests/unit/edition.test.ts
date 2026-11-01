@@ -15,13 +15,13 @@ afterEach(() => {
 });
 
 describe('one codebase, two products', () => {
-  it('Kitabu keeps every part a shop switched on, and opens on the till', async () => {
+  it('Kitabu keeps every part a shop switched on, and opens on the business dashboard', async () => {
     const { config, edition } = await load(undefined);
     expect(edition.APP_NAME).toBe('Kitabu');
-    expect(edition.HOME).toBe('/mauzo');
+    expect(edition.HOME).toBe('/muhtasari');
     expect(config.shopHasFeature(shop, 'staff')).toBe(true);
     expect(config.shopHasFeature(shop, 'traReceipts')).toBe(true);
-    expect(config.brandColorOf({ settings: {} })).toBe('#c8211e');
+    expect(config.brandColorOf({ settings: {} })).toBe('#0b5563');
   });
 
   it('Daftari leaves out staff, invoices and TRA receipts whatever the settings say, and opens on Leo', async () => {
@@ -32,6 +32,6 @@ describe('one codebase, two products', () => {
       expect(config.shopHasFeature(shop, feature), feature).toBe(false);
     }
     expect(config.shopHasFeature(shop, 'credit')).toBe(true);
-    expect(config.brandColorOf({ settings: {} })).toBe('#1d5c8c');
+    expect(config.brandColorOf({ settings: {} })).toBe('#c8211e');
   });
 });

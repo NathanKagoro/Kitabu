@@ -122,18 +122,27 @@ export default function LeoPage() {
         />
       </div>
 
-      {/* The exercise-book page: the one figure that matters, written on ruled lines. */}
-      <section className="page-ruled mx-3 mt-3 overflow-hidden rounded-[14px] border border-line pt-3 pr-4 pb-4 pl-11">
-        <p className="leading-8 font-semibold text-ink-soft">{t(`profitFor.${period}`)}</p>
-        <Money
-          value={profit}
-          symbol
-          className={cn('block text-[44px] leading-[64px] font-bold tracking-tight', profit < 0 ? 'text-loss' : 'text-ink')}
-        />
-        <p className="leading-8 text-ink-soft">
-          {t('sales')} <Money value={summary?.salesTotal ?? 0} symbol className="font-semibold text-ink" />
-        </p>
-        <p className="leading-8 text-ink-soft">{t('salesCount', { count: summary?.salesCount ?? 0 })}</p>
+      {/* The one figure that matters: gold on black, the first Daftari's look. */}
+      <section className="mx-3 mt-3 overflow-hidden rounded-[14px] bg-band text-band-ink">
+        <div className="px-5 pt-4 pb-4">
+          <p className="font-label text-[15px] text-band-soft">{t(`profitFor.${period}`)}</p>
+          <p className="mt-1 flex items-baseline gap-2">
+            <span className="font-label text-lg text-band-soft">TSh</span>
+            <Money value={profit} className={cn('font-display text-[48px] leading-none', profit < 0 ? 'text-loss' : 'text-accent')} />
+          </p>
+        </div>
+        <dl className="grid grid-cols-2 border-t border-band-line">
+          <div className="px-5 py-3">
+            <dt className="font-label text-[13px] text-band-soft">{t('sales')}</dt>
+            <dd>
+              <Money value={summary?.salesTotal ?? 0} className="font-display text-xl" />
+            </dd>
+          </div>
+          <div className="border-l border-band-line px-5 py-3">
+            <dt className="font-label text-[13px] text-band-soft">{t('salesCountLabel')}</dt>
+            <dd className="font-display text-xl tnum">{summary?.salesCount ?? 0}</dd>
+          </div>
+        </dl>
       </section>
 
       <div className="px-3 pt-3">

@@ -45,16 +45,38 @@ const CUSTOMERS = [
   { name: 'Mzee Hamisi', phone: null },
 ];
 
+/** Who buys on account depends on the trade: fundis and builders at a hardware, small shops at a wholesaler. */
+const CUSTOMERS_BY_TYPE: Partial<Record<BusinessType, typeof CUSTOMERS>> = {
+  hardware: [
+    { name: 'Fundi Ally', phone: '0713 410 220' },
+    { name: 'Msasani Builders', phone: '0754 880 101' },
+    { name: 'Fundi Peter', phone: '0689 300 452' },
+    { name: 'Mama Neema (anajenga)', phone: '0765 212 909' },
+    { name: 'Mzee Hamisi', phone: null },
+  ],
+  wholesale: [
+    { name: 'Duka la Mama Asha', phone: '0713 222 111' },
+    { name: 'Upendo Mini Supermarket', phone: '0754 610 330' },
+    { name: 'Genge la Bakari', phone: '0689 145 870' },
+    { name: 'Kibanda cha Rehema', phone: '0765 777 888' },
+    { name: 'Hoteli ya Faraji', phone: '0712 909 404' },
+  ],
+};
+
 /** How many items a typical sale has, and how many sales a day, by trade. */
-const PACE: Partial<Record<BusinessType, { perDay: [number, number]; restock: [number, number] }>> = {
+const PACE: Partial<Record<BusinessType, { perDay: [number, number]; restock: [number, number]; credit?: number; bulk?: number }>> = {
   genge: { perDay: [18, 33], restock: [8, 14] },
   duka: { perDay: [20, 35], restock: [10, 20] },
   cosmetics: { perDay: [6, 12], restock: [3, 6] },
   clothes: { perDay: [4, 9], restock: [2, 4] },
-  hardware: { perDay: [6, 12], restock: [3, 6] },
+  hardware: { perDay: [6, 12], restock: [3, 6], credit: 0.15 },
   pharmacy: { perDay: [12, 22], restock: [5, 10] },
-  wholesale: { perDay: [4, 8], restock: [3, 6] },
+  // Shops buy several bags and cartons at a time, and many on account.
+  wholesale: { perDay: [6, 11], restock: [4, 8], credit: 0.25, bulk: 4 },
 };
+
+/** What a customer pays off a debt at a time: a shop settling with its wholesaler pays far more than a neighbour at a duka. */
+const DEBT_INSTALMENT: Partial<Record<BusinessType, number>> = { wholesale: 50000, hardware: 20000, clothes: 10000 };
 
 function prng(seed: number) {
   let state = seed;
@@ -106,7 +128,7 @@ export async function createDemoBusiness(
 
   const customers = [];
   // Most demo customers agreed to offers at the till; a few did not.
-  for (const [i, c] of CUSTOMERS.entries()) {
+  for (const [i, c] of (CUSTOMERS_BY_TYPE[type] ?? CUSTOMERS).entries()) {
     customers.push(await createCustomer({ businessId, name: c.name, phone: c.phone, offersConsent: i % 3 !== 2 }));
   }
 
@@ -183,7 +205,7 @@ export async function createDemoBusiness(
           id: crypto.randomUUID(),
           productId: p.id,
           description: productLabel(p),
-          qty: 1 + (random() < 0.25 ? 1 : 0),
+          qty: 1 + (random() < 0.25 ? 1 : 0) + (pace.bulk ? Math.floor(random() * pace.bulk) : 0),
           unitPrice: p.price,
           unitCost: p.starter?.cost ?? null,
           vatType: p.vatType,
@@ -191,7 +213,7 @@ export async function createDemoBusiness(
       });
       const total = lines.reduce((s, l) => s + l.qty * l.unitPrice, 0);
       const roll = random();
-      const onCredit = roll < 0.08;
+      const onCredit = roll < (pace.credit ?? 0.08);
       const named = onCredit || roll > 0.8;
       await recordSale({
         businessId,
@@ -208,7 +230,7 @@ export async function createDemoBusiness(
       await recordWaste({ businessId, userId, at: at(day, 18), productId: priced[0]!.id, qty: 1, reason: type === 'genge' ? 'imeoza' : 'imeharibika' });
     }
     if (daysAgo % 4 === 2) {
-      await recordDebtPayment({ businessId, userId, at: at(day, 17), customerId: pick(customers).id, amount: 2000, method: 'cash' });
+      await recordDebtPayment({ businessId, userId, at: at(day, 17), customerId: pick(customers).id, amount: DEBT_INSTALMENT[type] ?? 2000, method: 'cash' });
     }
 
     // Stock checks: a week ago nearly clean, today a few things missing.

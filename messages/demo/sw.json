@@ -1,0 +1,24 @@
+{
+  "demoPick": {
+    "pickTitle": "Chagua duka la mfano",
+    "pickHint": "Kila duka lina wiki mbili za mauzo, manunuzi, madeni na hesabu ya stoo. Hakuna kinachotumwa popote.",
+    "shops": {
+      "hardware": {
+        "kind": "Vifaa vya ujenzi",
+        "about": "Saruji, nondo, mabati na rangi. Mafundi wanaokopa, mwenye duka na wafanyakazi wawili."
+      },
+      "duka": {
+        "kind": "Duka la rejareja",
+        "about": "Sukari, mchele, mafuta, soda na vocha. Wateja wengi wa kila siku, mwenye duka na msaidizi mmoja."
+      },
+      "wholesale": {
+        "kind": "Jumla",
+        "about": "Mifuko na katoni kwa maduka madogo. Mauzo makubwa, mengi kwa mkopo, mwenye duka na wafanyakazi wawili."
+      },
+      "clothes": {
+        "kind": "Nguo na viatu",
+        "about": "Magauni ya kitenge, jeans, raba na mikoba kwa saizi. Mwenye duka na muuzaji mmoja."
+      }
+    }
+  }
+}

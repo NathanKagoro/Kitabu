@@ -3,7 +3,7 @@
  * Generates the PWA icons as real PNGs, with no image dependency.
  *
  * The mark is a ruled book -- the daftari every trader already keeps -- in the
- * app's own green and paper colours. Geometry is kept in a 24-unit space so it
+ * app's own colour and paper. Geometry is kept in a 24-unit space so it
  * matches components/brand/logo.tsx exactly; change one, change the other.
  */
 import { deflateSync } from 'node:zlib';
@@ -15,8 +15,8 @@ const root = fileURLToPath(new URL('..', import.meta.url));
 const outDir = join(root, 'public', 'icons');
 mkdirSync(outDir, { recursive: true });
 
-// Daftari's build draws the same book in its notebook blue (lib/edition).
-const BRAND = process.env.NEXT_PUBLIC_EDITION === 'daftari' ? [0x1d, 0x5c, 0x8c] : [0x0f, 0x6b, 0x3f];
+// Kitabu's petrol and Daftari's red (lib/edition EDITION_BRAND).
+const BRAND = process.env.NEXT_PUBLIC_EDITION === 'daftari' ? [0xc8, 0x21, 0x1e] : [0x0b, 0x55, 0x63];
 const SPINE = [0xc9, 0xc2, 0xb4]; // page edges, the line colour from the app
 const PAPER = [0xfa, 0xf8, 0xf4];
 

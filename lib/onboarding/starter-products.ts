@@ -97,6 +97,12 @@ export const STARTER_PRODUCTS: Record<BusinessType, readonly StarterProduct[]> =
     { name: 'Mafuta ya kupikia', variant: 'dumu 20L', category: 'Vyakula', unit: 'kipande', icon: 'droplet', price: 95000, cost: 87000 },
     { name: 'Sabuni', variant: 'katoni', category: 'Usafi', unit: 'kipande', icon: 'droplets', price: 55000, cost: 50000 },
     { name: 'Soda', variant: 'kreti', category: 'Vinywaji', unit: 'kipande', icon: 'cup-soda', price: 18000, cost: 16500 },
+    { name: 'Unga wa ngano', variant: 'mfuko 50kg', category: 'Vyakula', unit: 'kipande', icon: 'wheat', price: 78000, cost: 72000 },
+    { name: 'Unga wa sembe', variant: 'mfuko 25kg', category: 'Vyakula', unit: 'kipande', icon: 'wheat', price: 42000, cost: 38500 },
+    { name: 'Maji ya kunywa', variant: 'katoni 12', category: 'Vinywaji', unit: 'kipande', icon: 'glass-water', price: 6500, cost: 5600 },
+    { name: 'Tambi', variant: 'katoni', category: 'Vyakula', unit: 'kipande', icon: 'box', price: 24000, cost: 21500 },
+    { name: 'Dawa ya meno', variant: 'katoni 72', category: 'Usafi', unit: 'kipande', icon: 'droplets', price: 115000, cost: 104000 },
+    { name: 'Chumvi', variant: 'bando 25', category: 'Vyakula', unit: 'kipande', icon: 'box', price: 11000, cost: 9500 },
   ],
   services: [
     { name: 'Huduma', category: 'Huduma', unit: 'kipande', icon: 'wrench', price: 10000, cost: 0 },

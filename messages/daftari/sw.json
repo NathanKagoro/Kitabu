@@ -13,6 +13,7 @@
     "profit": "Faida",
     "sales": "Mauzo",
     "salesCount": "{count, plural, =0 {Hakuna mauzo bado} one {mauzo 1} other {mauzo #}}",
+    "salesCountLabel": "Idadi ya mauzo",
     "owed": "Unawadai wateja",
     "owedNone": "Wote wamelipa",
     "sell": "Andika mauzo",

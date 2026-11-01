@@ -8,13 +8,14 @@ import { useTranslations } from 'next-intl';
 import { cn } from '@/lib/cn';
 import { IS_DAFTARI } from '@/lib/edition';
 
+/** Kitabu opens on the business dashboard; the till is the next tab. The day's close lives on the dashboard and in Zaidi. */
 const KITABU_ITEMS = [
+  { href: '/muhtasari', key: 'nav.home', Icon: LayoutGrid },
   { href: '/mauzo', key: 'nav.sales', Icon: Wallet },
   // Buying stock is the other half of a trading day, so it gets a tab of its
   // own rather than hiding under "Zaidi".
   { href: '/manunuzi', key: 'nav.purchases', Icon: ShoppingCart },
   { href: '/madeni', key: 'nav.credit', Icon: BookUser },
-  { href: '/hesabu', key: 'nav.summary', Icon: LayoutGrid },
   { href: '/zaidi', key: 'nav.more', Icon: Menu },
 ] as const;
 
@@ -29,6 +30,10 @@ const DAFTARI_ITEMS = [
 
 const ITEMS = IS_DAFTARI ? DAFTARI_ITEMS : KITABU_ITEMS;
 
+/**
+ * Daftari: the black band again at the bottom, gold for the open tab.
+ * Kitabu: a white bar with a petrol rule over the open tab, like an office system.
+ */
 export function BottomNav() {
   const pathname = usePathname();
   const t = useTranslations();
@@ -36,7 +41,10 @@ export function BottomNav() {
   return (
     <nav
       aria-label={t('nav.more')}
-      className="fixed inset-x-0 bottom-0 z-40 border-t border-band-line bg-band pb-[env(safe-area-inset-bottom,0px)]"
+      className={cn(
+        'fixed inset-x-0 bottom-0 z-40 border-t pb-[env(safe-area-inset-bottom,0px)]',
+        IS_DAFTARI ? 'border-band-line bg-band' : 'border-line bg-surface'
+      )}
     >
       <ul className="mx-auto flex max-w-lg">
         {ITEMS.map(({ href, key, Icon }) => {
@@ -52,20 +60,14 @@ export function BottomNav() {
                 aria-current={active ? 'page' : undefined}
                 className={cn(
                   'relative flex h-[68px] flex-col items-center justify-center gap-1 px-0.5',
-                  active ? (IS_DAFTARI ? 'text-brand' : 'text-accent') : 'text-band-soft'
+                  IS_DAFTARI ? (active ? 'text-accent' : 'text-band-soft') : active ? 'text-brand' : 'text-ink-faint'
                 )}
               >
-                {/* Kitabu marks the open tab with a gold bar along the top edge; Daftari with a soft pill. */}
-                {active && !IS_DAFTARI ? <span aria-hidden className="absolute inset-x-3 top-0 h-[3px] rounded-b bg-accent" /> : null}
-                <span
-                  className={cn(
-                    'flex h-8 w-14 items-center justify-center rounded-full',
-                    active && IS_DAFTARI && 'bg-brand-tint'
-                  )}
-                >
-                  <Icon size={22} strokeWidth={active ? 2.4 : 2} />
-                </span>
-                <span className={cn('text-[11px] leading-none', IS_DAFTARI ? (active ? 'font-bold' : 'font-medium') : 'font-label text-[13px]')}>
+                {active ? (
+                  <span aria-hidden className={cn('absolute inset-x-3 top-0 h-[3px] rounded-b', IS_DAFTARI ? 'bg-accent' : 'bg-brand')} />
+                ) : null}
+                <Icon size={22} strokeWidth={active ? 2.4 : 2} />
+                <span className={cn('leading-none', IS_DAFTARI ? 'font-label text-[13px]' : cn('text-[11.5px]', active ? 'font-bold' : 'font-medium'))}>
                   {t(key)}
                 </span>
               </Link>

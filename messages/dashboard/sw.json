@@ -1,0 +1,89 @@
+{
+  "dashboard": {
+    "title": "Muhtasari",
+    "periodLabel": "Kipindi",
+    "figures": "Hali ya biashara",
+    "periods": {
+      "today": "Leo",
+      "week": "Wiki hii",
+      "month": "Mwezi huu"
+    },
+    "versus": {
+      "today": "dhidi ya jana",
+      "week": "dhidi ya wiki iliyopita",
+      "month": "dhidi ya mwezi uliopita"
+    },
+    "noSales": "Bado hakuna mauzo kipindi hiki.",
+    "kpi": {
+      "sales": "Mauzo",
+      "salesCount": "{count, plural, =0 {hakuna mauzo} one {mauzo 1} other {mauzo #}}",
+      "profit": "Faida (makisio)",
+      "margin": "{pct}% ya mauzo",
+      "noMargin": "hakuna mauzo bado",
+      "cashSales": "Mauzo ya taslimu",
+      "cashSalesHint": "pesa taslimu iliyopokelewa",
+      "average": "Wastani wa mauzo",
+      "perSale": "kwa kila mauzo",
+      "expenses": "Matumizi",
+      "owed": "Wateja wanadaiwa",
+      "owedPeople": "{count, plural, =0 {hakuna anayedaiwa} one {mteja 1} other {wateja #}}"
+    },
+    "actions": {
+      "title": "Kazi za haraka",
+      "sell": "Uza",
+      "buy": "Nunua stoo",
+      "expense": "Matumizi",
+      "close": "Funga siku"
+    },
+    "drawer": {
+      "title": "Droo ya leo",
+      "open": "Iko wazi",
+      "closed": "Imefungwa",
+      "expected": "Inapaswa kuwa kwenye droo",
+      "opening": "Ya kuanzia",
+      "cashIn": "Iliyoingia",
+      "cashOut": "Iliyotoka",
+      "link": "Fungua hesabu ya leo"
+    },
+    "trend": {
+      "title": "Mauzo ya siku 7",
+      "average": "Wastani kwa siku",
+      "before": "Siku 7 kabla",
+      "change": "Mabadiliko"
+    },
+    "mix": {
+      "title": "Wateja walivyolipa",
+      "cash": "Taslimu",
+      "mobile": "Simu na benki",
+      "credit": "Deni"
+    },
+    "stock": {
+      "title": "Stoo ya kujaza",
+      "out": "Zimeisha {count}",
+      "low": "Zinapungua {count}",
+      "outBadge": "Imeisha",
+      "lowBadge": "Inapungua",
+      "allGood": "Stoo yote iko juu ya kiwango cha kuagiza.",
+      "all": "Bidhaa zote",
+      "left": "zimebaki {qty}"
+    },
+    "top": {
+      "title": "Bidhaa zinazouzwa zaidi",
+      "product": "Bidhaa",
+      "qty": "Idadi",
+      "value": "Thamani"
+    },
+    "recent": {
+      "title": "Mauzo ya karibuni",
+      "items": "{count, plural, one {bidhaa 1} other {bidhaa #}}",
+      "split": "Amegawanya",
+      "all": "Mauzo yote"
+    },
+    "staff": {
+      "title": "Mauzo kwa muuzaji",
+      "all": "Ona kwa kina",
+      "unknown": "Bila jina"
+    },
+    "noCompare": "hakuna ya kulinganisha"
+  }
+}

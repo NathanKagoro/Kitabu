@@ -1,0 +1,89 @@
+{
+  "dashboard": {
+    "title": "Overview",
+    "periodLabel": "Period",
+    "figures": "How the business is doing",
+    "periods": {
+      "today": "Today",
+      "week": "This week",
+      "month": "This month"
+    },
+    "versus": {
+      "today": "vs yesterday",
+      "week": "vs last week",
+      "month": "vs last month"
+    },
+    "noSales": "No sales in this period yet.",
+    "kpi": {
+      "sales": "Sales",
+      "salesCount": "{count, plural, =0 {no sales} one {1 sale} other {# sales}}",
+      "profit": "Profit (estimate)",
+      "margin": "{pct}% of sales",
+      "noMargin": "no sales yet",
+      "cashSales": "Cash sales",
+      "cashSalesHint": "cash taken at the till",
+      "average": "Average sale",
+      "perSale": "per sale",
+      "expenses": "Expenses",
+      "owed": "Customers owe",
+      "owedPeople": "{count, plural, =0 {nobody owes} one {1 customer} other {# customers}}"
+    },
+    "actions": {
+      "title": "Shortcuts",
+      "sell": "Sell",
+      "buy": "Buy stock",
+      "expense": "Expense",
+      "close": "Close day"
+    },
+    "drawer": {
+      "title": "Today's cash drawer",
+      "open": "Open",
+      "closed": "Closed",
+      "expected": "Should be in the drawer",
+      "opening": "Opening",
+      "cashIn": "Cash in",
+      "cashOut": "Cash out",
+      "link": "Open today's count"
+    },
+    "trend": {
+      "title": "Sales, last 7 days",
+      "average": "Daily average",
+      "before": "7 days before",
+      "change": "Change"
+    },
+    "mix": {
+      "title": "How customers paid",
+      "cash": "Cash",
+      "mobile": "Mobile and bank",
+      "credit": "Credit"
+    },
+    "stock": {
+      "title": "Stock to reorder",
+      "out": "{count} out",
+      "low": "{count} low",
+      "outBadge": "Out",
+      "lowBadge": "Low",
+      "allGood": "All stock is above its reorder level.",
+      "all": "All products",
+      "left": "{qty} left"
+    },
+    "top": {
+      "title": "Best sellers",
+      "product": "Product",
+      "qty": "Qty",
+      "value": "Value"
+    },
+    "recent": {
+      "title": "Latest sales",
+      "items": "{count, plural, one {1 item} other {# items}}",
+      "split": "Split",
+      "all": "All sales"
+    },
+    "staff": {
+      "title": "Sales by seller",
+      "all": "See details",
+      "unknown": "No name"
+    },
+    "noCompare": "nothing to compare yet"
+  }
+}

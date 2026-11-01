@@ -15,6 +15,7 @@ import {
   TrendingUp,
   Truck,
   Users,
+  Wallet,
 } from '@/components/icons';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -63,7 +64,11 @@ export default function MorePage() {
         // Daftari: customers have a tab of their own, and the profit split lives here.
         ...(IS_DAFTARI
           ? [{ href: '/leo/mgawanyo', label: t('daftari.split.editTitle'), icon: <TrendingUp size={22} />, permission: 'viewProfit' as const }]
-          : [{ href: '/wateja', label: t('clients.title'), icon: <Users size={22} />, permission: 'customerList' as const }]),
+          : [
+              // Kitabu: the day's count and close, reached from the dashboard too.
+              { href: '/hesabu', label: t('summary.title'), icon: <Wallet size={22} /> },
+              { href: '/wateja', label: t('clients.title'), icon: <Users size={22} />, permission: 'customerList' as const },
+            ]),
         { href: '/madeni', label: t('daftari.unpaid'), icon: <Users size={22} />, feature: 'credit' as const, daftariOnly: true },
         { href: '/matumizi', label: t('expenses.title'), icon: <Receipt size={22} />, feature: 'expenses', permission: 'recordExpense' },
         { href: '/faida', label: t('profit.title'), icon: <TrendingUp size={22} />, permission: 'viewProfit' },
