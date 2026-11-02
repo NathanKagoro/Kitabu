@@ -16,7 +16,7 @@ Both modes are the **same app**. The business type chosen at onboarding decides 
 Full product spec: `docs/MVP_SPEC.md`. Build order: `docs/BUILD_PLAN.md`. Read both before starting a phase.
 
 ## Non-negotiable product principles
-1. **Swahili first.** Every user-facing string goes through i18n (`sw` default, `en` secondary). Never hard-code UI text. Write Swahili that a market trader would actually say, not formal translated Swahili.
+1. **Two languages, both complete.** Every user-facing string goes through i18n (`sw` and `en`). Kitabu opens in English, Daftari in Swahili (`DEFAULT_LOCALE`, lib/i18n/config.ts). Never hard-code UI text. Write Swahili that a market trader would actually say, not formal translated Swahili.
 2. **Three taps to a sale.** Recording a sale in genge mode must take ≤3 taps from the home screen.
 3. **Works offline.** Sales, expenses and credit entries must save while offline and sync later. Never lose a sale.
 4. **Cheap phones, expensive data.** Target a 2 GB RAM Android phone on 3G. Keep JS bundles small, avoid heavy libraries, compress images, no autoplaying anything.

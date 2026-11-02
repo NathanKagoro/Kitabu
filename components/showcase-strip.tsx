@@ -13,7 +13,7 @@ export function ShowcaseStrip() {
       <span className="min-w-0 flex-1 truncate">{t('banner')}</span>
       {IS_DAFTARI ? null : (
         // Kitabu's demo has four trades: back to the choice.
-        <a href={withBase('/demo/')} className="flex h-8 shrink-0 items-center rounded-full border border-band/40 px-3 text-xs font-bold">
+        <a href={withBase('/demo/?chagua=1')} className="flex h-8 shrink-0 items-center rounded-full border border-band/40 px-3 text-xs font-bold">
           {t('switch')}
         </a>
       )}

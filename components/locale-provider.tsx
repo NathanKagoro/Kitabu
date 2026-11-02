@@ -4,28 +4,18 @@ import { NextIntlClientProvider, type AbstractIntlMessages } from 'next-intl';
 import { createContext, useCallback, useContext, useEffect, useState, type ReactNode } from 'react';
 
 import { DEFAULT_LOCALE, isLocale, LOCALE_STORAGE_KEY, type Locale } from '@/lib/i18n/config';
-import { EDITION_MESSAGES_SW, editionMessagesEn } from '@/lib/edition/messages';
-import baseSw from '@/messages/sw.json';
-
-const swMessages = { ...baseSw, ...EDITION_MESSAGES_SW };
+import { DEFAULT_MESSAGES, loadMessages } from '@/lib/edition/messages';
 
 /**
  * The language lives on the phone (localStorage), not in a cookie: the app is
  * plain files on a static host, so there is no server to read a cookie. The
- * HTML arrives in Swahili; a phone set to English switches straight after it
- * loads. English is fetched only by phones that use it.
+ * HTML arrives in the edition's language (English for Kitabu, Swahili for
+ * Daftari); a phone set to the other switches straight after it loads, and
+ * only those phones fetch it.
  */
 
 type SetLocale = (locale: Locale) => Promise<void>;
 const SetLocaleContext = createContext<SetLocale | null>(null);
-
-const loaders: Record<Locale, () => Promise<AbstractIntlMessages>> = {
-  sw: async () => swMessages as unknown as AbstractIntlMessages,
-  en: async () => ({
-    ...((await import('@/messages/en.json')).default as unknown as AbstractIntlMessages),
-    ...(await editionMessagesEn()),
-  }),
-};
 
 function storedLocale(): Locale {
   try {
@@ -39,11 +29,11 @@ function storedLocale(): Locale {
 export function LocaleProvider({ children }: { children: ReactNode }) {
   const [state, setState] = useState<{ locale: Locale; messages: AbstractIntlMessages }>({
     locale: DEFAULT_LOCALE,
-    messages: swMessages as unknown as AbstractIntlMessages,
+    messages: DEFAULT_MESSAGES,
   });
 
   const apply = useCallback(async (locale: Locale) => {
-    const messages = await loaders[locale]();
+    const messages = await loadMessages(locale);
     document.documentElement.lang = locale;
     setState({ locale, messages });
   }, []);
@@ -52,7 +42,7 @@ export function LocaleProvider({ children }: { children: ReactNode }) {
     const saved = storedLocale();
     if (saved === DEFAULT_LOCALE) return;
     let live = true;
-    void loaders[saved]().then((messages) => {
+    void loadMessages(saved).then((messages) => {
       if (!live) return;
       document.documentElement.lang = saved;
       setState({ locale: saved, messages });

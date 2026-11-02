@@ -272,7 +272,7 @@ export default function SalesPage() {
                   </span>
                 )}
                 <span className="pr-6">
-                  <span className="line-clamp-3 text-[15px] leading-tight font-semibold break-words hyphens-auto">{product.name}</span>
+                  <span className="line-clamp-3 text-[14px] leading-tight font-semibold hyphens-auto">{product.name}</span>
                   {product.variant ? <span className="mt-0.5 line-clamp-1 text-xs text-ink-soft">{product.variant}</span> : null}
                 </span>
                 <span>

@@ -11,6 +11,7 @@ import { withBase } from '@/lib/base-path';
 import { HOME, IS_DAFTARI } from '@/lib/edition';
 import { businessDay } from '@/lib/date';
 import { demoShop, type DemoShop } from '@/lib/demo-shops';
+import { DEFAULT_LOCALE, isLocale } from '@/lib/i18n/config';
 import { db, getMeta, META_KEYS, setDb, setMeta } from '@/lib/local/db';
 import { setShowcase } from '@/lib/showcase';
 import { uuidv7 } from '@/lib/uuid';
@@ -21,10 +22,10 @@ const SEEDED_SHOP = 'showcaseShop';
 /**
  * The demo link: a sample shop with two weeks of trading, no sign-in.
  * Everything stays in this browser (see lib/showcase.ts). Kitabu offers four
- * trades (/demo?shop=hardware|duka|wholesale|clothes; /demo alone shows the
- * choice); Daftari opens its one duka. The shop is rebuilt when the link is
+ * trades (/demo?shop=hardware|duka|wholesale|clothes); /demo alone opens the
+ * hardware shop and /demo?chagua=1 shows the choice. Daftari opens its one duka. The shop is rebuilt when the link is
  * opened on a new day or for another trade, so "today" always has sales in
- * it. ?lang=en opens it in English.
+ * it. ?lang=sw or ?lang=en sets the language; otherwise the phone's own.
  */
 export default function DemoPage() {
   const t = useTranslations('demo');
@@ -36,9 +37,11 @@ export default function DemoPage() {
   // Which shop: from the link, or the choice below.
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
+    // /demo opens the hardware shop; the strip's "Badilisha" comes back with ?chagua=1 for the choice.
     // eslint-disable-next-line react-hooks/set-state-in-effect
-    setShop(demoShop(params.get('shop'), IS_DAFTARI));
-    void setLocale(params.get('lang') === 'en' ? 'en' : 'sw');
+    setShop(params.get('chagua') === '1' ? null : demoShop(params.get('shop') ?? 'hardware', IS_DAFTARI));
+    const lang = params.get('lang');
+    if (isLocale(lang)) void setLocale(lang);
   }, [setLocale]);
 
   useEffect(() => {
@@ -46,7 +49,8 @@ export default function DemoPage() {
     let cancelled = false;
     void (async () => {
       try {
-        const lang = new URLSearchParams(window.location.search).get('lang') === 'en' ? 'en' : 'sw';
+        const asked = new URLSearchParams(window.location.search).get('lang');
+        const lang = isLocale(asked) ? asked : DEFAULT_LOCALE;
         setShowcase(true);
         setDb(null);
 

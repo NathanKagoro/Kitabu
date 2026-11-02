@@ -131,6 +131,14 @@ async function firstSignIn(page: Page) {
   await page.waitForURL(/\/mauzo\/?$/);
 }
 
+// The flows below are written in Swahili: phones start in Swahili unless a
+// test picks a language itself (Kitabu's default is English).
+test.beforeEach(async ({ page }) => {
+  await page.addInitScript(() => {
+    if (!localStorage.getItem('kitabu_locale')) localStorage.setItem('kitabu_locale', 'sw');
+  });
+});
+
 test('offline sales survive a reload and sync exactly once when the connection returns', async ({ page, context }) => {
   const server = await fakeSupabase(page);
   await firstSignIn(page);
@@ -241,6 +249,8 @@ test('the sales screen fits the data budget on a cold load', async ({ page }) =>
     if (types.get(e.requestId) === 'Script') sizes.set(e.requestId, e.encodedDataLength);
   });
 
+  // Measured in the default language (English): a phone set to Swahili also fetches that wording once.
+  await page.evaluate(() => localStorage.setItem('kitabu_locale', 'en'));
   await page.goto('/mauzo/', { waitUntil: 'load' });
   await expect(page.getByRole('button', { name: /Red 01/ }).first()).toBeVisible();
   await page.waitForTimeout(300);
@@ -332,8 +342,8 @@ test('the demo link offers four trades, opens a stocked hardware shop with no si
     if (request.url().startsWith(FAKE_SUPABASE)) requests++;
   });
 
-  // The plain link offers the trades; choosing one opens it on the dashboard.
-  await page.goto('/demo');
+  // The choice of trades; picking one opens it on the dashboard. (/demo alone opens the hardware shop.)
+  await page.goto('/demo?chagua=1');
   await page.getByRole('button', { name: /Baraka Hardware/ }).click();
   await page.waitForURL(/\/muhtasari\/?$/, { timeout: 60_000 });
   await expect(page.getByText('Duka la mfano', { exact: false })).toBeVisible();
@@ -353,7 +363,7 @@ test('the demo link offers four trades, opens a stocked hardware shop with no si
   await page.getByRole('button', { name: /Saruji 50kg/ }).first().click();
   await page.getByRole('button', { name: 'Lipa taslimu' }).click();
   await expect(page.getByText('Imehifadhiwa!')).toBeVisible();
-  await page.goto('/demo?shop=hardware');
+  await page.goto('/demo');
   await page.waitForURL(/\/muhtasari\/?$/, { timeout: 60_000 });
   await page.goto('/mauzo/historia/');
   await expect(page.getByText('Saruji', { exact: false }).first()).toBeVisible();

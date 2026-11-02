@@ -4,7 +4,7 @@ import { productLabel } from '@/lib/products';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { Info, Lock, TriangleAlert } from '@/components/icons';
 import { WithdrawSheet } from '@/components/summary/withdraw-sheet';
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { useState } from 'react';
 
 import { useApp } from '@/components/app-provider';
@@ -26,6 +26,7 @@ import { formatQty } from '@/lib/units';
 
 export default function SummaryPage() {
   const t = useTranslations('summary');
+  const locale = useLocale();
   const toast = useToast();
   const { businessId, userId, can } = useApp();
   const [range, setRange] = useState<7 | 30>(7);
@@ -78,7 +79,7 @@ export default function SummaryPage() {
     <>
       <PageHeader
         title={t('title')}
-        subtitle={new Date().toLocaleDateString('sw-TZ', { weekday: 'long', day: 'numeric', month: 'long', timeZone: 'Africa/Dar_es_Salaam' })}
+        subtitle={new Date().toLocaleDateString(locale === 'en' ? 'en-GB' : 'sw-TZ', { weekday: 'long', day: 'numeric', month: 'long', timeZone: 'Africa/Dar_es_Salaam' })}
       />
 
       {/* The day's takings: gold on black in Kitabu, the one loud thing on the screen. */}

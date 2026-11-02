@@ -3,7 +3,7 @@
 import { useLiveQuery } from 'dexie-react-hooks';
 import { HandCoins, MessageCircle } from '@/components/icons';
 import { useSearchParams } from 'next/navigation';
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { Suspense, useState } from 'react';
 
 import { hasOfferConsent } from '@/lib/customers';
@@ -41,6 +41,7 @@ function CustomerPage() {
   const t = useTranslations('customers');
   const tp = useTranslations('payment');
   const tc = useTranslations('common');
+  const locale = useLocale();
   const toast = useToast();
   const { businessId, userId, business, member } = useApp();
   const lastPaid = useLastPaidLabel();
@@ -94,7 +95,7 @@ function CustomerPage() {
   };
 
   const date = (iso: string) =>
-    new Date(iso).toLocaleDateString('sw-TZ', { day: 'numeric', month: 'short', timeZone: 'Africa/Dar_es_Salaam' });
+    new Date(iso).toLocaleDateString(locale === 'en' ? 'en-GB' : 'sw-TZ', { day: 'numeric', month: 'short', timeZone: 'Africa/Dar_es_Salaam' });
 
   return (
     <>

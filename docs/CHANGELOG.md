@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.10.1 — Kitabu speaks English first; the demo opens the hardware shop (2026-11-02)
+
+- **Kitabu's default language is English.** A phone that has never chosen a language opens in English; Swahili is one tap away in Mipangilio and is fetched only by phones that pick it. Daftari stays Swahili first. Each edition now ships only its default wording (`lib/edition/messages*.ts`); sales screen first load 209.2 KB.
+- **`/demo` opens Baraka Hardware directly.** The choice of four shops is at `/demo?chagua=1`, where the demo strip's "Switch" button goes. `?lang=sw|en` still sets the language.
+- Dates on Hesabu ya leo and a customer's credit page follow the chosen language.
+- Till tiles no longer split a product name mid-word.
+- End-to-end tests run in Swahili (set per test); the budget is measured in English.
+
 ## 0.10.0 — Navy Kitabu, a Stoo tab, wholesale prices, scanning and printing (2026-11-01)
 
 **Deploy note:** run migration `0015_wholesale_prices` on the server (`npm run db:migrate`) before shops set wholesale prices. Until a product has one, nothing new is sent.
