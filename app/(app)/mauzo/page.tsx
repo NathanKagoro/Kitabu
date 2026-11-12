@@ -262,7 +262,7 @@ export default function SalesPage() {
                   addProduct(product);
                 }}
                 className={cn(
-                  'relative flex min-h-[112px] flex-col justify-between gap-2 rounded-[12px] border p-2.5 text-left select-none',
+                  'till-tile relative flex min-h-[112px] flex-col justify-between gap-2 rounded-[12px] border p-2.5 text-left select-none',
                   qty > 0 ? 'border-brand bg-brand-tint ring-1 ring-brand' : 'border-line bg-surface active:bg-paper'
                 )}
               >

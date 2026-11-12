@@ -13,6 +13,7 @@ import { BarChart } from '@/components/summary/bar-chart';
 import { SyncIndicator } from '@/components/sync-indicator';
 import { Band, BandTitle } from '@/components/ui/band';
 import { Money } from '@/components/ui/bits';
+import { RoundActions } from '@/components/ui/round-actions';
 import { Segmented } from '@/components/ui/segmented';
 import { averageSale, marginPercent, paymentMix, percentChange, stockAlerts } from '@/lib/calc/dashboard';
 import { periodRange, previousRange } from '@/lib/calc/periods';
@@ -177,10 +178,9 @@ export default function DashboardPage() {
   const showProfit = can('viewProfit');
 
   const actions = [
-    { href: '/mauzo', label: t('actions.sell'), Icon: Wallet, primary: true, ok: can('sell') },
-    { href: '/manunuzi', label: t('actions.buy'), Icon: ShoppingCart, primary: false, ok: can('recordPurchase') },
-    { href: '/matumizi', label: t('actions.expense'), Icon: Receipt, primary: false, ok: can('recordExpense') && show('expenses') },
-    { href: '/hesabu', label: t('actions.close'), Icon: Lock, primary: false, ok: can('closeDay') },
+    { href: '/manunuzi', label: t('actions.buy'), Icon: ShoppingCart, ok: can('recordPurchase') },
+    { href: '/matumizi', label: t('actions.expense'), Icon: Receipt, ok: can('recordExpense') && show('expenses') },
+    { href: '/hesabu', label: t('actions.close'), Icon: Lock, ok: can('closeDay') },
   ].filter((a) => a.ok);
 
   return (
@@ -196,73 +196,65 @@ export default function DashboardPage() {
         />
       </div>
 
-      {/* The figures, as one statement: sales across the top, the rest beneath it, ruled into cells. */}
-      <section className="mx-3 mt-3 overflow-hidden rounded-[12px] border border-line bg-surface" aria-label={t('figures')}>
-        <div className="border-b border-line px-4 pt-3.5 pb-4">
+      {/* The day's sales on a navy card, the way a bank app shows a balance; the other figures as tiles beneath. */}
+      <section className="mx-3 mt-3" aria-label={t('figures')}>
+        <div className="rounded-[18px] bg-hero px-[18px] pt-4 pb-5 text-band-ink">
           <div className="flex items-baseline justify-between gap-3">
-            <p className="text-[13px] font-medium text-ink-soft">{t('kpi.sales')}</p>
-            <p className="tnum text-xs text-ink-faint">{t('kpi.salesCount', { count: now.salesCount })}</p>
+            <p className="text-[13px] font-medium text-band-soft">{t('kpi.sales')}</p>
+            <p className="tnum text-xs text-band-soft">{t('kpi.salesCount', { count: now.salesCount })}</p>
           </div>
-          <p className="mt-1 flex items-baseline gap-1.5">
-            <span className="text-sm font-semibold text-ink-soft">TSh</span>
-            <Money value={now.salesTotal} className="text-[34px] leading-none font-bold tracking-tight" />
+          <p className="mt-1.5 flex items-baseline gap-1.5">
+            <span className="text-sm font-semibold text-band-soft">TSh</span>
+            <Money value={now.salesTotal} className="text-[38px] leading-none font-bold tracking-tight" />
           </p>
-          <div className="mt-2">
-            <Change pct={percentChange(now.salesTotal, then.salesTotal)} label={versus} empty={t('noCompare')} />
+          <div className="mt-2.5">
+            <Change pct={percentChange(now.salesTotal, then.salesTotal)} label={versus} empty={t('noCompare')} onDark />
           </div>
         </div>
-        <div className="grid grid-cols-2">
+        <div className="mt-2 grid grid-cols-2 gap-2">
           {showProfit ? (
             <Figure label={t('kpi.profit')} value={now.estimatedProfit} tone={now.estimatedProfit < 0 ? 'loss' : 'plain'}>
-              {marginPercent(now.estimatedProfit, now.salesTotal) === null ? (
-                <span className="text-xs text-ink-faint">{t('kpi.noMargin')}</span>
-              ) : (
-                <span className="text-xs text-ink-faint">{t('kpi.margin', { pct: marginPercent(now.estimatedProfit, now.salesTotal) ?? 0 })}</span>
-              )}
+              <span className="text-xs text-ink-faint">
+                {marginPercent(now.estimatedProfit, now.salesTotal) === null
+                  ? t('kpi.noMargin')
+                  : t('kpi.margin', { pct: marginPercent(now.estimatedProfit, now.salesTotal) ?? 0 })}
+              </span>
             </Figure>
           ) : (
             <Figure label={t('kpi.cashSales')} value={now.cash}>
               <span className="text-xs text-ink-faint">{t('kpi.cashSalesHint')}</span>
             </Figure>
           )}
-          <Figure label={t('kpi.average')} value={averageSale(now.salesTotal, now.salesCount)} divider>
+          <Figure label={t('kpi.average')} value={averageSale(now.salesTotal, now.salesCount)}>
             <Change
               pct={percentChange(averageSale(now.salesTotal, now.salesCount), averageSale(then.salesTotal, then.salesCount))}
               label={t('kpi.perSale')}
               empty={t('noCompare')}
             />
           </Figure>
-          <Figure label={t('kpi.expenses')} value={now.expensesTotal} top>
+          <Figure label={t('kpi.expenses')} value={now.expensesTotal}>
             <Change pct={percentChange(now.expensesTotal, then.expensesTotal)} invert label={versus} empty={t('noCompare')} />
           </Figure>
-          <Figure label={t('kpi.owed')} value={owed} tone={owed > 0 ? 'debt' : 'plain'} top divider href="/madeni">
+          <Figure label={t('kpi.owed')} value={owed} tone={owed > 0 ? 'debt' : 'plain'} href="/madeni">
             <span className="text-xs text-ink-faint">{t('kpi.owedPeople', { count: owing })}</span>
           </Figure>
         </div>
       </section>
 
-      {actions.length ? (
-        <nav
-          aria-label={t('actions.title')}
-          className="mx-3 mt-3 grid gap-2"
-          style={{ gridTemplateColumns: `repeat(${actions.length}, minmax(0, 1fr))` }}
-        >
-          {actions.map(({ href, label, Icon, primary }) => (
-            <Link
-              key={href}
-              href={href}
-              prefetch={false}
-              className={cn(
-                'flex min-h-[76px] flex-col items-center justify-center gap-1.5 rounded-[12px] border px-1 text-center text-[13px] leading-tight font-semibold',
-                primary ? 'border-brand bg-brand text-on-fill active:bg-brand-dark' : 'border-line bg-surface text-ink active:bg-paper'
-              )}
-            >
-              <Icon size={22} className={primary ? undefined : 'text-brand'} />
-              {label}
-            </Link>
-          ))}
-        </nav>
+      {/* Selling is the job that matters most, so it gets the one full-width button; the rest are round shortcuts. */}
+      {can('sell') ? (
+        <div className="mx-3 mt-3">
+          <Link
+            href="/mauzo"
+            prefetch={false}
+            className="flex h-14 items-center justify-center gap-2 rounded-[14px] bg-brand text-[17px] font-bold text-on-fill active:bg-brand-dark"
+          >
+            <Wallet size={22} />
+            {t('actions.sell')}
+          </Link>
+        </div>
       ) : null}
+      <RoundActions actions={actions} label={t('actions.title')} />
 
       <Panel
         title={t('drawer.title')}
@@ -451,21 +443,17 @@ export default function DashboardPage() {
   );
 }
 
-/** One cell of the figures block: a label, the amount, and a line under it. */
+/** One figure as a white tile: label, amount, and a line under it. */
 function Figure({
   label,
   value,
   tone = 'plain',
-  top = false,
-  divider = false,
   href,
   children,
 }: {
   label: string;
   value: number;
   tone?: 'plain' | 'loss' | 'debt';
-  top?: boolean;
-  divider?: boolean;
   href?: string;
   children?: ReactNode;
 }) {
@@ -479,7 +467,7 @@ function Figure({
       <span className="mt-1.5 block">{children}</span>
     </>
   );
-  const frame = cn('block min-w-0 px-4 py-3', top && 'border-t border-line', divider && 'border-l border-line');
+  const frame = 'card block min-w-0 px-4 py-3';
   return href ? (
     <Link href={href} prefetch={false} className={cn(frame, 'active:bg-paper')}>
       {body}

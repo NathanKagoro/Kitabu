@@ -5,9 +5,8 @@ import { ArrowDownRight, ArrowUpRight, ChevronRight } from '@/components/icons';
 import { cn } from '@/lib/cn';
 
 /**
- * A section of the dashboard, the way an office system draws one: a white
- * panel with a title bar ruled off from its content, and, when the section
- * leads somewhere, a footer link across its full width.
+ * A section of the dashboard: a white card with a bold title, and, when the
+ * section leads somewhere, a footer link across its full width.
  */
 export function Panel({
   title,
@@ -23,9 +22,9 @@ export function Panel({
   className?: string;
 }) {
   return (
-    <section className={cn('mx-3 mt-3 overflow-hidden rounded-[12px] border border-line bg-surface', className)}>
-      <header className="flex min-h-12 items-center gap-2 border-b border-line px-4">
-        <h2 className="min-w-0 flex-1 truncate text-[15px] font-semibold">{title}</h2>
+    <section className={cn('mx-3 mt-3 overflow-hidden rounded-[18px] bg-surface', className)}>
+      <header className="flex min-h-[52px] items-center gap-2 px-4">
+        <h2 className="min-w-0 flex-1 truncate text-base font-bold">{title}</h2>
         {aside}
       </header>
       {children}
@@ -48,21 +47,25 @@ export function Change({
   invert = false,
   label,
   empty,
+  onDark = false,
 }: {
   pct: number | null;
   invert?: boolean;
   label: string;
   /** Said instead when there is nothing to compare with. */
   empty: string;
+  /** On the navy sales card: lighter greens and reds on a translucent chip. */
+  onDark?: boolean;
 }) {
-  if (pct === null) return <span className="text-xs text-ink-faint">{empty}</span>;
+  const muted = onDark ? 'text-band-soft' : 'text-ink-faint';
+  if (pct === null) return <span className={cn('text-xs', muted)}>{empty}</span>;
   const good = invert ? pct <= 0 : pct >= 0;
   return (
-    <span className="inline-flex flex-wrap items-center gap-1.5 text-xs text-ink-faint">
+    <span className={cn('inline-flex flex-wrap items-center gap-1.5 text-xs', muted)}>
       <span
         className={cn(
           'tnum inline-flex items-center gap-0.5 rounded-[6px] px-1.5 py-0.5 font-bold',
-          good ? 'bg-up/10 text-up' : 'bg-down/10 text-down'
+          onDark ? cn('bg-white/12', good ? 'text-[#8fe0b4]' : 'text-[#ffaba4]') : good ? 'bg-up/10 text-up' : 'bg-down/10 text-down'
         )}
       >
         {pct >= 0 ? <ArrowUpRight size={13} strokeWidth={2.6} /> : <ArrowDownRight size={13} strokeWidth={2.6} />}

@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.11.0 — Kitabu's "Bank card" look, from a five-way design study (2026-11-13)
+
+Five designer personas each restyled the dashboard against the same brief (mid-size Tanzanian shops, cheap Android phones on 3G, no web fonts, no new JavaScript, 48px taps, nothing ornate): Bank card, Counter, Daylight, Office and Harbour. **Bank card** won, with one idea from Counter (a full-width Sell button).
+
+- **The page:** a calm blue-grey background (#eef2f8) with white cards, no outlines, 16px corners. Every Kitabu screen follows through the shared `card`, segmented control and till tile styles; Daftari keeps its own look.
+- **The dashboard:** the day's sales on a navy card, like a bank balance, with the change against the period before on a light chip; profit, average sale, expenses and money owed as four white tiles; one full-width **Sell** button; Buy stock, Expense and Close day as round shortcuts like a bank app's.
+- **Stoo:** stock value on the same navy card; in stock, running low and out of stock as tiles that filter the list (the separate filter bar is gone); the stock jobs as round shortcuts.
+- **Hesabu ya leo:** the takings card uses the same navy card.
+- New `--color-hero` token (navy in Kitabu, the band colour in Daftari) and `components/ui/round-actions.tsx`.
+- English: the purchases screen is "Buy stock" (it was "Stock", which clashed with the new Stock tab).
+- No new dependencies, no fonts. CSS is 8.4 KB compressed; the sales screen's first load stays at 209.2 KB.
+
 ## 0.10.1 — Kitabu speaks English first; the demo opens the hardware shop (2026-11-02)
 
 - **Kitabu's default language is English.** A phone that has never chosen a language opens in English; Swahili is one tap away in Mipangilio and is fetched only by phones that pick it. Daftari stays Swahili first. Each edition now ships only its default wording (`lib/edition/messages*.ts`); sales screen first load 209.2 KB.

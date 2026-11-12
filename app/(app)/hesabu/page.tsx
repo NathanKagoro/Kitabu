@@ -83,7 +83,7 @@ export default function SummaryPage() {
       />
 
       {/* The day's takings: gold on black in Kitabu, the one loud thing on the screen. */}
-      <section className="m-3 overflow-hidden rounded-[14px] bg-band text-band-ink">
+      <section className="m-3 overflow-hidden rounded-[18px] bg-hero text-band-ink">
         <div className="px-5 pt-4 pb-4">
           <p className="font-label text-[15px] text-band-soft">{t('salesTotal')}</p>
           <p className="mt-1 flex items-baseline gap-2">
@@ -175,7 +175,7 @@ export default function SummaryPage() {
             <Button
               size="lg"
               variant={todayClose ? 'secondary' : 'primary'}
-              className={cn('whitespace-nowrap px-3', !can('withdrawCash') && 'col-span-2')}
+              className={cn('whitespace-nowrap px-3 text-base', !can('withdrawCash') && 'col-span-2')}
               onClick={() => {
                 setCounted(todayClose ? String(todayClose.countedCash) : '');
                 setClosing(true);
@@ -186,7 +186,7 @@ export default function SummaryPage() {
             </Button>
           )}
           {can('withdrawCash') && (
-            <Button size="lg" variant="secondary" className={cn(!can('closeDay') && 'col-span-2')} onClick={() => setWithdrawing(true)}>
+            <Button size="lg" variant="secondary" className={cn('whitespace-nowrap px-3 text-base', !can('closeDay') && 'col-span-2')} onClick={() => setWithdrawing(true)}>
               {t('withdrawButton')}
             </Button>
           )}

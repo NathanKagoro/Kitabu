@@ -9,7 +9,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { useApp } from '@/components/app-provider';
 import { Badge, EmptyState, Money, PageHeader } from '@/components/ui/bits';
 import { TextInput } from '@/components/ui/field';
-import { Segmented } from '@/components/ui/segmented';
+import { RoundActions } from '@/components/ui/round-actions';
 import { inventoryValue } from '@/lib/calc/dashboard';
 import { averageUnitCost, isLowStock } from '@/lib/calc/stock';
 import { cn } from '@/lib/cn';
@@ -83,7 +83,9 @@ export default function ProductsPage() {
     { href: '/stoo', label: ti('actions.count'), Icon: ClipboardCheck, ok: can('countStock') && tracking },
     { href: '/hasara', label: ti('actions.waste'), Icon: Trash, ok: can('manageProducts') && show('waste') },
     { href: '/bidhaa/ingiza', label: ti('actions.bulk'), Icon: Package, ok: can('manageProducts') },
-  ].filter((j) => j.ok);
+  ]
+    .filter((j) => j.ok)
+    .map(({ href, label, Icon }) => ({ href, label, Icon }));
 
   return (
     <>
@@ -101,32 +103,29 @@ export default function ProductsPage() {
       />
 
       {tracking && live.length > 0 ? (
-        <section className="mx-3 mt-3 overflow-hidden rounded-[12px] border border-line bg-surface" aria-label={ti('valueLabel')}>
-          <div className="px-4 pt-3.5 pb-3">
+        <section className="mx-3 mt-3" aria-label={ti('valueLabel')}>
+          {/* What the shelves are worth, on the navy card; tap a tile below to see only those lines. */}
+          <div className="rounded-[18px] bg-hero px-[18px] pt-4 pb-5 text-band-ink">
             <div className="flex items-baseline justify-between gap-3">
-              <p className="text-[13px] font-medium text-ink-soft">{ti('valueLabel')}</p>
-              <p className="text-xs text-ink-faint">{ti('valueHint')}</p>
+              <p className="text-[13px] font-medium text-band-soft">{ti('valueLabel')}</p>
+              <p className="text-xs text-band-soft">{ti('valueHint')}</p>
             </div>
-            <Money value={worth.value} symbol className="mt-1 block text-[28px] leading-tight font-bold" />
-            {worth.uncosted > 0 ? <p className="mt-1 text-xs text-ink-faint">{ti('uncosted', { count: worth.uncosted })}</p> : null}
+            <Money value={worth.value} symbol className="mt-1.5 block text-[30px] leading-tight font-bold" />
+            {worth.uncosted > 0 ? <p className="mt-1 text-xs text-band-soft">{ti('uncosted', { count: worth.uncosted })}</p> : null}
           </div>
-          <div className="grid grid-cols-3 border-t border-line">
+          <div className="mt-2 grid grid-cols-3 gap-2" role="group" aria-label={ti('filter')}>
             {(
               [
                 { key: 'all', label: ti('inStock'), value: live.filter((p) => p.trackStock).length - outCount, tone: '' },
                 { key: 'low', label: ti('low'), value: lowCount, tone: lowCount ? 'text-debt' : '' },
                 { key: 'out', label: ti('out'), value: outCount, tone: outCount ? 'text-loss' : '' },
               ] as const
-            ).map((cell, i) => (
+            ).map((cell) => (
               <button
                 key={cell.key}
                 onClick={() => setFilter(cell.key)}
                 aria-pressed={filter === cell.key}
-                className={cn(
-                  'px-3 py-2.5 text-left active:bg-paper',
-                  i > 0 && 'border-l border-line',
-                  filter === cell.key && 'bg-brand-tint'
-                )}
+                className={cn('card min-h-[64px] border-2 px-3 py-2.5 text-left active:bg-paper', filter === cell.key && 'border-brand!')}
               >
                 <span className="block text-xs text-ink-faint">{cell.label}</span>
                 <span className={cn('tnum block text-xl font-bold', cell.tone)}>{cell.value}</span>
@@ -136,31 +135,7 @@ export default function ProductsPage() {
         </section>
       ) : null}
 
-      {jobs.length ? (
-        <nav className="mx-3 mt-3 grid gap-2" style={{ gridTemplateColumns: `repeat(${jobs.length}, minmax(0, 1fr))` }} aria-label={ts('title')}>
-          {jobs.map(({ href, label, Icon }) => (
-            <Link
-              key={href}
-              href={href}
-              className="flex min-h-[68px] flex-col items-center justify-center gap-1 rounded-[12px] border border-line bg-surface px-1 text-center text-[13px] leading-tight font-semibold active:bg-paper"
-            >
-              <Icon size={21} className="text-brand" />
-              {label}
-            </Link>
-          ))}
-        </nav>
-      ) : null}
-
-      {tracking && live.length > 0 ? (
-        <div className="px-3 pt-3">
-          <Segmented
-            label={ti('filter')}
-            value={filter}
-            onChange={setFilter}
-            options={(['all', 'low', 'out'] as const).map((f) => ({ value: f, label: ti(`filters.${f}`) }))}
-          />
-        </div>
-      ) : null}
+      <RoundActions actions={jobs} label={ts('title')} />
 
       {(products?.length ?? 0) > 8 && (
         <div className="relative px-3 pt-3">

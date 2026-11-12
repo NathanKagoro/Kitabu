@@ -40,6 +40,8 @@
 
   /* Text on a solid brand, loss or debt fill: white in light mode, near-black in dark. */
   --color-on-fill: #ffffff;
+  /* The navy card that carries a screen's key figure (Kitabu's dashboard and Hesabu). */
+  --color-hero: #10213f;
 
   /* Rises and falls against the last period (Kitabu's dashboard). */
   --color-up: #157347;
@@ -125,6 +127,7 @@
   --color-brand: #c8211e;
   --color-brand-dark: #901816;
   --color-brand-tint: #f8e4e4;
+  --color-hero: var(--color-band);
   --font-display: 'Anton', 'Arial Narrow', Impact, sans-serif;
   --font-label: 'Barlow Condensed', 'Arial Narrow', system-ui, sans-serif;
 }
@@ -184,6 +187,7 @@
   --color-brand: #84a9e6;
   --color-brand-dark: #b8cdf2;
   --color-brand-tint: #1a2a4a;
+  --color-hero: #1b2f57;
   --color-up: #5cc98f;
   --color-down: #f08a84;
 }
@@ -350,5 +354,37 @@
   .print-hide {
     display: none !important;
   }
+}
+
+
+/*
+ * Kitabu's look, chosen from a five-way design study (Nov 2026): "Bank card".
+ * Shop owners already trust their bank and M-Pesa apps, so Kitabu borrows
+ * their grammar: a calm blue-grey page, white cards with no outlines, the
+ * key figure on a navy card, round shortcuts. Everything here is CSS on
+ * shared classes, so every Kitabu screen follows; Daftari keeps its own look.
+ */
+:root[data-edition='kitabu'] {
+  --radius-card: 16px;
+}
+:root[data-edition='kitabu']:not([data-theme='dark']) {
+  --color-paper: #eef2f8;
+}
+[data-edition='kitabu'] .card {
+  border-color: transparent;
+}
+[data-edition='kitabu'] .seg {
+  border-color: transparent;
+  border-radius: 14px;
+}
+[data-edition='kitabu'] .seg-btn {
+  border-radius: 11px;
+}
+/* Till tiles: outlined only when picked. */
+[data-edition='kitabu'] .till-tile {
+  border-radius: 14px;
+}
+[data-edition='kitabu'] .till-tile.border-line {
+  border-color: transparent;
 }
 
