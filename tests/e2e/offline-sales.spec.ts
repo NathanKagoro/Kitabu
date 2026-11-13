@@ -347,7 +347,7 @@ test('the demo link offers four trades, opens a stocked hardware shop with no si
   await page.getByRole('button', { name: /Baraka Hardware/ }).click();
   await page.waitForURL(/\/muhtasari\/?$/, { timeout: 60_000 });
   await expect(page.getByText('Duka la mfano', { exact: false })).toBeVisible();
-  await expect(page.getByText('Mauzo ya siku 7')).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Jaza stoo' })).toBeVisible();
   await page.goto('/mauzo/');
   await expect(page.getByRole('button', { name: /Saruji 50kg/ }).first()).toBeVisible();
 

@@ -42,6 +42,11 @@
   --color-on-fill: #ffffff;
   /* The navy card that carries a screen's key figure (Kitabu's dashboard and Hesabu). */
   --color-hero: #10213f;
+  /* Kitabu's signboard and Sell slab (set per edition below). */
+  --color-sign: #ffc20e;
+  --color-sign-ink: #13294b;
+  --color-sell: #d7262e;
+  --color-sell-dark: #9e1a20;
 
   /* Rises and falls against the last period (Kitabu's dashboard). */
   --color-up: #157347;
@@ -149,47 +154,69 @@
  * white panels joined by hairlines, and figures in the phone's own font at
  * heavy weight with tabular digits. No display face: the numbers carry it.
  */
+/*
+ * Kitabu: the shop's own signboard. Chosen from a five-way design study (Nov
+ * 2026): a Kariakoo sign-writer's look. The dashboard opens on a painted
+ * yellow sign with the shop's name and the day's takings, figures sit on flat
+ * painted panels, and Sell is a red slab. Navy carries the structure; one
+ * condensed display face (Big Shoulders Display, 14KB, used only for figures
+ * and titles) does the signwriting; everything else is the phone's own font.
+ */
+@font-face {
+  font-family: 'Big Shoulders Display';
+  src: url('./fonts/big-shoulders-800.woff2') format('woff2');
+  font-weight: 800;
+  font-display: swap;
+}
 :root[data-edition='kitabu'] {
-  --color-band: #10213f;
+  --color-band: #13294b;
   --color-band-ink: #ffffff;
-  --color-band-soft: #aab7cd;
-  --color-band-line: #22365a;
-  /* Figures on the navy bar (the day's takings on Hesabu). */
-  --color-accent: #a9c7ff;
-  --color-paper: #eef1f6;
+  --color-band-soft: #aab6cc;
+  --color-band-line: #22385e;
+  /* Yellow on navy: the open tab, figures on the navy bar. */
+  --color-accent: #ffc20e;
+  --color-paper: #eceef1;
   --color-surface: #ffffff;
-  --color-line: #d9dfe8;
-  --color-line-strong: #b8c2d2;
-  --color-ink: #121a2b;
-  --color-ink-soft: #46546b;
-  --color-ink-faint: #76829a;
-  --color-brand: #1b3a6b;
-  --color-brand-dark: #10264a;
-  --color-brand-tint: #e3e9f3;
+  --color-line: #dde1e7;
+  --color-line-strong: #b9c1ce;
+  --color-ink: #13294b;
+  --color-ink-soft: #4e5b72;
+  --color-ink-faint: #7a8599;
+  --color-brand: #13294b;
+  --color-brand-dark: #0b1a33;
+  --color-brand-tint: #e2e7f0;
   --color-up: #157347;
   --color-down: #b42318;
-  --font-display: var(--font-sans);
+  --color-hero: #13294b;
+  /* The signboard and the Sell slab. */
+  --color-sign: #ffc20e;
+  --color-sign-ink: #13294b;
+  --color-sell: #d7262e;
+  --color-sell-dark: #9e1a20;
+  --radius-card: 6px;
+  --font-display: 'Big Shoulders Display', 'Arial Narrow', system-ui, sans-serif;
   --font-label: var(--font-sans);
 }
 :root[data-edition='kitabu'][data-theme='dark'] {
-  --color-band: #0a1426;
+  --color-band: #0b1730;
   --color-band-ink: #eef2f8;
   --color-band-soft: #93a3bf;
-  --color-band-line: #1c2a45;
-  --color-accent: #a9c7ff;
-  --color-paper: #0b1220;
-  --color-surface: #131c2e;
-  --color-line: #22304a;
-  --color-line-strong: #34445f;
+  --color-band-line: #1d2c48;
+  --color-paper: #0a1220;
+  --color-surface: #142039;
+  --color-line: #24324d;
+  --color-line-strong: #36466a;
   --color-ink: #eef2f8;
-  --color-ink-soft: #b2bdd0;
-  --color-ink-faint: #8090aa;
-  --color-brand: #84a9e6;
-  --color-brand-dark: #b8cdf2;
-  --color-brand-tint: #1a2a4a;
-  --color-hero: #1b2f57;
+  --color-ink-soft: #b3bdd0;
+  --color-ink-faint: #8190a8;
+  --color-brand: #8fb0ea;
+  --color-brand-dark: #bcd0f3;
+  --color-brand-tint: #1b2a4a;
   --color-up: #5cc98f;
   --color-down: #f08a84;
+  --color-hero: #1b2f55;
+  --color-sell: #e0393f;
+  --color-sell-dark: #8e1b20;
 }
 
 @layer base {
@@ -261,8 +288,8 @@
     letter-spacing: 0.02em;
   }
   :root[data-edition='kitabu'] .font-display {
-    font-weight: 750;
-    letter-spacing: -0.02em;
+    font-weight: 800;
+    letter-spacing: 0.005em;
   }
   :root[data-edition='kitabu'] .font-label {
     letter-spacing: 0;
@@ -357,32 +384,34 @@
 }
 
 
-/*
- * Kitabu's look, chosen from a five-way design study (Nov 2026): "Bank card".
- * Shop owners already trust their bank and M-Pesa apps, so Kitabu borrows
- * their grammar: a calm blue-grey page, white cards with no outlines, the
- * key figure on a navy card, round shortcuts. Everything here is CSS on
- * shared classes, so every Kitabu screen follows; Daftari keeps its own look.
- */
-:root[data-edition='kitabu'] {
-  --radius-card: 16px;
-}
-:root[data-edition='kitabu']:not([data-theme='dark']) {
-  --color-paper: #eef2f8;
-}
+/* Kitabu's shared pieces in the signboard look: flat white panels, a navy tab strip for choices. */
 [data-edition='kitabu'] .card {
   border-color: transparent;
 }
 [data-edition='kitabu'] .seg {
+  background: var(--color-band);
   border-color: transparent;
-  border-radius: 14px;
+  border-radius: var(--radius-card);
+  padding: 0;
+  gap: 0;
 }
 [data-edition='kitabu'] .seg-btn {
-  border-radius: 11px;
+  border-radius: 0;
+  min-height: 48px;
+  color: var(--color-band-soft);
+  font-weight: 700;
 }
-/* Till tiles: outlined only when picked. */
+[data-edition='kitabu'] .seg-on {
+  background: var(--color-surface);
+  color: var(--color-ink);
+}
+/* On the yellow signboard, the sync status reads in navy. */
+.sign-board {
+  --color-band-ink: var(--color-sign-ink);
+  --color-band-soft: var(--color-sign-ink);
+}
 [data-edition='kitabu'] .till-tile {
-  border-radius: 14px;
+  border-radius: var(--radius-card);
 }
 [data-edition='kitabu'] .till-tile.border-line {
   border-color: transparent;

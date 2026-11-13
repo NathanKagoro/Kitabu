@@ -29,7 +29,7 @@ export function cn(...inputs: ClassValue[]): string {
 const TEXT_SIZES = /^(xs|sm|base|lg|xl|\d?xl|\[\d+(\.\d+)?(px|rem)\])$/;
 const TEXT_ALIGN = /^(left|center|right|justify|start|end)$/;
 const FONT_WEIGHTS = /^(thin|extralight|light|normal|medium|semibold|bold|extrabold|black)$/;
-const BORDER_WIDTH = /^(\d+|x|y|t|r|b|l|s|e|[xytrblse]-\d+)$/;
+const BORDER_WIDTH = /^(\d+|\[[^\]]+\]|x|y|t|r|b|l|s|e|[xytrblse]-(\d+|\[[^\]]+\]))$/;
 
 /** Group a utility belongs to, including its variant prefix; null = never conflicts. */
 export function conflictKey(cls: string): string | null {
@@ -58,7 +58,15 @@ export function conflictKey(cls: string): string | null {
       group = FONT_WEIGHTS.test(rest) ? 'font-weight' : 'font-family';
       break;
     case 'border':
-      group = BORDER_WIDTH.test(rest) ? 'border-width' : 'border-color';
+      if (BORDER_WIDTH.test(rest)) {
+        // border-2 / border-[3px] and border-b / border-b-[4px] are widths, one group per side.
+        const side = /^[xytrblse](-|$)/.test(rest) ? rest[0] : '';
+        group = `border-width${side}`;
+      } else {
+        // border-line is every side's colour; border-l-band only the left one's.
+        const side = /^[xytrblse]-/.test(rest) ? rest[0] : '';
+        group = `border-color${side}`;
+      }
       break;
     case 'flex':
       group = /^(row|col)/.test(rest) ? 'flex-direction' : /wrap/.test(rest) ? 'flex-wrap' : 'flex';

@@ -83,7 +83,7 @@ export default function SummaryPage() {
       />
 
       {/* The day's takings: gold on black in Kitabu, the one loud thing on the screen. */}
-      <section className="m-3 overflow-hidden rounded-[18px] bg-hero text-band-ink">
+      <section className="m-3 overflow-hidden rounded-[var(--radius-card)] bg-hero text-band-ink">
         <div className="px-5 pt-4 pb-4">
           <p className="font-label text-[15px] text-band-soft">{t('salesTotal')}</p>
           <p className="mt-1 flex items-baseline gap-2">

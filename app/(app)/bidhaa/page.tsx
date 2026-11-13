@@ -105,12 +105,12 @@ export default function ProductsPage() {
       {tracking && live.length > 0 ? (
         <section className="mx-3 mt-3" aria-label={ti('valueLabel')}>
           {/* What the shelves are worth, on the navy card; tap a tile below to see only those lines. */}
-          <div className="rounded-[18px] bg-hero px-[18px] pt-4 pb-5 text-band-ink">
+          <div className="rounded-[var(--radius-card)] bg-hero px-[18px] pt-4 pb-5 text-band-ink">
             <div className="flex items-baseline justify-between gap-3">
               <p className="text-[13px] font-medium text-band-soft">{ti('valueLabel')}</p>
               <p className="text-xs text-band-soft">{ti('valueHint')}</p>
             </div>
-            <Money value={worth.value} symbol className="mt-1.5 block text-[30px] leading-tight font-bold" />
+            <Money value={worth.value} symbol className="font-display mt-1.5 block text-[40px] leading-none" />
             {worth.uncosted > 0 ? <p className="mt-1 text-xs text-band-soft">{ti('uncosted', { count: worth.uncosted })}</p> : null}
           </div>
           <div className="mt-2 grid grid-cols-3 gap-2" role="group" aria-label={ti('filter')}>

@@ -42,8 +42,8 @@ const DAFTARI_ITEMS: readonly NavItem[] = [
 const ITEMS = IS_DAFTARI ? DAFTARI_ITEMS : KITABU_ITEMS;
 
 /**
- * Daftari: the black band again at the bottom, gold for the open tab.
- * Kitabu: a white bar with a navy rule over the open tab, like an office system.
+ * The band again at the bottom: black and gold in Daftari, navy and
+ * signboard yellow in Kitabu, with a bar over the open tab.
  */
 export function BottomNav() {
   const pathname = usePathname();
@@ -54,7 +54,7 @@ export function BottomNav() {
       aria-label={t('nav.more')}
       className={cn(
         'fixed inset-x-0 bottom-0 z-40 border-t pb-[env(safe-area-inset-bottom,0px)]',
-        IS_DAFTARI ? 'border-band-line bg-band' : 'border-line bg-surface'
+        'border-band-line bg-band'
       )}
     >
       <ul className="mx-auto flex max-w-lg">
@@ -71,11 +71,11 @@ export function BottomNav() {
                 aria-current={active ? 'page' : undefined}
                 className={cn(
                   'relative flex h-[68px] flex-col items-center justify-center gap-1 px-0.5',
-                  IS_DAFTARI ? (active ? 'text-accent' : 'text-band-soft') : active ? 'text-brand' : 'text-ink-faint'
+                  active ? 'text-accent' : 'text-band-soft'
                 )}
               >
                 {active ? (
-                  <span aria-hidden className={cn('absolute inset-x-3 top-0 h-[3px] rounded-b', IS_DAFTARI ? 'bg-accent' : 'bg-brand')} />
+                  <span aria-hidden className="absolute inset-x-3 top-0 h-[3px] rounded-b bg-accent" />
                 ) : null}
                 <Icon size={22} strokeWidth={active ? 2.4 : 2} />
                 <span className={cn('leading-none', IS_DAFTARI ? 'font-label text-[13px]' : cn('text-[11.5px]', active ? 'font-bold' : 'font-medium'))}>

@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.12.0 — The signboard: Kitabu's own look (2026-11-13)
+
+The "Bank card" look read as a template. A second study gave five designers five different ideas (signboard, big numbers, today's target, daladala, receipt), built as full mockups; the **signboard** won.
+
+- **Home is the shop's signboard:** a yellow sign with the shop's name and the day's takings painted large, the change on a navy chip. A red **Sell** slab sits under the period switch, with Buy stock, Expense and Close day as small buttons.
+- **Four painted panels, one word each:** Profit (navy), Owed to you (yellow, opens Credit), In the drawer (opens the day's count), Spent. Average sale and the payment split left the home screen (the split is on the day's count).
+- **Sections with short signwritten names** (Restock, This week, Selling most, Latest sales, By seller) over white lists with a coloured edge: navy, amber for low stock and credit, red for out of stock.
+- **Across Kitabu:** navy header with a yellow rule and signwritten titles, navy tab bar with yellow for the open tab, period switches as a navy strip, flat 6px panels, a navy demo strip.
+- **Type:** Big Shoulders Display 800 (14 KB, SIL Open Font License) for figures and titles in Kitabu only; everything else stays the phone's font.
+- **Fix:** `cn()` dropped a side border's width when a colour followed (`border-b-[4px] border-sign`) and treated each side's colour as one; Daftari's red stripe under its header now shows as intended. Tests in `tests/unit/cn.test.ts`.
+- Removed the unused `components/dashboard/panel.tsx`. Sales screen first load 209.2 KB.
+
 ## 0.11.0 — Kitabu's "Bank card" look, from a five-way design study (2026-11-13)
 
 Five designer personas each restyled the dashboard against the same brief (mid-size Tanzanian shops, cheap Android phones on 3G, no web fonts, no new JavaScript, 48px taps, nothing ornate): Bank card, Counter, Daylight, Office and Harbour. **Bank card** won, with one idea from Counter (a full-width Sell button).

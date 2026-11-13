@@ -7,15 +7,12 @@ import { useEffect, useState, type ReactNode } from 'react';
 
 import { useApp } from '@/components/app-provider';
 import { ShopLogo } from '@/components/brand/shop-logo';
-import { Change, Panel } from '@/components/dashboard/panel';
-import { CircleCheck, Lock, Receipt, ShoppingCart, Wallet } from '@/components/icons';
+import { ArrowDownRight, ArrowUpRight, ChevronRight, CircleCheck, Lock, Receipt, ShoppingCart } from '@/components/icons';
 import { BarChart } from '@/components/summary/bar-chart';
 import { SyncIndicator } from '@/components/sync-indicator';
-import { Band, BandTitle } from '@/components/ui/band';
 import { Money } from '@/components/ui/bits';
-import { RoundActions } from '@/components/ui/round-actions';
 import { Segmented } from '@/components/ui/segmented';
-import { averageSale, marginPercent, paymentMix, percentChange, stockAlerts } from '@/lib/calc/dashboard';
+import { marginPercent, percentChange, stockAlerts } from '@/lib/calc/dashboard';
 import { periodRange, previousRange } from '@/lib/calc/periods';
 import { salesByDay, summariseDay, topProducts } from '@/lib/calc/summary';
 import { cn } from '@/lib/cn';
@@ -30,13 +27,6 @@ type DashPeriod = 'today' | 'week' | 'month';
 const PERIODS: readonly DashPeriod[] = ['today', 'week', 'month'];
 const PERIOD_KEY = 'kitabu.dashboardPeriod';
 
-/** Colours of the payment-mix bar: the shop's colour, a lighter shade of it, and amber for credit. */
-const MIX_COLOUR = {
-  cash: 'var(--color-brand)',
-  mobile: 'color-mix(in srgb, var(--color-brand) 45%, var(--color-surface))',
-  credit: 'var(--color-debt)',
-} as const;
-
 /**
  * Kitabu's home: the state of the business on one screen, the way an office
  * system opens. Sales, profit, the average sale, expenses and money owed,
@@ -47,7 +37,6 @@ const MIX_COLOUR = {
  */
 export default function DashboardPage() {
   const t = useTranslations('dashboard');
-  const tp = useTranslations('payment.methods');
   const locale = useLocale();
   const { business, businessId, can, show } = useApp();
   const [period, setPeriodState] = useState<DashPeriod>('today');
@@ -150,34 +139,43 @@ export default function DashboardPage() {
     timeZone: 'Africa/Dar_es_Salaam',
   });
 
-  const header = (
-    <Band>
-      <div className="flex min-h-14 items-center gap-2.5 py-1.5 pr-1 pl-4">
-        <ShopLogo src={business?.settings.logoUrl} size={34} className="rounded-[8px] bg-surface" />
-        <BandTitle title={business?.name ?? t('title')} subtitle={dateLine} />
+  // The top of the dashboard is the shop's signboard: its name and the day's takings, painted large.
+  const sign = (
+    <header className="sign-board bg-sign px-4 pt-3 pb-4 text-sign-ink">
+      <div className="flex items-center gap-2">
+        {business?.settings.logoUrl ? <ShopLogo src={business.settings.logoUrl} size={30} className="rounded-[6px] bg-surface" /> : null}
+        <h1 className="font-display min-w-0 flex-1 truncate text-[26px] leading-none uppercase">{business?.name ?? t('title')}</h1>
         <div className="band-action flex shrink-0 items-center">
           <SyncIndicator />
         </div>
       </div>
-    </Band>
+      <p className="mt-1 text-[13px] font-semibold">{dateLine}</p>
+      {data ? (
+        <>
+          <p className="mt-3 flex items-baseline gap-1.5" aria-label={t('kpi.sales')}>
+            <span className="font-display text-[26px]">TSh</span>
+            <Money value={data.now.salesTotal} className="font-display text-[68px] leading-[0.9]" />
+          </p>
+          <div className="mt-2 flex flex-wrap items-center gap-2 text-[15px] font-bold">
+            <SignChange pct={percentChange(data.now.salesTotal, data.then.salesTotal)} />
+            {t('kpi.salesCount', { count: data.now.salesCount })}
+          </div>
+        </>
+      ) : null}
+    </header>
   );
-  if (!data) return header;
+  if (!data) return sign;
 
-  const { now, then, drawer } = data;
+  const { now, drawer } = data;
   const owed = customers?.reduce((sum, c) => sum + Math.max(0, c.balance), 0) ?? 0;
   const owing = customers?.filter((c) => c.balance > 0).length ?? 0;
-  const versus = t(`versus.${period}`);
-  const mix = paymentMix(now);
   const alerts = products && stock ? stockAlerts(products, stock) : [];
   const outCount = alerts.filter((a) => a.status === 'out').length;
   const lowCount = alerts.length - outCount;
   const weekTotal = data.thisWeek.reduce((s, p) => s + p.total, 0);
-  const lastWeekTotal = data.lastWeek.reduce((s, p) => s + p.total, 0);
-  const topMax = Math.max(1, ...data.top.map((p) => p.total));
-  const sellerMax = Math.max(1, ...data.sellers.map((s) => s.total));
   const showProfit = can('viewProfit');
 
-  const actions = [
+  const jobs = [
     { href: '/manunuzi', label: t('actions.buy'), Icon: ShoppingCart, ok: can('recordPurchase') },
     { href: '/matumizi', label: t('actions.expense'), Icon: Receipt, ok: can('recordExpense') && show('expenses') },
     { href: '/hesabu', label: t('actions.close'), Icon: Lock, ok: can('closeDay') },
@@ -185,7 +183,7 @@ export default function DashboardPage() {
 
   return (
     <>
-      {header}
+      {sign}
 
       <div className="px-3 pt-3">
         <Segmented
@@ -196,246 +194,107 @@ export default function DashboardPage() {
         />
       </div>
 
-      {/* The day's sales on a navy card, the way a bank app shows a balance; the other figures as tiles beneath. */}
-      <section className="mx-3 mt-3" aria-label={t('figures')}>
-        <div className="rounded-[18px] bg-hero px-[18px] pt-4 pb-5 text-band-ink">
-          <div className="flex items-baseline justify-between gap-3">
-            <p className="text-[13px] font-medium text-band-soft">{t('kpi.sales')}</p>
-            <p className="tnum text-xs text-band-soft">{t('kpi.salesCount', { count: now.salesCount })}</p>
-          </div>
-          <p className="mt-1.5 flex items-baseline gap-1.5">
-            <span className="text-sm font-semibold text-band-soft">TSh</span>
-            <Money value={now.salesTotal} className="text-[38px] leading-none font-bold tracking-tight" />
-          </p>
-          <div className="mt-2.5">
-            <Change pct={percentChange(now.salesTotal, then.salesTotal)} label={versus} empty={t('noCompare')} onDark />
-          </div>
-        </div>
-        <div className="mt-2 grid grid-cols-2 gap-2">
-          {showProfit ? (
-            <Figure label={t('kpi.profit')} value={now.estimatedProfit} tone={now.estimatedProfit < 0 ? 'loss' : 'plain'}>
-              <span className="text-xs text-ink-faint">
-                {marginPercent(now.estimatedProfit, now.salesTotal) === null
-                  ? t('kpi.noMargin')
-                  : t('kpi.margin', { pct: marginPercent(now.estimatedProfit, now.salesTotal) ?? 0 })}
-              </span>
-            </Figure>
-          ) : (
-            <Figure label={t('kpi.cashSales')} value={now.cash}>
-              <span className="text-xs text-ink-faint">{t('kpi.cashSalesHint')}</span>
-            </Figure>
-          )}
-          <Figure label={t('kpi.average')} value={averageSale(now.salesTotal, now.salesCount)}>
-            <Change
-              pct={percentChange(averageSale(now.salesTotal, now.salesCount), averageSale(then.salesTotal, then.salesCount))}
-              label={t('kpi.perSale')}
-              empty={t('noCompare')}
-            />
-          </Figure>
-          <Figure label={t('kpi.expenses')} value={now.expensesTotal}>
-            <Change pct={percentChange(now.expensesTotal, then.expensesTotal)} invert label={versus} empty={t('noCompare')} />
-          </Figure>
-          <Figure label={t('kpi.owed')} value={owed} tone={owed > 0 ? 'debt' : 'plain'} href="/madeni">
-            <span className="text-xs text-ink-faint">{t('kpi.owedPeople', { count: owing })}</span>
-          </Figure>
-        </div>
+      {can('sell') ? (
+        <Link
+          href="/mauzo"
+          prefetch={false}
+          className="font-display mx-3 mt-3 flex h-[68px] items-center justify-center rounded-[6px] bg-sell text-[34px] tracking-[0.04em] text-white uppercase shadow-[0_5px_0_var(--color-sell-dark)] active:translate-y-[3px] active:shadow-[0_2px_0_var(--color-sell-dark)]"
+        >
+          {t('actions.sell')}
+        </Link>
+      ) : null}
+
+      {jobs.length ? (
+        <nav aria-label={t('actions.title')} className="mx-3 mt-4 grid gap-2" style={{ gridTemplateColumns: `repeat(${jobs.length}, minmax(0, 1fr))` }}>
+          {jobs.map(({ href, label, Icon }) => (
+            <Link
+              key={href}
+              href={href}
+              prefetch={false}
+              className="flex min-h-12 items-center justify-center gap-1.5 rounded-[6px] bg-surface px-1.5 text-[13.5px] leading-tight font-bold active:bg-brand-tint"
+            >
+              <Icon size={18} className="shrink-0" />
+              <span className="min-w-0">{label}</span>
+            </Link>
+          ))}
+        </nav>
+      ) : null}
+
+      {/* The figures as painted panels: one colour each, a big number, one word. */}
+      <section className="mx-3 mt-3 grid grid-cols-2 gap-2" aria-label={t('figures')}>
+        {showProfit ? (
+          <Tile tone="navy" label={t('tiles.profit')} value={now.estimatedProfit} note={marginPercent(now.estimatedProfit, now.salesTotal) === null ? null : `${marginPercent(now.estimatedProfit, now.salesTotal)}%`} />
+        ) : (
+          <Tile tone="navy" label={t('tiles.cash')} value={now.cash} />
+        )}
+        <Tile tone="sign" label={t('tiles.owed')} value={owed} note={t('tiles.people', { count: owing })} href="/madeni" />
+        <Tile label={t('tiles.drawer')} value={drawer.expectedCash} note={data.closed ? t('tiles.closed') : t('tiles.open')} href="/hesabu" />
+        <Tile label={t('tiles.spent')} value={now.expensesTotal} />
       </section>
 
-      {/* Selling is the job that matters most, so it gets the one full-width button; the rest are round shortcuts. */}
-      {can('sell') ? (
-        <div className="mx-3 mt-3">
-          <Link
-            href="/mauzo"
-            prefetch={false}
-            className="flex h-14 items-center justify-center gap-2 rounded-[14px] bg-brand text-[17px] font-bold text-on-fill active:bg-brand-dark"
-          >
-            <Wallet size={22} />
-            {t('actions.sell')}
-          </Link>
-        </div>
-      ) : null}
-      <RoundActions actions={actions} label={t('actions.title')} />
-
-      <Panel
-        title={t('drawer.title')}
-        aside={
-          <span
-            className={cn(
-              'inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-semibold',
-              data.closed ? 'bg-line/60 text-ink-soft' : 'bg-up/10 text-up'
-            )}
-          >
-            {data.closed ? <Lock size={12} /> : <span aria-hidden className="h-1.5 w-1.5 rounded-full bg-up" />}
-            {data.closed ? t('drawer.closed') : t('drawer.open')}
-          </span>
-        }
-        footer={{ href: '/hesabu', label: t('drawer.link') }}
-      >
-        <div className="px-4 py-3">
-          <p className="text-[13px] text-ink-soft">{t('drawer.expected')}</p>
-          <Money
-            value={drawer.expectedCash}
-            symbol
-            className={cn('block text-[26px] leading-tight font-bold', drawer.expectedCash < 0 && 'text-loss')}
-          />
-        </div>
-        <dl className="grid grid-cols-3 border-t border-line text-sm">
-          <Cell label={t('drawer.opening')} value={data.openingCash} />
-          <Cell label={t('drawer.cashIn')} value={drawer.cashIn} sign="+" />
-          <Cell label={t('drawer.cashOut')} value={drawer.cashSpent + drawer.cashWithdrawals} sign="-" />
-        </dl>
-      </Panel>
-
-      <Panel title={t('trend.title')} aside={<Money value={weekTotal} symbol className="text-sm font-bold" />}>
-        <div className="px-4 pt-4 pb-2">
-          <BarChart points={data.thisWeek} today={today} compare={data.lastWeek} compareLabel={t('trend.sameDayBefore')} />
-        </div>
-        <dl className="grid grid-cols-3 border-t border-line text-sm">
-          <Cell label={t('trend.average')} value={Math.round(weekTotal / 7)} />
-          <Cell label={t('trend.before')} value={lastWeekTotal} />
-          <div className="border-l border-line px-3 py-2.5">
-            <dt className="text-xs text-ink-faint">{t('trend.change')}</dt>
-            <dd className="mt-1">
-              <Change pct={percentChange(weekTotal, lastWeekTotal)} label="" empty="—" />
-            </dd>
-          </div>
-        </dl>
-      </Panel>
-
-      <Panel title={t('mix.title')} aside={<span className="text-xs text-ink-faint">{t(`periods.${period}`)}</span>}>
-        {now.salesTotal > 0 ? (
-          <div className="px-4 pt-4 pb-1">
-            <div className="flex h-3 overflow-hidden rounded-full bg-line" aria-hidden>
-              {mix.map((part) => (
-                <span key={part.key} style={{ width: `${part.pct}%`, background: MIX_COLOUR[part.key] }} />
-              ))}
-            </div>
-            <ul className="mt-2 divide-y divide-line">
-              {mix.map((part) => (
-                <li key={part.key} className="flex items-center gap-3 py-2.5">
-                  <span aria-hidden className="h-3 w-3 shrink-0 rounded-[3px]" style={{ background: MIX_COLOUR[part.key] }} />
-                  <span className="min-w-0 flex-1 text-[15px]">{t(`mix.${part.key}`)}</span>
-                  <span className="tnum w-10 text-right text-sm text-ink-faint">{part.pct}%</span>
-                  <Money value={part.amount} className="w-24 text-right font-semibold" />
-                </li>
-              ))}
-            </ul>
-          </div>
-        ) : (
-          <p className="px-4 py-5 text-sm text-ink-soft">{t('noSales')}</p>
-        )}
-      </Panel>
-
       {show('stockTracking') ? (
-        <Panel
-          title={t('stock.title')}
-          aside={
-            alerts.length ? (
-              <span className="flex gap-1.5">
-                {outCount ? <Pill tone="loss">{t('stock.out', { count: outCount })}</Pill> : null}
-                {lowCount ? <Pill tone="debt">{t('stock.low', { count: lowCount })}</Pill> : null}
-              </span>
-            ) : null
-          }
-          footer={{ href: outCount || lowCount ? `/bidhaa?onyesha=${outCount ? 'out' : 'low'}` : '/bidhaa', label: t('stock.all') }}
-        >
+        <Section title={t('sections.restock')} more={alerts.length ? { href: `/bidhaa?onyesha=${outCount ? 'out' : 'low'}`, label: t('stock.all') } : undefined}>
           {alerts.length === 0 ? (
-            <p className="flex items-center gap-2 px-4 py-4 text-sm text-ink-soft">
+            <p className="flex min-h-12 items-center gap-2 px-4 text-[15px] font-semibold">
               <CircleCheck size={18} className="text-up" />
               {t('stock.allGood')}
             </p>
           ) : (
-            <ul className="divide-y divide-line">
-              {alerts.slice(0, 5).map(({ product, onHand, status }) => (
-                <li key={product.id} className="flex min-h-12 items-center gap-3 px-4 py-2">
-                  <span className="min-w-0 flex-1 truncate text-[15px]">{productLabel(product)}</span>
-                  <span className="tnum text-sm text-ink-soft">{t('stock.left', { qty: formatQty(Math.max(0, onHand)) })}</span>
-                  <span
-                    aria-hidden
-                    className={cn('h-2.5 w-2.5 shrink-0 rounded-full', status === 'out' ? 'bg-loss' : 'bg-debt')}
-                    title={status === 'out' ? t('stock.outBadge') : t('stock.lowBadge')}
-                  />
-                </li>
-              ))}
-            </ul>
+            alerts.slice(0, 4).map(({ product, onHand, status }) => (
+              <Row key={product.id} edge={status === 'out' ? 'loss' : 'debt'} label={productLabel(product)}>
+                <span className={cn('font-display text-[22px]', status === 'out' ? 'text-loss' : 'text-debt')}>
+                  {status === 'out' ? t('stock.outBadge') : t('stock.left', { qty: formatQty(onHand) })}
+                </span>
+              </Row>
+            ))
           )}
-        </Panel>
+          {lowCount + outCount > 4 ? <p className="px-4 pb-2 text-xs text-ink-faint">{t('stock.more', { count: lowCount + outCount - 4 })}</p> : null}
+        </Section>
       ) : null}
 
-      <Panel title={t('top.title')} aside={<span className="text-xs text-ink-faint">{t(`periods.${period}`)}</span>}>
-        {data.top.length === 0 ? (
-          <p className="px-4 py-5 text-sm text-ink-soft">{t('noSales')}</p>
-        ) : (
-          <table className="w-full text-left">
-            <thead>
-              <tr className="text-xs text-ink-faint">
-                <th className="py-2 pl-4 font-medium">{t('top.product')}</th>
-                <th className="py-2 pr-2 text-right font-medium">{t('top.qty')}</th>
-                <th className="py-2 pr-4 text-right font-medium">{t('top.value')}</th>
-              </tr>
-            </thead>
-            <tbody>
-              {data.top.map((row) => (
-                <tr key={row.productId} className="border-t border-line align-top">
-                  <td className="py-2.5 pl-4">
-                    <span className="line-clamp-1 text-[15px]">{row.name}</span>
-                    <span aria-hidden className="mt-1.5 block h-1 rounded-full bg-line">
-                      <span className="block h-1 rounded-full bg-brand" style={{ width: `${(row.total / topMax) * 100}%` }} />
-                    </span>
-                  </td>
-                  <td className="tnum py-2.5 pr-2 text-right text-sm text-ink-soft">{formatQty(row.qty)}</td>
-                  <td className="py-2.5 pr-4 text-right">
-                    <Money value={row.total} className="text-[15px] font-semibold" />
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        )}
-      </Panel>
+      <Section title={t('sections.week')} aside={<Money value={weekTotal} symbol className="text-sm font-bold" />}>
+        <div className="px-4 pt-3 pb-3">
+          <BarChart points={data.thisWeek} today={today} compare={data.lastWeek} compareLabel={t('trend.sameDayBefore')} />
+        </div>
+      </Section>
 
-      <Panel title={t('recent.title')} footer={{ href: '/mauzo/historia', label: t('recent.all') }}>
-        {data.recent.length === 0 ? (
-          <p className="px-4 py-5 text-sm text-ink-soft">{t('noSales')}</p>
+      <Section title={t('sections.top')}>
+        {data.top.length === 0 ? (
+          <p className="flex min-h-12 items-center px-4 text-[15px] text-ink-soft">{t('noSales')}</p>
         ) : (
-          <ul className="divide-y divide-line">
-            {data.recent.map((sale) => (
-              <li key={sale.id} className="flex min-h-14 items-center gap-3 px-4 py-2">
-                <span className="tnum w-11 shrink-0 text-sm text-ink-faint">
-                  {new Date(sale.at).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', timeZone: 'Africa/Dar_es_Salaam' })}
-                </span>
-                <span className="min-w-0 flex-1">
-                  <span className="block truncate text-[15px]">{t('recent.items', { count: sale.items })}</span>
-                  {sale.seller ? <span className="block truncate text-xs text-ink-faint">{sale.seller}</span> : null}
-                </span>
-                <span className="text-right">
-                  <Money value={sale.total} className="block font-semibold" />
-                  <span className={cn('block text-xs', sale.method === 'credit' ? 'text-debt' : 'text-ink-faint')}>
-                    {sale.method === 'split' ? t('recent.split') : tp(sale.method)}
-                  </span>
-                </span>
-              </li>
-            ))}
-          </ul>
+          data.top.slice(0, 3).map((row) => (
+            <Row key={row.productId} label={row.name} sub={`× ${formatQty(row.qty)}`}>
+              <Money value={row.total} className="font-display text-[22px]" />
+            </Row>
+          ))
         )}
-      </Panel>
+      </Section>
+
+      <Section title={t('sections.recent')} more={{ href: '/mauzo/historia', label: t('recent.all') }}>
+        {data.recent.length === 0 ? (
+          <p className="flex min-h-12 items-center px-4 text-[15px] text-ink-soft">{t('noSales')}</p>
+        ) : (
+          data.recent.slice(0, 3).map((sale) => (
+            <Row
+              key={sale.id}
+              edge={sale.method === 'credit' ? 'debt' : undefined}
+              label={new Date(sale.at).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', timeZone: 'Africa/Dar_es_Salaam' })}
+              sub={[t('recent.items', { count: sale.items }), sale.seller].filter(Boolean).join(', ')}
+            >
+              <Money value={sale.total} className="font-display text-[22px]" />
+            </Row>
+          ))
+        )}
+      </Section>
 
       {show('staff') && can('viewStaffSales') && data.sellers.length > 1 ? (
-        <Panel title={t('staff.title')} footer={{ href: '/wafanyakazi/mauzo', label: t('staff.all') }}>
-          <ul className="divide-y divide-line">
-            {data.sellers.map((seller) => (
-              <li key={seller.id || 'none'} className="px-4 py-2.5">
-                <div className="flex items-baseline justify-between gap-3">
-                  <span className="truncate text-[15px]">{seller.name ?? t('staff.unknown')}</span>
-                  <Money value={seller.total} className="font-semibold" />
-                </div>
-                <span aria-hidden className="mt-1.5 block h-1 rounded-full bg-line">
-                  <span className="block h-1 rounded-full bg-brand" style={{ width: `${(seller.total / sellerMax) * 100}%` }} />
-                </span>
-              </li>
-            ))}
-          </ul>
-        </Panel>
+        <Section title={t('sections.sellers')} more={{ href: '/wafanyakazi/mauzo', label: t('staff.all') }}>
+          {data.sellers.map((seller) => (
+            <Row key={seller.id || 'none'} label={seller.name ?? t('staff.unknown')}>
+              <Money value={seller.total} className="font-display text-[22px]" />
+            </Row>
+          ))}
+        </Section>
       ) : null}
 
       <div className="h-6" />
@@ -443,57 +302,101 @@ export default function DashboardPage() {
   );
 }
 
-/** One figure as a white tile: label, amount, and a line under it. */
-function Figure({
-  label,
-  value,
-  tone = 'plain',
-  href,
-  children,
-}: {
-  label: string;
-  value: number;
-  tone?: 'plain' | 'loss' | 'debt';
-  href?: string;
-  children?: ReactNode;
-}) {
-  const body = (
-    <>
-      <span className="block text-[13px] font-medium text-ink-soft">{label}</span>
-      <Money
-        value={value}
-        className={cn('mt-1 block text-[21px] leading-tight font-bold', tone === 'loss' && 'text-loss', tone === 'debt' && 'text-debt')}
-      />
-      <span className="mt-1.5 block">{children}</span>
-    </>
-  );
-  const frame = 'card block min-w-0 px-4 py-3';
-  return href ? (
-    <Link href={href} prefetch={false} className={cn(frame, 'active:bg-paper')}>
-      {body}
-    </Link>
-  ) : (
-    <div className={frame}>{body}</div>
+/** The change against the period before, as a navy chip on the yellow sign. */
+function SignChange({ pct }: { pct: number | null }) {
+  if (pct === null) return null;
+  return (
+    <span className="tnum inline-flex items-center gap-0.5 rounded-[4px] bg-sign-ink px-2 py-0.5 text-sm text-sign">
+      {pct >= 0 ? <ArrowUpRight size={14} strokeWidth={2.6} /> : <ArrowDownRight size={14} strokeWidth={2.6} />}
+      {Math.abs(pct)}%
+    </span>
   );
 }
 
-/** A small labelled amount in a row of three. */
-function Cell({ label, value, sign }: { label: string; value: number; sign?: '+' | '-' }) {
+/** A section: its name painted above, its rows on a white panel, and a link out when there is more. */
+function Section({
+  title,
+  aside,
+  more,
+  children,
+}: {
+  title: string;
+  aside?: ReactNode;
+  more?: { href: string; label: string };
+  children: ReactNode;
+}) {
   return (
-    <div className="border-l border-line px-3 py-2.5 first:border-l-0">
-      <dt className="text-xs text-ink-faint">{label}</dt>
-      <dd className={cn('tnum mt-0.5 font-semibold', sign === '+' && 'text-up', sign === '-' && 'text-down')}>
-        {sign && value > 0 ? sign : ''}
-        <Money value={value} />
-      </dd>
+    <section className="mx-3 mt-6">
+      <header className="mb-2 flex items-end justify-between gap-2 px-1">
+        <h2 className="font-display text-[24px] leading-none uppercase">{title}</h2>
+        {aside}
+      </header>
+      <div className="card overflow-hidden">
+        {children}
+        {more ? (
+          <Link
+            href={more.href}
+            prefetch={false}
+            className="flex min-h-12 items-center justify-between border-t border-line px-4 text-sm font-bold active:bg-paper"
+          >
+            {more.label}
+            <ChevronRight size={18} />
+          </Link>
+        ) : null}
+      </div>
+    </section>
+  );
+}
+
+/** One line of a section: a coloured edge, a name, and its figure on the right. */
+function Row({ label, sub, edge, children }: { label: string; sub?: string; edge?: 'loss' | 'debt'; children: ReactNode }) {
+  return (
+    <div
+      className={cn(
+        'flex min-h-14 items-center gap-3 border-b border-b-paper py-2 pr-4 pl-3 last:border-b-0',
+        'border-l-[6px]',
+        edge === 'loss' ? 'border-l-loss' : edge === 'debt' ? 'border-l-debt' : 'border-l-band'
+      )}
+    >
+      <span className="min-w-0 flex-1">
+        <span className="block truncate text-[15px] font-semibold">{label}</span>
+        {sub ? <span className="block truncate text-xs text-ink-faint">{sub}</span> : null}
+      </span>
+      {children}
     </div>
   );
 }
 
-function Pill({ tone, children }: { tone: 'loss' | 'debt'; children: ReactNode }) {
-  return (
-    <span className={cn('rounded-full px-2 py-0.5 text-xs font-semibold', tone === 'loss' ? 'bg-loss-tint text-loss' : 'bg-debt-tint text-debt')}>
-      {children}
-    </span>
+/** A painted panel: one word, one big number, and at most a short note. */
+function Tile({
+  label,
+  value,
+  note,
+  tone = 'plain',
+  href,
+}: {
+  label: string;
+  value: number;
+  note?: string | null;
+  tone?: 'plain' | 'navy' | 'sign';
+  href?: string;
+}) {
+  const body = (
+    <>
+      <span className="block text-[13px] font-bold">{label}</span>
+      <Money value={value} className={cn('font-display mt-1 block text-[38px] leading-none', value < 0 && 'text-loss')} />
+      {note ? <span className="mt-1.5 block text-[13px] font-semibold opacity-80">{note}</span> : null}
+    </>
+  );
+  const frame = cn(
+    'block min-h-[100px] min-w-0 rounded-[6px] px-3.5 py-3',
+    tone === 'navy' ? 'bg-hero text-band-ink' : tone === 'sign' ? 'bg-sign text-sign-ink' : 'bg-surface text-ink'
+  );
+  return href ? (
+    <Link href={href} prefetch={false} className={cn(frame, 'active:opacity-85')}>
+      {body}
+    </Link>
+  ) : (
+    <div className={frame}>{body}</div>
   );
 }

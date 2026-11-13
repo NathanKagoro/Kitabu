@@ -64,9 +64,10 @@
       "low": "Zinapungua {count}",
       "outBadge": "Imeisha",
       "lowBadge": "Inapungua",
-      "allGood": "Stoo yote iko juu ya kiwango cha kuagiza.",
+      "allGood": "Stoo iko sawa",
       "all": "Bidhaa zote",
-      "left": "zimebaki {qty}"
+      "left": "zimebaki {qty}",
+      "more": "{count} zaidi"
     },
     "top": {
       "title": "Bidhaa zinazouzwa zaidi",
@@ -85,6 +86,23 @@
       "all": "Ona kwa kina",
       "unknown": "Bila jina"
     },
-    "noCompare": "hakuna ya kulinganisha"
+    "noCompare": "hakuna ya kulinganisha",
+    "tiles": {
+      "profit": "Faida",
+      "cash": "Taslimu",
+      "owed": "Unadai",
+      "drawer": "Kwenye droo",
+      "spent": "Matumizi",
+      "open": "wazi",
+      "closed": "imefungwa",
+      "people": "{count, plural, one {mtu 1} other {watu #}}"
+    },
+    "sections": {
+      "restock": "Jaza stoo",
+      "week": "Wiki hii",
+      "top": "Zinauzwa zaidi",
+      "recent": "Mauzo ya karibuni",
+      "sellers": "Kwa muuzaji"
+    }
   }
 }

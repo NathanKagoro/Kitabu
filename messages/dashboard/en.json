@@ -64,9 +64,10 @@
       "low": "{count} low",
       "outBadge": "Out",
       "lowBadge": "Low",
-      "allGood": "All stock is above its reorder level.",
+      "allGood": "Stock is fine",
       "all": "All products",
-      "left": "{qty} left"
+      "left": "{qty} left",
+      "more": "{count} more"
     },
     "top": {
       "title": "Best sellers",
@@ -85,6 +86,23 @@
       "all": "See details",
       "unknown": "No name"
     },
-    "noCompare": "nothing to compare"
+    "noCompare": "nothing to compare",
+    "tiles": {
+      "profit": "Profit",
+      "cash": "Cash sales",
+      "owed": "Owed to you",
+      "drawer": "In the drawer",
+      "spent": "Spent",
+      "open": "open",
+      "closed": "closed",
+      "people": "{count, plural, one {1 person} other {# people}}"
+    },
+    "sections": {
+      "restock": "Restock",
+      "week": "This week",
+      "top": "Selling most",
+      "recent": "Latest sales",
+      "sellers": "By seller"
+    }
   }
 }

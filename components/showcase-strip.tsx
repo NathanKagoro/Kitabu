@@ -9,16 +9,23 @@ import { IS_DAFTARI } from '@/lib/edition';
 export function ShowcaseStrip() {
   const t = useTranslations('demo');
   return (
-    <div className="flex min-h-10 items-center gap-2 bg-accent px-4 text-sm font-semibold text-band">
+    <div
+      className={
+        IS_DAFTARI
+          ? 'flex min-h-10 items-center gap-2 bg-accent px-4 text-sm font-semibold text-band'
+          : // Kitabu's sign is yellow, so the demo strip sits above it in navy.
+            'flex min-h-10 items-center gap-2 border-b border-band-line bg-band px-4 text-sm font-semibold text-band-ink'
+      }
+    >
       <span className="min-w-0 flex-1 truncate">{t('banner')}</span>
       {IS_DAFTARI ? null : (
         // Kitabu's demo has four trades: back to the choice.
-        <a href={withBase('/demo/?chagua=1')} className="flex h-8 shrink-0 items-center rounded-full border border-band/40 px-3 text-xs font-bold">
+        <a href={withBase('/demo/?chagua=1')} className="flex h-8 shrink-0 items-center rounded-full border border-current/40 px-3 text-xs font-bold">
           {t('switch')}
         </a>
       )}
       <button
-        className="h-8 shrink-0 rounded-full bg-band px-3 text-xs font-bold text-band-ink"
+        className={IS_DAFTARI ? 'h-8 shrink-0 rounded-full bg-band px-3 text-xs font-bold text-band-ink' : 'h-8 shrink-0 rounded-full bg-accent px-3 text-xs font-bold text-band'}
         onClick={() =>
           void (async () => {
             const { signOut } = await import('@/lib/auth/session');
