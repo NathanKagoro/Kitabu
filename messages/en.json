@@ -500,7 +500,9 @@
     },
     "withdrawn": "Saved",
     "moneyMoves": "Money in and out",
-    "salesByDay": "Sales by day"
+    "salesByDay": "Sales by day",
+    "drawerNow": "Should be in the drawer",
+    "drawerTitle": "Drawer"
   },
   "documents": {
     "title": "Documents",

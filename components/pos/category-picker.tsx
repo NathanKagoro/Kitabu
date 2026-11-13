@@ -38,7 +38,7 @@ export function CategoryPicker({
       <button
         onClick={() => setOpen(true)}
         aria-haspopup="dialog"
-        className={cn('flex h-12 w-full items-center gap-2 rounded-[10px] border border-line-strong bg-surface px-3 text-left', className)}
+        className={cn('field flex h-12 w-full items-center gap-2 rounded-[10px] border border-line-strong bg-surface px-3 text-left', className)}
       >
         <span className="text-sm text-ink-soft">{t('categoryLabel')}</span>
         <span className="min-w-0 flex-1 truncate font-semibold">{value ?? tc('all')}</span>

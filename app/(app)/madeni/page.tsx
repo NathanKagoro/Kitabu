@@ -49,7 +49,7 @@ export default function CreditPage() {
 
       <section className="card m-3 p-4">
         <p className="text-sm font-medium text-ink-soft">{t('totalOwed')}</p>
-        <Money value={totalOwed} symbol className="text-3xl font-bold text-debt" />
+        <Money value={totalOwed} symbol className="font-display text-[40px] leading-none text-debt" />
         <p className="mt-0.5 text-sm text-ink-soft">{t('peopleOwing', { count: owing.length })}</p>
       </section>
 

@@ -36,7 +36,7 @@ export function Field({ label, hint, error, children }: FieldProps) {
 }
 
 const inputStyles =
-  'w-full h-14 px-3.5 rounded-[10px] bg-surface border border-line-strong text-ink ' +
+  'field w-full h-14 px-3.5 rounded-[10px] bg-surface border border-line-strong text-ink ' +
   'placeholder:text-ink-faint focus:border-brand focus:outline-none';
 
 export function TextInput({ className, ...props }: InputHTMLAttributes<HTMLInputElement>) {

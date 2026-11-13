@@ -103,6 +103,18 @@
       "top": "Zinauzwa zaidi",
       "recent": "Mauzo ya karibuni",
       "sellers": "Kwa muuzaji"
+    },
+    "hero": {
+      "against": {
+        "today": "Siku ya kawaida",
+        "week": "Wiki iliyopita",
+        "month": "Mwezi uliopita"
+      }
+    },
+    "chart": {
+      "usual": "Kawaida",
+      "best": "Bora",
+      "vsUsual": "ya kawaida"
     }
   }
 }

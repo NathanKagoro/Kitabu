@@ -53,8 +53,8 @@ export function BottomNav() {
     <nav
       aria-label={t('nav.more')}
       className={cn(
-        'fixed inset-x-0 bottom-0 z-40 border-t pb-[env(safe-area-inset-bottom,0px)]',
-        'border-band-line bg-band'
+        'fixed inset-x-0 bottom-0 z-40 bg-band pb-[env(safe-area-inset-bottom,0px)]',
+        IS_DAFTARI ? 'border-t border-band-line' : 'rounded-t-[22px]'
       )}
     >
       <ul className="mx-auto flex max-w-lg">
@@ -75,7 +75,7 @@ export function BottomNav() {
                 )}
               >
                 {active ? (
-                  <span aria-hidden className="absolute inset-x-3 top-0 h-[3px] rounded-b bg-accent" />
+                  <span aria-hidden className={cn('absolute top-0 h-[3px] bg-accent', IS_DAFTARI ? 'inset-x-3 rounded-b' : 'inset-x-5 rounded-b-full')} />
                 ) : null}
                 <Icon size={22} strokeWidth={active ? 2.4 : 2} />
                 <span className={cn('leading-none', IS_DAFTARI ? 'font-label text-[13px]' : cn('text-[11.5px]', active ? 'font-bold' : 'font-medium'))}>

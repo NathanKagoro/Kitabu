@@ -139,40 +139,43 @@ export default function DashboardPage() {
     timeZone: 'Africa/Dar_es_Salaam',
   });
 
-  // The top of the dashboard is the shop's signboard: its name and the day's takings, painted large.
-  const sign = (
-    <header className="sign-board bg-sign px-4 pt-3 pb-4 text-sign-ink">
-      <div className="flex items-center gap-2">
-        {business?.settings.logoUrl ? <ShopLogo src={business.settings.logoUrl} size={30} className="rounded-[6px] bg-surface" /> : null}
-        <h1 className="font-display min-w-0 flex-1 truncate text-[26px] leading-none uppercase">{business?.name ?? t('title')}</h1>
+  // A curved navy header with the shop and the period; the day's sales on a white card that overlaps it.
+  const top = (
+    <header className="rounded-b-[28px] bg-band px-4 pt-3 pb-16 text-band-ink">
+      <div className="flex items-center gap-2.5">
+        {business?.settings.logoUrl ? <ShopLogo src={business.settings.logoUrl} size={32} className="rounded-[10px] bg-surface" /> : null}
+        <div className="min-w-0 flex-1">
+          <h1 className="font-display truncate text-[26px] leading-none uppercase">{business?.name ?? t('title')}</h1>
+          <p className="mt-1 truncate text-[13px] text-band-soft">{dateLine}</p>
+        </div>
         <div className="band-action flex shrink-0 items-center">
           <SyncIndicator />
         </div>
       </div>
-      <p className="mt-1 text-[13px] font-semibold">{dateLine}</p>
-      {data ? (
-        <>
-          <p className="mt-3 flex items-baseline gap-1.5" aria-label={t('kpi.sales')}>
-            <span className="font-display text-[26px]">TSh</span>
-            <Money value={data.now.salesTotal} className="font-display text-[68px] leading-[0.9]" />
-          </p>
-          <div className="mt-2 flex flex-wrap items-center gap-2 text-[15px] font-bold">
-            <SignChange pct={percentChange(data.now.salesTotal, data.then.salesTotal)} />
-            {t('kpi.salesCount', { count: data.now.salesCount })}
-          </div>
-        </>
-      ) : null}
+      <Segmented
+        className="seg-dark mt-4"
+        label={t('periodLabel')}
+        value={period}
+        onChange={setPeriod}
+        options={PERIODS.map((p) => ({ value: p, label: t(`periods.${p}`) }))}
+      />
     </header>
   );
-  if (!data) return sign;
+  if (!data) return top;
 
-  const { now, drawer } = data;
+  const { now, then, drawer } = data;
   const owed = customers?.reduce((sum, c) => sum + Math.max(0, c.balance), 0) ?? 0;
   const owing = customers?.filter((c) => c.balance > 0).length ?? 0;
   const alerts = products && stock ? stockAlerts(products, stock) : [];
   const outCount = alerts.filter((a) => a.status === 'out').length;
   const lowCount = alerts.length - outCount;
   const weekTotal = data.thisWeek.reduce((s, p) => s + p.total, 0);
+  // A usual day: the average of the seven days before today.
+  const usual = Math.round([...data.lastWeek, ...data.thisWeek].slice(6, 13).reduce((s, p) => s + p.total, 0) / 7);
+  // What today, this week or this month is measured against: a usual day, last week, last month.
+  const target = period === 'today' ? usual : then.salesTotal;
+  const progress = target > 0 ? now.salesTotal / target : null;
+  const change = percentChange(now.salesTotal, then.salesTotal);
   const showProfit = can('viewProfit');
 
   const jobs = [
@@ -183,22 +186,53 @@ export default function DashboardPage() {
 
   return (
     <>
-      {sign}
+      {top}
 
-      <div className="px-3 pt-3">
-        <Segmented
-          label={t('periodLabel')}
-          value={period}
-          onChange={setPeriod}
-          options={PERIODS.map((p) => ({ value: p, label: t(`periods.${p}`) }))}
-        />
-      </div>
+      <section className="relative mx-3 -mt-12 rounded-[24px] bg-surface px-[18px] pt-4 pb-[18px]" aria-label={t('kpi.sales')}>
+        <div className="flex items-center justify-between gap-3">
+          <p className="text-[13px] font-bold text-ink-soft">{t('kpi.sales')}</p>
+          <p className="tnum text-[13px] text-ink-faint">{t('kpi.salesCount', { count: now.salesCount })}</p>
+        </div>
+        <div className="mt-1 flex items-end justify-between gap-3">
+          <p className="flex items-baseline gap-1.5">
+            <span className="font-display text-[24px]">TSh</span>
+            <Money value={now.salesTotal} className="font-display text-[60px] leading-[0.9]" />
+          </p>
+          {change !== null ? (
+            <span
+              className={cn(
+                'tnum mb-1 inline-flex shrink-0 items-center gap-0.5 rounded-full px-2.5 py-1 text-sm font-bold',
+                change >= 0 ? 'bg-up/12 text-up' : 'bg-down/10 text-down'
+              )}
+            >
+              {change >= 0 ? <ArrowUpRight size={15} strokeWidth={2.6} /> : <ArrowDownRight size={15} strokeWidth={2.6} />}
+              {Math.abs(change)}%
+            </span>
+          ) : null}
+        </div>
+        {progress !== null ? (
+          <div className="mt-4">
+            <div className="h-3 overflow-hidden rounded-full bg-paper">
+              <div
+                className={cn('h-full rounded-full', progress >= 1 ? 'bg-up' : 'bg-band')}
+                style={{ width: `${Math.min(100, Math.round(progress * 100))}%` }}
+              />
+            </div>
+            <div className="mt-1.5 flex justify-between gap-3 text-[13px]">
+              <span className="text-ink-faint">
+                {t(`hero.against.${period}`)} <Money value={target} className="font-semibold text-ink-soft" />
+              </span>
+              <span className={cn('tnum font-bold', progress >= 1 ? 'text-up' : 'text-ink-soft')}>{Math.round(progress * 100)}%</span>
+            </div>
+          </div>
+        ) : null}
+      </section>
 
       {can('sell') ? (
         <Link
           href="/mauzo"
           prefetch={false}
-          className="font-display mx-3 mt-3 flex h-[68px] items-center justify-center rounded-[6px] bg-sell text-[34px] tracking-[0.04em] text-white uppercase shadow-[0_5px_0_var(--color-sell-dark)] active:translate-y-[3px] active:shadow-[0_2px_0_var(--color-sell-dark)]"
+          className="font-display mx-3 mt-3 flex h-16 items-center justify-center rounded-[20px] bg-sell text-[32px] tracking-[0.05em] text-white uppercase shadow-[0_5px_0_var(--color-sell-dark)] active:translate-y-[3px] active:shadow-[0_2px_0_var(--color-sell-dark)]"
         >
           {t('actions.sell')}
         </Link>
@@ -211,7 +245,7 @@ export default function DashboardPage() {
               key={href}
               href={href}
               prefetch={false}
-              className="flex min-h-12 items-center justify-center gap-1.5 rounded-[6px] bg-surface px-1.5 text-[13.5px] leading-tight font-bold active:bg-brand-tint"
+              className="flex min-h-12 items-center justify-center gap-1.5 rounded-full bg-surface px-2 text-[13.5px] leading-tight font-bold active:bg-brand-tint"
             >
               <Icon size={18} className="shrink-0" />
               <span className="min-w-0">{label}</span>
@@ -254,7 +288,12 @@ export default function DashboardPage() {
 
       <Section title={t('sections.week')} aside={<Money value={weekTotal} symbol className="text-sm font-bold" />}>
         <div className="px-4 pt-3 pb-3">
-          <BarChart points={data.thisWeek} today={today} compare={data.lastWeek} compareLabel={t('trend.sameDayBefore')} />
+          <BarChart
+            points={data.thisWeek}
+            today={today}
+            usual={usual > 0 ? usual : undefined}
+            labels={{ usual: t('chart.usual'), best: t('chart.best'), vsUsual: t('chart.vsUsual') }}
+          />
         </div>
       </Section>
 
@@ -302,17 +341,6 @@ export default function DashboardPage() {
   );
 }
 
-/** The change against the period before, as a navy chip on the yellow sign. */
-function SignChange({ pct }: { pct: number | null }) {
-  if (pct === null) return null;
-  return (
-    <span className="tnum inline-flex items-center gap-0.5 rounded-[4px] bg-sign-ink px-2 py-0.5 text-sm text-sign">
-      {pct >= 0 ? <ArrowUpRight size={14} strokeWidth={2.6} /> : <ArrowDownRight size={14} strokeWidth={2.6} />}
-      {Math.abs(pct)}%
-    </span>
-  );
-}
-
 /** A section: its name painted above, its rows on a white panel, and a link out when there is more. */
 function Section({
   title,
@@ -327,8 +355,8 @@ function Section({
 }) {
   return (
     <section className="mx-3 mt-6">
-      <header className="mb-2 flex items-end justify-between gap-2 px-1">
-        <h2 className="font-display text-[24px] leading-none uppercase">{title}</h2>
+      <header className="mb-2.5 flex items-center gap-3 px-1">
+        <h2 className="stripe-title font-display min-w-0 flex-1 text-[24px] leading-none uppercase">{title}</h2>
         {aside}
       </header>
       <div className="card overflow-hidden">
@@ -355,7 +383,7 @@ function Row({ label, sub, edge, children }: { label: string; sub?: string; edge
       className={cn(
         'flex min-h-14 items-center gap-3 border-b border-b-paper py-2 pr-4 pl-3 last:border-b-0',
         'border-l-[6px]',
-        edge === 'loss' ? 'border-l-loss' : edge === 'debt' ? 'border-l-debt' : 'border-l-band'
+        edge === 'loss' ? 'border-l-loss' : edge === 'debt' ? 'border-l-debt' : 'border-l-bar'
       )}
     >
       <span className="min-w-0 flex-1">
@@ -389,7 +417,7 @@ function Tile({
     </>
   );
   const frame = cn(
-    'block min-h-[100px] min-w-0 rounded-[6px] px-3.5 py-3',
+    'block min-h-[104px] min-w-0 rounded-[20px] px-4 py-3.5',
     tone === 'navy' ? 'bg-hero text-band-ink' : tone === 'sign' ? 'bg-sign text-sign-ink' : 'bg-surface text-ink'
   );
   return href ? (

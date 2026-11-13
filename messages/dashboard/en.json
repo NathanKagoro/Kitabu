@@ -103,6 +103,18 @@
       "top": "Selling most",
       "recent": "Latest sales",
       "sellers": "By seller"
+    },
+    "hero": {
+      "against": {
+        "today": "Usual day",
+        "week": "Last week",
+        "month": "Last month"
+      }
+    },
+    "chart": {
+      "usual": "Usual",
+      "best": "Best",
+      "vsUsual": "on usual"
     }
   }
 }

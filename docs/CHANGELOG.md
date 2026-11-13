@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.13.0 — The blend: soft, painted, striped (2026-11-13)
+
+Kitabu's look is now a blend of three of the five concepts, and the yellow header is gone.
+
+- **From "Today's target" (soft edges):** a curved navy header holding the shop name and pill period buttons; the day's sales on a white card that overlaps it; 20px corners on cards and panels, round buttons and inputs, a tab bar with rounded top corners. Headers on every screen have rounded bottom corners instead of the yellow rule.
+- **From "Signboard" (the bottom half):** the red Sell slab, small pill shortcuts, the four painted panels (navy Profit, yellow Owed to you, In the drawer, Spent), the signwritten figures and section names, lists with a coloured edge.
+- **From "Daladala":** section names carry a yellow diagonal stripe, and the cash drawer is drawn as a route (start, cash in, cash out, should be in the drawer, counted) on the day's count, where it is worked out.
+- **Sales against a usual day:** the sales card shows a bar against a usual day (the average of the seven days before today), last week or last month, with the percentage.
+- **A chart that says something:** a dashed "usual" line, bars solid when the day beat it and pale when it did not, today in yellow, the best day flagged, tap a day for its amount against the usual. The bars grow in once when the screen opens (not with reduced motion). Bars use a lighter tone in dark mode so they show.
+- New `components/summary/cash-route.tsx`; `--color-bar` token. Sales screen first load 209.3 KB.
+
 ## 0.12.0 — The signboard: Kitabu's own look (2026-11-13)
 
 The "Bank card" look read as a template. A second study gave five designers five different ideas (signboard, big numbers, today's target, daladala, receipt), built as full mockups; the **signboard** won.

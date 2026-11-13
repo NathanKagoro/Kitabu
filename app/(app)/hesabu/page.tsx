@@ -3,6 +3,7 @@
 import { productLabel } from '@/lib/products';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { Info, Lock, TriangleAlert } from '@/components/icons';
+import { CashRoute } from '@/components/summary/cash-route';
 import { WithdrawSheet } from '@/components/summary/withdraw-sheet';
 import { useLocale, useTranslations } from 'next-intl';
 import { useState } from 'react';
@@ -144,7 +145,7 @@ export default function SummaryPage() {
 
       <section className="card mx-3 mb-3 p-4">
         <div className="flex items-start justify-between gap-3">
-          <h2 className="font-label text-[17px]">{t('expectedCash')}</h2>
+          <h2 className="font-display text-[24px] leading-none uppercase">{t('drawerTitle')}</h2>
           {todayClose ? (
             <span className="flex items-center gap-1 rounded-full bg-brand-tint px-2.5 py-1 text-xs font-semibold text-brand-dark">
               <Lock size={12} />
@@ -152,17 +153,17 @@ export default function SummaryPage() {
             </span>
           ) : null}
         </div>
-        <Money value={summary.expectedCash} symbol className={cn('mt-1 block font-display text-[36px] leading-tight', summary.expectedCash < 0 && 'text-loss')} />
-        <div className="mt-2 border-t border-line">
-          <Row label={t('openingCash')} value={<Money value={openingCash} />} tone="soft" />
-          <Row label={t('cashIn')} value={<Money value={summary.cashIn} signed />} tone="brand" />
-          <Row label={t('cashSpent')} value={<Money value={-summary.cashSpent} />} tone="loss" />
-          {summary.cashWithdrawals > 0 ? (
-            <Row label={t('withdrawals')} value={<Money value={-summary.cashWithdrawals} />} tone="soft" />
-          ) : null}
-          {todayClose ? (
-            <Row label={t('countedLabel')} value={<Money value={todayClose.countedCash} />} strong />
-          ) : null}
+        <div className="mt-3">
+          <CashRoute
+            stops={[
+              { label: t('openingCash'), amount: openingCash },
+              { label: t('cashIn'), amount: summary.cashIn, flow: 'in' },
+              { label: t('cashSpent'), amount: summary.cashSpent, flow: 'out' },
+              ...(summary.cashWithdrawals > 0 ? [{ label: t('withdrawals'), amount: summary.cashWithdrawals, flow: 'out' as const }] : []),
+              { label: t('drawerNow'), amount: summary.expectedCash, end: true },
+              ...(todayClose ? [{ label: t('countedLabel'), amount: todayClose.countedCash }] : []),
+            ]}
+          />
         </div>
         {summary.expectedCash < 0 ? (
           <p className="mt-2 flex gap-1.5 rounded-[10px] bg-loss-tint px-3 py-2 text-sm text-loss" role="status">

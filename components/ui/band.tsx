@@ -5,15 +5,15 @@ import { IS_DAFTARI } from '@/lib/edition';
 
 /**
  * The top of every screen. Daftari: a warm black band with a stripe of the
- * shop's colour under it (the first Daftari's look). Kitabu: a navy bar with a
- * yellow rule, the colours of its signboard. Colours come from the edition's tokens (globals.css).
+ * shop's colour under it (the first Daftari's look). Kitabu: a navy bar with soft
+ * rounded corners at the bottom. Colours come from the edition's tokens (globals.css).
  */
 export function Band({ children, className }: { children: ReactNode; className?: string }) {
   return (
     <header
       className={cn(
         'sticky top-0 z-30 bg-band text-band-ink',
-        IS_DAFTARI ? 'border-b-[3px] border-brand' : 'border-b-[4px] border-sign',
+        IS_DAFTARI ? 'border-b-[3px] border-brand' : 'rounded-b-[24px]',
         className
       )}
     >

@@ -500,7 +500,9 @@
     },
     "withdrawn": "Imehifadhiwa",
     "moneyMoves": "Pesa iliyoingia na kutoka",
-    "salesByDay": "Mauzo ya kila siku"
+    "salesByDay": "Mauzo ya kila siku",
+    "drawerNow": "Inapaswa kuwa kwenye droo",
+    "drawerTitle": "Droo"
   },
   "documents": {
     "title": "Hati",
