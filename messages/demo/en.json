@@ -1,7 +1,7 @@
 {
   "demoPick": {
     "pickTitle": "Choose a sample shop",
-    "pickHint": "Each shop has two weeks of sales, purchases, credit and stock checks. Nothing is sent anywhere.",
+    "pickHint": "Each shop has five weeks of sales, purchases, credit and stock checks. Nothing is sent anywhere.",
     "shops": {
       "hardware": {
         "kind": "Hardware",

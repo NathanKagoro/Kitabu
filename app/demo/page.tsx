@@ -18,6 +18,8 @@ import { uuidv7 } from '@/lib/uuid';
 
 const SEEDED_ON = 'showcaseSeededOn';
 const SEEDED_SHOP = 'showcaseShop';
+/** Bumped when the demo data changes, so phones that opened an older demo today get the new one. */
+const DEMO_VERSION = 2;
 
 /**
  * The demo link: a sample shop with two weeks of trading, no sign-in.
@@ -25,7 +27,7 @@ const SEEDED_SHOP = 'showcaseShop';
  * trades (/demo?shop=hardware|duka|wholesale|clothes); /demo alone opens the
  * hardware shop and /demo?chagua=1 shows the choice. Daftari opens its one duka. The shop is rebuilt when the link is
  * opened on a new day or for another trade, so "today" always has sales in
- * it. ?lang=sw or ?lang=en sets the language; otherwise the phone's own.
+ * it. It opens in the edition's language; ?lang=sw or ?lang=en picks one.
  */
 export default function DemoPage() {
   const t = useTranslations('demo');
@@ -40,8 +42,10 @@ export default function DemoPage() {
     // /demo opens the hardware shop; the strip's "Badilisha" comes back with ?chagua=1 for the choice.
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setShop(params.get('chagua') === '1' ? null : demoShop(params.get('shop') ?? 'hardware', IS_DAFTARI));
+    // The demo opens in the edition's language (English for Kitabu) unless the link asks for another,
+    // even on a phone an older demo left set to Swahili.
     const lang = params.get('lang');
-    if (isLocale(lang)) void setLocale(lang);
+    void setLocale(isLocale(lang) ? lang : DEFAULT_LOCALE);
   }, [setLocale]);
 
   useEffect(() => {
@@ -56,7 +60,7 @@ export default function DemoPage() {
 
         const fresh =
           (await getMeta(SEEDED_ON, null)) === businessDay() &&
-          (await getMeta(SEEDED_SHOP, null)) === shop.key &&
+          (await getMeta(SEEDED_SHOP, null)) === `${shop.key}@${DEMO_VERSION}` &&
           (await getMeta(META_KEYS.activeBusinessId, null));
         if (!fresh) {
           await db().delete();
@@ -69,7 +73,7 @@ export default function DemoPage() {
           const { createDemoBusiness } = await import('@/lib/demo');
           await createDemoBusiness(userId, shop.name, lang, shop.type, { owner: shop.owner, staff: shop.staff });
           await setMeta(SEEDED_ON, businessDay());
-          await setMeta(SEEDED_SHOP, shop.key);
+          await setMeta(SEEDED_SHOP, `${shop.key}@${DEMO_VERSION}`);
         }
         // A full load, so every screen opens on the demo database.
         if (!cancelled) window.location.replace(withBase(`${HOME}/`));

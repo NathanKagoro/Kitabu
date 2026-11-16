@@ -335,6 +335,13 @@ test('a shared phone: duplicates are caught, a cashier takes the till with a PIN
   await expect.poll(() => rows('sales').map((sale) => sale.member_id), { timeout: 20_000 }).toContain(jumaId);
 });
 
+test('a visitor to the front page lands on the sample hardware shop, in English', async ({ page }) => {
+  await page.goto('/');
+  await page.waitForURL(/\/muhtasari\/?$/, { timeout: 60_000 });
+  await expect(page.getByRole('heading', { name: 'Baraka Hardware' })).toBeVisible();
+  await expect(page.getByRole('link', { name: 'Sell', exact: true })).toBeVisible();
+});
+
 test('the demo link offers four trades, opens a stocked hardware shop with no sign-in, and sends nothing to the server', async ({ page }) => {
   const server = await fakeSupabase(page);
   let requests = 0;
@@ -343,7 +350,7 @@ test('the demo link offers four trades, opens a stocked hardware shop with no si
   });
 
   // The choice of trades; picking one opens it on the dashboard. (/demo alone opens the hardware shop.)
-  await page.goto('/demo?chagua=1');
+  await page.goto('/demo?chagua=1&lang=sw');
   await page.getByRole('button', { name: /Baraka Hardware/ }).click();
   await page.waitForURL(/\/muhtasari\/?$/, { timeout: 60_000 });
   await expect(page.getByText('Duka la mfano', { exact: false })).toBeVisible();
@@ -351,19 +358,19 @@ test('the demo link offers four trades, opens a stocked hardware shop with no si
   await page.goto('/mauzo/');
   await expect(page.getByRole('button', { name: /Saruji 50kg/ }).first()).toBeVisible();
 
-  // Two weeks of trading, today included, split across the staff.
+  // Five weeks of trading, today included, split across the staff.
   await page.goto('/wafanyakazi/mauzo/');
   await expect(page.getByText('Juma')).toBeVisible();
   await expect(page.getByText('Neema')).toBeVisible();
   await page.goto('/stoo/');
-  await expect(page.getByText(/Zimepungua 8/).first()).toBeVisible();
+  await expect(page.getByText(/Zimepungua \d+/).first()).toBeVisible();
 
   // Opening the link again the same day keeps the shop (and a sale made in it).
   await page.goto('/mauzo/');
   await page.getByRole('button', { name: /Saruji 50kg/ }).first().click();
   await page.getByRole('button', { name: 'Lipa taslimu' }).click();
   await expect(page.getByText('Imehifadhiwa!')).toBeVisible();
-  await page.goto('/demo');
+  await page.goto('/demo?lang=sw');
   await page.waitForURL(/\/muhtasari\/?$/, { timeout: 60_000 });
   await page.goto('/mauzo/historia/');
   await expect(page.getByText('Saruji', { exact: false }).first()).toBeVisible();

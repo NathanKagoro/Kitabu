@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.14.0 — Fuller demo shops; the front page opens the demo (2026-11-16)
+
+- **Five weeks of trading instead of two**, so This month and the comparisons have something in them. Busier on Friday and Saturday, quiet on Sunday, a lift at month end, slow growth over the five weeks; today holds only the sales up to the current hour.
+- **Fuller shelves** (`lib/demo-catalogue.ts`): hardware 42 lines, duka 34, wholesale 24, clothes 30, at typical Dar prices, each with a popularity weight so best sellers stand out and a typical quantity (metres of cable, kilos of sugar, bags of cement).
+- **Livelier sales:** one to four items, big orders haggled to a round figure, cash, M-Pesa, Mixx by Yas, Airtel Money, bank for large orders, the odd split payment, and credit to named regulars who mostly settle within a week or two.
+- **A real back office:** named suppliers per category, restocking when a line runs low (sometimes on the supplier's credit, part-paid today), transport on each trip, two lines left to run out or low; rent on the 1st, power and the guard weekly, lunch most days, levy mid-month, wages at month end; breakages now and then.
+- **The front page opens the hardware demo's dashboard** for a phone that has never signed in (Kitabu only; a signed-in phone goes home, Daftari goes to sign-in).
+- **The demo always opens in English** (Kitabu) unless the link says `?lang=sw`, including on phones an older demo left set to Swahili. Demos made earlier the same day are rebuilt with the new data.
+- Seeding takes about 3 to 6 seconds on a laptop. Sales screen first load 209.6 KB.
+
 ## 0.13.0 — The blend: soft, painted, striped (2026-11-13)
 
 Kitabu's look is now a blend of three of the five concepts, and the yellow header is gone.

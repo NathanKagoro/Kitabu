@@ -669,7 +669,7 @@
     "created": "Demo business ready",
     "businessName": "{type} – demo",
     "opening": "Opening the sample shop…",
-    "openingHint": "Setting up two weeks of trading. The first time takes a few seconds.",
+    "openingHint": "Setting up five weeks of trading. The first time takes a few seconds.",
     "failed": "Could not open the sample shop.",
     "retry": "Try again",
     "banner": "Sample shop",
