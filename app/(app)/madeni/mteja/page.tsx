@@ -158,7 +158,7 @@ function CustomerPage() {
           <li key={payment.id} className="flex items-center gap-3 px-4 py-3">
             <span className="w-14 shrink-0 text-sm text-ink-faint">{date(payment.clientCreatedAt)}</span>
             <span className="min-w-0 flex-1 text-[15px]">
-              {charge ? t('creditSale') : `${t('payment')} · ${tp(`methods.${payment.method}`)}`}
+              {charge ? t('creditSale') : `${t('payment')} (${tp(`methods.${payment.method}`)})`}
             </span>
             <span className="text-right">
               <Money value={charge ? payment.amount : -payment.amount} signed className={cn('block font-semibold', charge ? 'text-debt' : 'text-brand')} />
@@ -199,7 +199,7 @@ function CustomerPage() {
         <div className="space-y-4 p-4">
           <p className="tnum text-center text-4xl font-bold">{formatTZS(value)}</p>
           <Button variant="secondary" block onClick={() => setAmount(String(balance))}>
-            {t('payAll')} · {formatTZS(balance)}
+            {t('payAll')}: {formatTZS(balance)}
           </Button>
           <Keypad value={amount} onChange={setAmount} />
           <OptionGrid<PaymentMethod>

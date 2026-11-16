@@ -80,7 +80,7 @@ describe('units', () => {
 
 describe('receipts and reminders', () => {
   it('builds a short text receipt and a wa.me link', () => {
-    expect(receiptItemsText([{ description: 'Nyanya', qty: 2, lineTotal: 2000 }])).toBe('• Nyanya x2 — 2,000');
+    expect(receiptItemsText([{ description: 'Nyanya', qty: 2, lineTotal: 2000 }])).toBe('• Nyanya x2: 2,000');
     expect(whatsappLink('Habari', '0712345678')).toBe('https://wa.me/255712345678?text=Habari');
     expect(whatsappLink('a b')).toBe('https://wa.me/?text=a%20b');
   });

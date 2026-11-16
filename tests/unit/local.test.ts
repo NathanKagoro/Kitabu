@@ -386,7 +386,7 @@ describe('recordStockCount', () => {
       ],
     });
     expect(count).toMatchObject({ itemsCounted: 2, linesShort: 1, unitsShort: 3, valueShortCost: 16500, valueShortPrice: 24000 });
-    expect(count.lines.find((l) => l.productId === red.id)).toMatchObject({ name: 'Lipstick – Red 01', expected: 10, counted: 7 });
+    expect(count.lines.find((l) => l.productId === red.id)).toMatchObject({ name: 'Lipstick Red 01', expected: 10, counted: 7 });
 
     // The ledger now agrees with the shelf, and the correction points at the count.
     expect(await onHand(red.id)).toBe(7);
@@ -444,7 +444,7 @@ describe('every shop type starts with its own things', () => {
 
   it('a cosmetics demo has lotions and lipsticks in their categories, and no vegetables', async () => {
     const { createDemoBusiness } = await import('@/lib/demo');
-    const id = await createDemoBusiness('u1', 'Vipodozi – mfano', 'sw', 'cosmetics');
+    const id = await createDemoBusiness('u1', 'Vipodozi (mfano)', 'sw', 'cosmetics');
     const products = await db().products.where('businessId').equals(id).toArray();
     expect(products.length).toBeGreaterThan(5);
     expect(products.every((p) => p.category && p.price > 0)).toBe(true);

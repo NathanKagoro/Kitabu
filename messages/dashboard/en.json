@@ -102,7 +102,12 @@
       "week": "This week",
       "top": "Selling most",
       "recent": "Latest sales",
-      "sellers": "By seller"
+      "sellers": "By seller",
+      "chart": {
+        "today": "Today by hour",
+        "week": "This week",
+        "month": "This month"
+      }
     },
     "hero": {
       "against": {

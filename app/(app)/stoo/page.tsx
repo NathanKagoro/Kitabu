@@ -81,10 +81,10 @@ export default function StockCheckPage() {
                     <span className="min-w-0 flex-1">
                       <span className="block font-semibold">
                         {dateText(count.clientCreatedAt)}
-                        {count.scope ? <span className="font-normal text-ink-soft"> · {count.scope}</span> : null}
+                        {count.scope ? <span className="font-normal text-ink-soft">, {count.scope}</span> : null}
                       </span>
                       <span className="text-sm text-ink-faint">
-                        {count.kind === 'opening' ? `${t('openingLead')} · ` : ''}
+                        {count.kind === 'opening' ? `${t('openingLead')}, ` : ''}
                         {t('itemsCounted', { count: count.itemsCounted })}
                       </span>
                     </span>

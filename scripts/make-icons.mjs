@@ -131,12 +131,12 @@ function crc32(buffer) {
 
 for (const size of [192, 512]) {
   writeFileSync(join(outDir, `icon-${size}.png`), png(size));
-  console.log(`icons — wrote icon-${size}.png`);
+  console.log(`icons: wrote icon-${size}.png`);
 }
 
 // iOS home screen. Next serves app/apple-icon.png by file convention.
 writeFileSync(join(root, 'app', 'apple-icon.png'), png(180));
-console.log('icons — wrote app/apple-icon.png');
+console.log('icons: wrote app/apple-icon.png');
 
 /*
  * The browser tab, as SVG so it stays crisp at 16px and at 64px. Built from
@@ -153,4 +153,4 @@ const svg = [
   '</svg>',
 ].join('\n');
 writeFileSync(join(root, 'app', 'icon.svg'), `${svg}\n`);
-console.log('icons — wrote app/icon.svg');
+console.log('icons: wrote app/icon.svg');

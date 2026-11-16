@@ -12,7 +12,7 @@ const p = (name: string, variant: string | null = null, category: string | null 
 
 describe('a product family reads as one', () => {
   it('the label carries the shade or size', () => {
-    expect(productLabel(p('Nivea Lotion', '400ml'))).toBe('Nivea Lotion – 400ml');
+    expect(productLabel(p('Nivea Lotion', '400ml'))).toBe('Nivea Lotion 400ml');
     expect(productLabel(p('Sukari', '  '))).toBe('Sukari');
     expect(productLabel(p('Sukari'))).toBe('Sukari');
   });

@@ -114,7 +114,7 @@ export default function SignInPage() {
           <Button type="submit" size="lg" block disabled={busy || phone.length < 9 || !secret}>
             {busy ? t('signingIn') : t('signIn')}
           </Button>
-          <SupportButton message={t('supportMessage', { phone: phone.trim() || '—' })} label={t('forgot')} />
+          <SupportButton message={t('supportMessage', { phone: phone.trim() || '-' })} label={t('forgot')} />
         </div>
       </form>
     </main>

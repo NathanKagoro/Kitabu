@@ -136,8 +136,8 @@ function CustomersPageInner() {
                     <span className="block truncate font-semibold">{customer.name}</span>
                     <span className="block truncate text-sm text-ink-faint">
                       {customer.phone ? formatPhone(normalisePhone(customer.phone) ?? customer.phone) : t('noPhone')}
-                      {s ? ` · ${t('bought', { count: s.sales })}` : ''}
-                      {days !== null ? ` · ${t('lastSeen', { days })}` : ''}
+                      {s ? `, ${t('bought', { count: s.sales })}` : ''}
+                      {days !== null ? `, ${t('lastSeen', { days })}` : ''}
                     </span>
                   </span>
                   {hasOfferConsent(customer) ? <Badge tone="brand">{t('offersBadge')}</Badge> : null}

@@ -8,13 +8,13 @@ import { useEffect, useState, type ReactNode } from 'react';
 import { useApp } from '@/components/app-provider';
 import { ShopLogo } from '@/components/brand/shop-logo';
 import { ArrowDownRight, ArrowUpRight, ChevronRight, CircleCheck, Lock, Receipt, ShoppingCart } from '@/components/icons';
-import { BarChart } from '@/components/summary/bar-chart';
+import { BarChart, dayName, dayPoints, dayTick, type ChartPoint } from '@/components/summary/bar-chart';
 import { SyncIndicator } from '@/components/sync-indicator';
 import { Money } from '@/components/ui/bits';
 import { Segmented } from '@/components/ui/segmented';
 import { marginPercent, percentChange, stockAlerts } from '@/lib/calc/dashboard';
-import { periodRange, previousRange } from '@/lib/calc/periods';
-import { salesByDay, summariseDay, topProducts } from '@/lib/calc/summary';
+import { periodDays, periodRange, previousRange } from '@/lib/calc/periods';
+import { salesByDay, salesByHour, summariseDay, topProducts } from '@/lib/calc/summary';
 import { cn } from '@/lib/cn';
 import { addDays, businessDay, recentDays } from '@/lib/date';
 import { openingCashFor } from '@/lib/local/actions';
@@ -24,6 +24,9 @@ import { productLabel } from '@/lib/products';
 import { formatQty } from '@/lib/units';
 
 type DashPeriod = 'today' | 'week' | 'month';
+
+/** The hour of a sale in Dar es Salaam (UTC+3, no daylight saving). */
+const darHourOf = (sale: { clientCreatedAt: string }) => (new Date(sale.clientCreatedAt).getUTCHours() + 3) % 24;
 const PERIODS: readonly DashPeriod[] = ['today', 'week', 'month'];
 const PERIOD_KEY = 'kitabu.dashboardPeriod';
 
@@ -60,6 +63,7 @@ export default function DashboardPage() {
   };
 
   const today = businessDay();
+  const nowHour = darHourOf({ clientCreatedAt: new Date().toISOString() });
   const range = periodRange(period, today);
   const before = previousRange(period, today);
 
@@ -114,19 +118,25 @@ export default function DashboardPage() {
 
     const days = recentDays(14, today);
     const points = salesByDay(fortnight.sales, days, (s) => businessDay(s.clientCreatedAt));
+    // The chart covers the period picked: today by hour, this week Monday to Sunday, this month day by day.
+    const chart: ChartPoint[] =
+      period === 'today'
+        ? salesByHour(current.sales, darHourOf).map((h) => ({ key: String(h.hour), total: h.total, future: h.hour > nowHour }))
+        : dayPoints(salesByDay(current.sales, periodDays(period, today), (s) => businessDay(s.clientCreatedAt)), today);
     return {
       now,
       then,
       drawer,
       openingCash,
       closed: Boolean(closed),
-      top: top.map((p, i) => ({ ...p, name: topNames[i] ? productLabel(topNames[i]) : '—' })),
+      top: top.map((p, i) => ({ ...p, name: topNames[i] ? productLabel(topNames[i]) : '' })),
       recent,
       sellers,
       lastWeek: points.slice(0, 7),
       thisWeek: points.slice(7),
+      chart,
     };
-  }, [businessId, today, range.start, range.end, before.start, before.end]);
+  }, [businessId, today, period, nowHour, range.start, range.end, before.start, before.end]);
 
   const products = useProducts(businessId);
   const stock = useStock(businessId);
@@ -169,7 +179,6 @@ export default function DashboardPage() {
   const alerts = products && stock ? stockAlerts(products, stock) : [];
   const outCount = alerts.filter((a) => a.status === 'out').length;
   const lowCount = alerts.length - outCount;
-  const weekTotal = data.thisWeek.reduce((s, p) => s + p.total, 0);
   // A usual day: the average of the seven days before today.
   const usual = Math.round([...data.lastWeek, ...data.thisWeek].slice(6, 13).reduce((s, p) => s + p.total, 0) / 7);
   // What today, this week or this month is measured against: a usual day, last week, last month.
@@ -193,10 +202,11 @@ export default function DashboardPage() {
           <p className="text-[13px] font-bold text-ink-soft">{t('kpi.sales')}</p>
           <p className="tnum text-[13px] text-ink-faint">{t('kpi.salesCount', { count: now.salesCount })}</p>
         </div>
-        <div className="mt-1 flex items-end justify-between gap-3">
-          <p className="flex items-baseline gap-1.5">
+        <div className="mt-1 flex flex-wrap items-end justify-between gap-x-3 gap-y-1">
+          <p className="flex min-w-0 items-baseline gap-1.5">
             <span className="font-display text-[24px]">TSh</span>
-            <Money value={now.salesTotal} className="font-display text-[60px] leading-[0.9]" />
+            {/* Shrinks a little on narrow phones so a seven-figure day still fits beside its change. */}
+            <Money value={now.salesTotal} className="font-display text-[clamp(44px,14vw,60px)] leading-[0.9]" />
           </p>
           {change !== null ? (
             <span
@@ -286,12 +296,15 @@ export default function DashboardPage() {
         </Section>
       ) : null}
 
-      <Section title={t('sections.week')} aside={<Money value={weekTotal} symbol className="text-sm font-bold" />}>
+      <Section title={t(`sections.chart.${period}`)} aside={<Money value={now.salesTotal} symbol className="text-sm font-bold" />}>
         <div className="px-4 pt-3 pb-3">
           <BarChart
-            points={data.thisWeek}
-            today={today}
-            usual={usual > 0 ? usual : undefined}
+            key={period}
+            points={data.chart}
+            current={period === 'today' ? String(Math.min(20, Math.max(7, nowHour))) : today}
+            name={(key) => (period === 'today' ? `${key.padStart(2, '0')}:00` : dayName(key, locale))}
+            tick={period === 'today' ? (key) => (Number(key) % 3 === 1 ? key : '') : dayTick(data.chart.length)}
+            usual={usual > 0 ? (period === 'today' ? Math.round(usual / 11) : usual) : undefined}
             labels={{ usual: t('chart.usual'), best: t('chart.best'), vsUsual: t('chart.vsUsual') }}
           />
         </div>

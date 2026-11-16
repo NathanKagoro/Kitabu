@@ -89,7 +89,7 @@ export default function WastePage() {
             todayWaste.map((w) => (
               <Row
                 key={w.id}
-                label={`${products?.find((p) => p.id === w.productId)?.name ?? ''} × ${formatQty(w.qty)} · ${t(`reasons.${w.reason}`)}`}
+                label={`${products?.find((p) => p.id === w.productId)?.name ?? ''} × ${formatQty(w.qty)}, ${t(`reasons.${w.reason}`)}`}
                 value={<Money value={-w.costValue} />}
                 tone="loss"
               />

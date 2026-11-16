@@ -19,7 +19,7 @@ import { uuidv7 } from '@/lib/uuid';
 const SEEDED_ON = 'showcaseSeededOn';
 const SEEDED_SHOP = 'showcaseShop';
 /** Bumped when the demo data changes, so phones that opened an older demo today get the new one. */
-const DEMO_VERSION = 2;
+const DEMO_VERSION = 3;
 
 /**
  * The demo link: a sample shop with two weeks of trading, no sign-in.

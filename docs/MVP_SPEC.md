@@ -1,12 +1,12 @@
-# MVP Spec — Hesabu
+# MVP Spec: Hesabu
 
 ## 1. Who it's for
 
 | Persona | Example | Reality | What they need most |
 |---|---|---|---|
-| **Mama Neema — genge** | Sells tomatoes, onions, sukuma, bananas by the roadside in Sinza | One phone, buys stock at Kariakoo/Tandale most mornings, prices change daily, sells by *fungu* (heap), gives credit to regulars | Know if she made money today, track who owes her, don't lose stock to spoilage without noticing |
-| **Juma — duka** | Small shop selling soap, sugar, rice, airtime | Works alone or with one helper, mix of cash and M-Pesa | Fast sales, know when to restock, track *madeni* |
-| **Grace — biashara** | Hardware wholesaler with 4 staff | Issues proforma invoices, has suppliers, some customers pay later, VAT-registered | Proforma → delivery note → invoice, staff accounts, stock across the business, clean records for her accountant |
+| **Mama Neema: genge** | Sells tomatoes, onions, sukuma, bananas by the roadside in Sinza | One phone, buys stock at Kariakoo/Tandale most mornings, prices change daily, sells by *fungu* (heap), gives credit to regulars | Know if she made money today, track who owes her, don't lose stock to spoilage without noticing |
+| **Juma: duka** | Small shop selling soap, sugar, rice, airtime | Works alone or with one helper, mix of cash and M-Pesa | Fast sales, know when to restock, track *madeni* |
+| **Grace: biashara** | Hardware wholesaler with 4 staff | Issues proforma invoices, has suppliers, some customers pay later, VAT-registered | Proforma → delivery note → invoice, staff accounts, stock across the business, clean records for her accountant |
 
 ## 2. Business modes
 
@@ -38,7 +38,7 @@ At onboarding the owner picks a business type. That sets a **mode**, which only 
 - Dev mode: fixed OTP `123456`. Production: SMS via a Tanzanian-capable provider (Beem Africa or Africa's Talking) through Supabase's custom SMS hook.
 
 ### 3.2 Products & stock
-- Fields: name, selling unit, selling price, buying cost (optional), stock quantity (optional — genges may not count stock), low-stock alert level (optional), photo/emoji icon.
+- Fields: name, selling unit, selling price, buying cost (optional), stock quantity (optional, genges may not count stock), low-stock alert level (optional), photo/emoji icon.
 - Units: `fungu` (heap), `kg`, `kipande` (piece), `bunda` (bunch), `debe`, `pakti`, `lita`, `dazeni`, custom.
 - **Daily price update screen:** one list of all products with big price inputs, pre-filled with yesterday's prices. Save in one tap.
 - Stock movements are an append-only ledger (`stock_movements`): sale, purchase, waste, adjustment. Current stock = sum of movements.
@@ -46,7 +46,7 @@ At onboarding the owner picks a business type. That sets a **mode**, which only 
 ### 3.3 Sales (POS)
 - Home screen = product grid with big tiles. Tap tile → adds 1 unit. Long-press / tap quantity → numeric keypad (supports decimals for kg).
 - **Amount-only sale** (genge/duka): type an amount, tap save. For sellers who won't itemise.
-- Payment method: **Cash**, **Mobile money** (M-Pesa, Mixx by Yas/Tigo Pesa, Airtel Money, HaloPesa — record reference number optionally), **Credit (deni)** → must choose/create customer, **Split** (part cash, part credit).
+- Payment method: **Cash**, **Mobile money** (M-Pesa, Mixx by Yas/Tigo Pesa, Airtel Money, HaloPesa, record reference number optionally), **Credit (deni)** → must choose/create customer, **Split** (part cash, part credit).
 - Discount: amount off total (simple). Price override allowed per line (bargaining is normal).
 - After sale: success screen with **"Tuma risiti WhatsApp"** button → opens `wa.me` link with a short text receipt + link to a public receipt page (unguessable token).
 - Void sale (owner only, requires reason) → reverses stock movement, never deletes.
@@ -79,7 +79,7 @@ At onboarding the owner picks a business type. That sets a **mode**, which only 
 - **Documents flow:** Proforma → Delivery note → Invoice → Payment(s). Each step one tap, carrying lines forward. Numbering per business (`PF-0001`, `DN-0001`, `INV-0001`).
 - PDF generation with business logo, TIN, VRN, bank details, mobile money pay number.
 - Suppliers list with balances owed.
-- VAT: per-product flag (standard/exempt); invoice shows VAT breakdown. Rate is a setting (default 18%) — do not hard-code.
+- VAT: per-product flag (standard/exempt); invoice shows VAT breakdown. Rate is a setting (default 18%), do not hard-code.
 - **Staff:** owner invites by phone number. Roles: `owner` (everything), `manager` (all but settings/staff), `cashier` (sales, customers, expenses only; can't see profit or void sales).
 - Export: CSV of sales, expenses, customers, stock for the accountant.
 
@@ -117,8 +117,8 @@ document_lines    id, document_id, product_id?, description, qty, unit_price, va
 Customer credit balance and supplier balance are **derived** from sales/payments/purchases (use SQL views), not stored.
 
 ## 6. Explicitly NOT in the MVP (roadmap)
-- **Phase 2:** Mobile money API collection via a Tanzanian aggregator (e.g., Selcom, AzamPay, ClickPesa — evaluate fees and onboarding), automatic payment matching, SMS receipts, multi-branch stock, barcode scanning with the camera.
-- **Phase 3:** Payroll with Tanzanian deductions (PAYE, NSSF, SDL, WCF — rates must be configurable, verify current rates with TRA/NSSF before building), double-entry accounting & financial statements, TRA VFD/EFD fiscal receipts through an approved VFD provider.
+- **Phase 2:** Mobile money API collection via a Tanzanian aggregator (e.g., Selcom, AzamPay, ClickPesa, evaluate fees and onboarding), automatic payment matching, SMS receipts, multi-branch stock, barcode scanning with the camera.
+- **Phase 3:** Payroll with Tanzanian deductions (PAYE, NSSF, SDL, WCF, rates must be configurable, verify current rates with TRA/NSSF before building), double-entry accounting & financial statements, TRA VFD/EFD fiscal receipts through an approved VFD provider.
 - **Later:** Native Android wrapper, USSD for feature phones, supplier ordering, loyalty, credit scoring partnerships with lenders/SACCOs.
 
 ## 7. MVP success metrics

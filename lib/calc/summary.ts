@@ -159,6 +159,22 @@ export function salesByDay(
   return days.map((day) => ({ day, total: totals.get(day) ?? 0 }));
 }
 
+/** Opening hours shown on the "today" chart: 7:00 to 20:00. A sale outside them counts in the first or last hour. */
+export const CHART_HOURS = Array.from({ length: 14 }, (_, i) => i + 7);
+
+/** Sales per hour of one day (hour = 0..23 in Dar es Salaam), for the "today" chart. */
+export function salesByHour(sales: readonly Sale[], hourOf: (sale: Sale) => number, hours: readonly number[] = CHART_HOURS): { hour: number; total: number }[] {
+  const first = hours[0]!;
+  const last = hours[hours.length - 1]!;
+  const totals = new Map<number, number>(hours.map((h) => [h, 0]));
+  for (const sale of sales) {
+    if (sale.status !== 'complete') continue;
+    const hour = Math.min(last, Math.max(first, hourOf(sale)));
+    totals.set(hour, (totals.get(hour) ?? 0) + sale.total);
+  }
+  return hours.map((hour) => ({ hour, total: totals.get(hour) ?? 0 }));
+}
+
 export interface ProductTotal {
   productId: string;
   qty: number;

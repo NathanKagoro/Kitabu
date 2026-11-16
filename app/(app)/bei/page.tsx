@@ -66,7 +66,7 @@ function DailyPrices() {
               <label htmlFor={`price-${product.id}`} className="min-w-0 flex-1">
                 <span className="block truncate font-semibold">{productLabel(product)}</span>
                 <span className="text-xs text-ink-faint">
-                  /{product.unit === 'custom' ? product.unitLabel : tp(`unitsShort.${product.unit}`)} · {t('yesterday', { price: formatTZS(product.price) })}
+                  /{product.unit === 'custom' ? product.unitLabel : tp(`unitsShort.${product.unit}`)}, {t('yesterday', { price: formatTZS(product.price) })}
                 </span>
               </label>
               <AmountInput

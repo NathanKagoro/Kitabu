@@ -134,7 +134,7 @@ export default function PurchasesPage() {
           <Field label={t('chooseProducts')}>
             {(id) => (
               <Select id={id} value={productId} onChange={(e) => pickProduct(e.target.value)}>
-                <option value="">—</option>
+                <option value="">{t('pickProduct')}</option>
                 {products?.map((p) => (
                   <option key={p.id} value={p.id}>
                     {productLabel(p)}
@@ -178,7 +178,7 @@ export default function PurchasesPage() {
                 <div className="rounded-[10px] bg-brand-tint px-3 py-2.5 text-sm">
                   <p className="font-semibold text-brand-dark">
                     {t('converted', { qty: formatQty(units), unit: unitName })}
-                    {totalCost > 0 ? ` · ${t('costEach', { cost: formatTZS(perUnit), unit: unitName })}` : ''}
+                    {totalCost > 0 ? `, ${t('costEach', { cost: formatTZS(perUnit), unit: unitName })}` : ''}
                   </p>
                   {totalCost > 0 && product.price > 0 && margin && (
                     <p className={margin.profit >= 0 ? 'mt-0.5 text-brand-dark' : 'mt-0.5 flex gap-1.5 font-semibold text-loss'}>
@@ -215,7 +215,7 @@ export default function PurchasesPage() {
                       {line.packLabel
                         ? `${formatQty(line.packQty ?? 0)} × ${line.packLabel} = ${formatQty(line.qty)}`
                         : formatQty(line.qty)}
-                      {' · '}
+                      {', '}
                       {t('costEach', {
                         cost: formatTZS(costPerUnit(line.totalCost, line.qty)),
                         unit: unitOf(line.productId),
@@ -274,11 +274,18 @@ export default function PurchasesPage() {
             todays.map((purchase) => (
               <Row
                 key={purchase.id}
-                label={
-                  purchase.total > purchase.paidAmount
-                    ? `${t('unpaid')}: ${formatTZS(purchase.total - purchase.paidAmount)}`
-                    : tc('total')
-                }
+                label={[
+                  // Who it was bought from (or when), and anything still owed on it.
+                  suppliers?.find((sup) => sup.id === purchase.supplierId)?.name ??
+                    new Date(purchase.clientCreatedAt ?? purchase.createdAt).toLocaleTimeString('en-GB', {
+                      hour: '2-digit',
+                      minute: '2-digit',
+                      timeZone: 'Africa/Dar_es_Salaam',
+                    }),
+                  purchase.total > purchase.paidAmount ? `${t('unpaid')} ${formatTZS(purchase.total - purchase.paidAmount)}` : null,
+                ]
+                  .filter(Boolean)
+                  .join(', ')}
                 value={<Money value={purchase.total} />}
               />
             ))

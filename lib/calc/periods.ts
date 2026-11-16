@@ -38,7 +38,7 @@ export function periodRange(period: Period, today: string = businessDay()): DayR
 /**
  * The stretch to compare a period with, the same length and just before it:
  * yesterday for today, the same days of last week for this week, and the
- * same days of last month for this month ("1st–12th" against "1st–12th").
+ * same days of last month for this month ("1st to 12th" against "1st to 12th").
  */
 export function previousRange(period: 'today' | 'week' | 'month', today: string = businessDay()): DayRange {
   const current = periodRange(period, today);
@@ -48,4 +48,19 @@ export function previousRange(period: 'today' | 'week' | 'month', today: string 
   const span = Number(today.slice(8)) - 1;
   const end = addDays(last.start, span);
   return { start: last.start, end: end > last.end ? last.end : end };
+}
+
+/**
+ * Every day of this week (Monday to Sunday) or this month (1st to last), the
+ * ones still ahead included, so a chart can show how much of the period is
+ * left. Today alone for 'today'.
+ */
+export function periodDays(period: 'today' | 'week' | 'month', today: string = businessDay()): string[] {
+  const { start } = periodRange(period, today);
+  if (period === 'today') return [today];
+  const length =
+    period === 'week'
+      ? 7
+      : new Date(Date.UTC(Number(today.slice(0, 4)), Number(today.slice(5, 7)), 0)).getUTCDate();
+  return Array.from({ length }, (_, i) => addDays(start, i));
 }

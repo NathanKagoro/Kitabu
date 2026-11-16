@@ -158,9 +158,9 @@ export default function StaffPage() {
             <li key={m.id} className="space-y-2 px-4 py-3">
               <div className="flex items-center gap-2">
                 <span className="min-w-0 flex-1">
-                  <span className="block truncate font-semibold">{personName(m, '—')}</span>
+                  <span className="block truncate font-semibold">{personName(m, t('noName'))}</span>
                   <span className="block truncate text-sm text-ink-faint">
-                    {m.phone ? formatPhone(m.phone) : tt('tillOnly')} · {t(`roleHints.${m.role}`)}
+                    {m.phone ? formatPhone(m.phone) : tt('tillOnly')}, {t(`roleHints.${m.role}`)}
                   </span>
                 </span>
                 <Badge tone={m.role === 'owner' ? 'brand' : 'plain'}>{t(`roles.${m.role}`)}</Badge>

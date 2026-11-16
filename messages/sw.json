@@ -54,7 +54,7 @@
     "syncing": "Inatuma...",
     "pending": "{count} zinasubiri",
     "offline": "Hakuna mtandao",
-    "offlineSafe": "Hakuna mtandao — mauzo yanahifadhiwa kwenye simu",
+    "offlineSafe": "Hakuna mtandao. Mauzo yanahifadhiwa kwenye simu",
     "syncNow": "Tuma sasa",
     "lastSync": "Mara ya mwisho: {time}",
     "savedOnPhone": "Iko kwenye simu"
@@ -168,7 +168,8 @@
     "payCash": "Lipa taslimu",
     "otherPayment": "Njia nyingine",
     "wholesaleApplied": "Bei ya jumla",
-    "print": "Chapisha risiti"
+    "print": "Chapisha risiti",
+    "noName": "Bila jina"
   },
   "payment": {
     "title": "Malipo",
@@ -291,7 +292,7 @@
     "variantPlaceholders": {
       "shade": "Mf. Nude 03, 400ml",
       "size": "Mf. 42, XL",
-      "sizeColour": "Mf. M · Bluu",
+      "sizeColour": "Mf. M, Bluu",
       "spec": "Mf. 20L, 2.5mm, 1/2 inchi"
     },
     "anotherVariant": {
@@ -311,7 +312,7 @@
       "qtyShort": "Idadi",
       "addRow": "Bidhaa nyingine",
       "skip": "Nitaingiza baadaye",
-      "saveAll": "Hifadhi zote ({count}) · stoo TSh {total}",
+      "saveAll": "Hifadhi zote ({count}), stoo TSh {total}",
       "saved": "{count, plural, one {Bidhaa 1 imeongezwa} other {Bidhaa # zimeongezwa}}",
       "missingPrice": "{count, plural, one {Bidhaa 1 haina bei bado} other {Bidhaa # hazina bei bado}}",
       "pasteHelp": "Nakili orodha kutoka Excel, Google Sheets au WhatsApp. Kila bidhaa mstari wake, kwa mpangilio huu (unaweza kuacha za mwisho; ya saba ni idadi iliyotakiwa kuwepo):",
@@ -433,12 +434,13 @@
     "packCostLabel": "Umelipa kiasi gani kwa jumla?",
     "converted": "Unapata {qty} {unit}",
     "costEach": "{cost} kwa {unit}",
-    "marginHint": "Unauza {price} — faida {profit} kwa {unit}",
+    "marginHint": "Unauza {price}: faida {profit} kwa {unit}",
     "marginLoss": "Tahadhari: unauza {price}, chini ya gharama {cost}",
     "noPrice": "Bidhaa hii bado haina bei ya kuuza",
     "addPackHint": "Weka vipimo vya ununuzi kwenye bidhaa ili kuhesabu bei kwa kipande",
     "transportLabel": "Usafiri wa safari hii",
-    "transportHint": "Si lazima. Unaongezwa kwenye gharama ya bidhaa hizi, kwa hiyo faida inakuwa sahihi."
+    "transportHint": "Si lazima. Unaongezwa kwenye gharama ya bidhaa hizi, kwa hiyo faida inakuwa sahihi.",
+    "pickProduct": "Chagua bidhaa"
   },
   "suppliers": {
     "title": "Wauzaji",
@@ -537,7 +539,8 @@
     "balanceDue": "Bado inadaiwa",
     "empty": "Bado hakuna hati",
     "convertedFrom": "Imetoka {number}",
-    "message": "Habari! Hii hapa {kind} {number} kutoka {business}. Jumla: TSh {total}."
+    "message": "Habari! Hii hapa {kind} {number} kutoka {business}. Jumla: TSh {total}.",
+    "pickProduct": "Chagua bidhaa"
   },
   "staff": {
     "title": "Wafanyakazi",
@@ -558,7 +561,8 @@
     "removeConfirm": "Mwondoe {name} kwenye biashara hii?",
     "invited": "Amealikwa",
     "empty": "Wewe tu ndiye upo hapa",
-    "needName": "Andika jina lake"
+    "needName": "Andika jina lake",
+    "noName": "Bila jina"
   },
   "settings": {
     "title": "Mipangilio",
@@ -572,7 +576,7 @@
       "biashara": "Biashara"
     },
     "modeHints": {
-      "genge": "Rahisi kabisa — mauzo, madeni, hesabu",
+      "genge": "Rahisi kabisa: mauzo, madeni, hesabu",
       "duka": "Na bidhaa, stoo na risiti",
       "biashara": "Na ankara, VAT, wafanyakazi"
     },
@@ -667,7 +671,7 @@
     "hint": "Wiki mbili za mauzo, manunuzi na hesabu ya stoo za duka la aina hii, kwa ajili ya kuonyesha app.",
     "creating": "Inatengeneza...",
     "created": "Biashara ya mfano iko tayari",
-    "businessName": "{type} – mfano",
+    "businessName": "{type} (mfano)",
     "opening": "Inafungua duka la mfano…",
     "openingHint": "Wiki tano za mauzo zinaandaliwa. Mara ya kwanza huchukua sekunde chache.",
     "failed": "Imeshindikana kufungua duka la mfano.",
@@ -697,7 +701,7 @@
     "profit": "Faida",
     "margin": "Asilimia",
     "purchased": "Manunuzi",
-    "perUnit": "Nunua {cost} · uza {price}",
+    "perUnit": "Nunua {cost}, uza {price}",
     "noCost": "Hakuna gharama",
     "noCostHint": "Andika manunuzi ili tujue faida ya bidhaa hii",
     "empty": "Bado hakuna mauzo kwenye kipindi hiki",

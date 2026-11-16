@@ -113,7 +113,7 @@ export default function StaffSalesPage() {
                   </dl>
                   {row.voided > 0 ? (
                     <p className="rounded-[10px] bg-debt-tint px-3 py-2 text-sm font-medium text-debt">
-                      {t('voided', { count: row.voided })} · <Money value={row.voidedValue} symbol />
+                      {t('voided', { count: row.voided })}, <Money value={row.voidedValue} symbol />
                     </p>
                   ) : null}
                 </li>

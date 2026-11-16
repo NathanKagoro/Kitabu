@@ -102,7 +102,12 @@
       "week": "Wiki hii",
       "top": "Zinauzwa zaidi",
       "recent": "Mauzo ya karibuni",
-      "sellers": "Kwa muuzaji"
+      "sellers": "Kwa muuzaji",
+      "chart": {
+        "today": "Leo kwa saa",
+        "week": "Wiki hii",
+        "month": "Mwezi huu"
+      }
     },
     "hero": {
       "against": {

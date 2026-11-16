@@ -1,11 +1,11 @@
-# CLAUDE.md — Project context for Claude Code
+# CLAUDE.md: Project context for Claude Code
 
 > Name: **Kitabu** (formerly Hesabu; the pre-template code is on the `hesabu-original` branch of NathanKagoro/finance-trackers-legacy). The phone database is still called `hesabu` on purpose: renaming it would strand records already on phones.
 
 ## What we are building
 A simple, mobile-first business app for Tanzanian small businesses. It must work equally well for:
-- **Genge / kibanda / duka mode** — a single owner selling vegetables, fruit, charcoal, airtime, household goods from a stall or kiosk, using a cheap Android phone, often with weak internet, often in Swahili.
-- **Biashara mode** — a small formal business (wholesaler, hardware store, pharmacy, service company) with a few staff, suppliers, invoices and TRA obligations.
+- **Genge / kibanda / duka mode**: a single owner selling vegetables, fruit, charcoal, airtime, household goods from a stall or kiosk, using a cheap Android phone, often with weak internet, often in Swahili.
+- **Biashara mode**: a small formal business (wholesaler, hardware store, pharmacy, service company) with a few staff, suppliers, invoices and TRA obligations.
 
 Both modes are the **same app**. The business type chosen at onboarding decides which features are visible. Genge mode hides everything that isn't essential. Features are revealed progressively, never forced.
 
@@ -21,11 +21,12 @@ Full product spec: `docs/MVP_SPEC.md`. Build order: `docs/BUILD_PLAN.md`. Read b
 3. **Works offline.** Sales, expenses and credit entries must save while offline and sync later. Never lose a sale.
 4. **Cheap phones, expensive data.** Target a 2 GB RAM Android phone on 3G. Keep JS bundles small, avoid heavy libraries, compress images, no autoplaying anything.
 5. **Big, obvious UI.** Minimum tap target 48px, base font 16px+, icons next to labels, high contrast, no hidden gestures.
-6. **Plain language, not accounting language.** "Pesa iliyoingia", "Deni", "Faida ya leo" — not "Accounts receivable" or "Journal entry". Accounting rigor lives in the data model, not the UI.
+6. **Plain language, not accounting language.** "Pesa iliyoingia", "Deni", "Faida ya leo", not "Accounts receivable" or "Journal entry". Accounting rigor lives in the data model, not the UI.
+7. **Short, plain text on screen.** One or two words per label. No em or en dashes and no middle dots (" · ") in anything a user reads, including product names (`productLabel()` joins with a space), receipts and messages: use a colon, a comma or a new line.
 
 ## Tech stack
 - **Next.js (App Router) + TypeScript (strict)**, built as a **static export** (`out/`). No server code in the app: no server actions, no cookies, no dynamic routes (records come in as `?id=`). Anything that builds a URL by hand goes through `withBase()` (GitHub Pages serves from a sub-folder).
-- **Supabase** — Postgres, Auth (phone number → password; no SMS), one Edge Function (`supabase/functions/accounts`) for anything that needs the service role. Use Row Level Security for multi-tenancy.
+- **Supabase**: Postgres, Auth (phone number → password; no SMS), one Edge Function (`supabase/functions/accounts`) for anything that needs the service role. Use Row Level Security for multi-tenancy.
 - **Drizzle ORM** for schema and migrations (`/db/schema.ts`, `/db/migrations`).
 - **Tailwind CSS + shadcn/ui** for components.
 - **next-intl** for i18n (`/messages/sw.json`, `/messages/en.json`).

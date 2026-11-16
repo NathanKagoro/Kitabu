@@ -87,7 +87,7 @@ export default function ProfitPage() {
                     <div className="min-w-0 flex-1">
                       <p className="truncate font-bold">{line.name}</p>
                       <p className="text-xs text-ink-faint">
-                        {t('sold')} {formatQty(line.qtySold)} · {t('revenue')} {formatTZS(line.revenue)}
+                        {t('sold')} {formatQty(line.qtySold)}, {t('revenue')} {formatTZS(line.revenue)}
                       </p>
                     </div>
                     <div className="text-right">
@@ -116,7 +116,7 @@ export default function ProfitPage() {
                     )}
                     {line.purchased > 0 && (
                       <span className="tnum text-xs text-ink-faint">
-                        · {t('purchased')} {formatTZS(line.purchased)}
+                        {t('purchased')} {formatTZS(line.purchased)}
                       </span>
                     )}
                   </div>

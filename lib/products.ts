@@ -8,10 +8,10 @@ import type { Product } from './types';
  * These helpers make the rows read and search as one family.
  */
 
-/** "Nivea Lotion – 400ml": what appears on a sale line and a receipt. */
+/** "Nivea Lotion 400ml": what appears on a sale line and a receipt. */
 export function productLabel(product: Pick<Product, 'name' | 'variant'>): string {
   const variant = product.variant?.trim();
-  return variant ? `${product.name} – ${variant}` : product.name;
+  return variant ? `${product.name} ${variant}` : product.name;
 }
 
 /** Search by name, shade/size, category, barcode or code. */
@@ -22,7 +22,7 @@ export function matchesQuery(product: Pick<Product, 'name' | 'variant' | 'catego
     .filter(Boolean)
     .join(' ')
     .toLowerCase();
-  // Every word must match somewhere: "nivea 400" finds "Nivea Lotion – 400ml".
+  // Every word must match somewhere: "nivea 400" finds "Nivea Lotion 400ml".
   return q.split(/\s+/).every((word) => haystack.includes(word));
 }
 

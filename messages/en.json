@@ -54,7 +54,7 @@
     "syncing": "Sending...",
     "pending": "{count} waiting",
     "offline": "No connection",
-    "offlineSafe": "No connection — sales are saved on this phone",
+    "offlineSafe": "No connection. Sales are saved on this phone",
     "syncNow": "Send now",
     "lastSync": "Last sent: {time}",
     "savedOnPhone": "Saved on phone"
@@ -168,7 +168,8 @@
     "payCash": "Cash",
     "otherPayment": "Other",
     "wholesaleApplied": "Wholesale",
-    "print": "Print receipt"
+    "print": "Print receipt",
+    "noName": "No name"
   },
   "payment": {
     "title": "Payment",
@@ -291,7 +292,7 @@
     "variantPlaceholders": {
       "shade": "e.g. Nude 03, 400ml",
       "size": "e.g. 42, XL",
-      "sizeColour": "e.g. M · Blue",
+      "sizeColour": "e.g. M, Blue",
       "spec": "e.g. 20L, 2.5mm, 1/2 inch"
     },
     "anotherVariant": {
@@ -311,7 +312,7 @@
       "qtyShort": "Qty",
       "addRow": "Another product",
       "skip": "I'll add them later",
-      "saveAll": "Save all ({count}) · stock TSh {total}",
+      "saveAll": "Save all ({count}), stock TSh {total}",
       "saved": "{count, plural, one {1 product added} other {# products added}}",
       "missingPrice": "{count, plural, one {1 product has no price yet} other {# products have no price yet}}",
       "pasteHelp": "Copy a list from Excel, Google Sheets or WhatsApp. One product per line, in this order (later columns can be left off; the seventh is how many should be there):",
@@ -433,12 +434,13 @@
     "packCostLabel": "How much did you pay in total?",
     "converted": "That is {qty} {unit}",
     "costEach": "{cost} per {unit}",
-    "marginHint": "You sell at {price} — {profit} profit per {unit}",
+    "marginHint": "You sell at {price}: {profit} profit per {unit}",
     "marginLoss": "Careful: you sell at {price}, below the {cost} it cost you",
     "noPrice": "This product has no selling price yet",
     "addPackHint": "Add buying sizes on the product to get a price per unit",
     "transportLabel": "Transport for this trip",
-    "transportHint": "Optional. It is added to the cost of these goods, so profit comes out right."
+    "transportHint": "Optional. It is added to the cost of these goods, so profit comes out right.",
+    "pickProduct": "Choose a product"
   },
   "suppliers": {
     "title": "Suppliers",
@@ -537,7 +539,8 @@
     "balanceDue": "Still due",
     "empty": "No documents yet",
     "convertedFrom": "From {number}",
-    "message": "Hello! Here is {kind} {number} from {business}. Total: TSh {total}."
+    "message": "Hello! Here is {kind} {number} from {business}. Total: TSh {total}.",
+    "pickProduct": "Choose a product"
   },
   "staff": {
     "title": "Staff",
@@ -558,7 +561,8 @@
     "removeConfirm": "Remove {name} from this business?",
     "invited": "Invited",
     "empty": "It is just you here",
-    "needName": "Enter their name"
+    "needName": "Enter their name",
+    "noName": "No name"
   },
   "settings": {
     "title": "Settings",
@@ -572,7 +576,7 @@
       "biashara": "Formal business"
     },
     "modeHints": {
-      "genge": "As simple as it gets — sales, credit, summary",
+      "genge": "As simple as it gets: sales, credit, summary",
       "duka": "Adds products, stock and receipts",
       "biashara": "Adds invoices, VAT and staff"
     },
@@ -667,7 +671,7 @@
     "hint": "Two weeks of sales, purchases and stock checks for this type of shop, for showing the app.",
     "creating": "Creating...",
     "created": "Demo business ready",
-    "businessName": "{type} – demo",
+    "businessName": "{type} (demo)",
     "opening": "Opening the sample shop…",
     "openingHint": "Setting up five weeks of trading. The first time takes a few seconds.",
     "failed": "Could not open the sample shop.",
@@ -697,7 +701,7 @@
     "profit": "Profit",
     "margin": "Margin",
     "purchased": "Bought",
-    "perUnit": "Buy {cost} · sell {price}",
+    "perUnit": "Buy {cost}, sell {price}",
     "noCost": "No cost yet",
     "noCostHint": "Record a purchase so we can work out this product’s profit",
     "empty": "No sales in this period yet",

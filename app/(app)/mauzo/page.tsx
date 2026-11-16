@@ -173,7 +173,7 @@ export default function SalesPage() {
               className="flex h-10 max-w-28 items-center gap-1 rounded-full border border-band-line px-2.5 text-sm font-semibold"
             >
               <UserRound size={16} className="shrink-0" />
-              <span className="truncate">{personName(member, '—')}</span>
+              <span className="truncate">{personName(member, t('noName'))}</span>
             </button>
           )}
           <SyncIndicator />

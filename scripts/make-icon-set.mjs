@@ -53,7 +53,7 @@ for (const name of [...used].sort()) {
   try {
     source = readFileSync(file, 'utf8');
   } catch {
-    console.error(`icons — no lucide icon for ${name} (looked for ${relative(root, file)})`);
+    console.error(`icons: no lucide icon for ${name} (looked for ${relative(root, file)})`);
     process.exit(1);
   }
   // Renamed icons are re-exports of their new file; follow the alias.
@@ -64,7 +64,7 @@ for (const name of [...used].sort()) {
   }
   const match = /const __iconData = (\{[\s\S]*?\n\});/.exec(source);
   if (!match) {
-    console.error(`icons — could not read ${name}`);
+    console.error(`icons: could not read ${name}`);
     process.exit(1);
   }
   // The icon data is a plain literal (arrays, strings, objects); evaluate it.
@@ -129,4 +129,4 @@ writeFileSync(join(outDir, 'index.ts'), `${header}${barrel}\n`);
 // Scoped to this folder: lets the bundler drop icons a route never imports.
 writeFileSync(join(outDir, 'package.json'), `${JSON.stringify({ sideEffects: false }, null, 2)}\n`);
 
-console.log(`icons — wrote ${icons.length} icons to ${relative(root, outDir)}/`);
+console.log(`icons: wrote ${icons.length} icons to ${relative(root, outDir)}/`);

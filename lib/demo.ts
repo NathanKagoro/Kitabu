@@ -288,7 +288,8 @@ export async function createDemoBusiness(
       const gross = lines.reduce((s, l) => s + l.qty * l.unitPrice, 0);
       // Big orders are haggled down to a round figure now and then.
       const step = gross >= 300000 ? 10000 : 5000;
-      const discount = gross >= 50000 && random() < 0.25 ? gross % step || step / 5 : 0;
+      // (Only on single-item sales, so each product's takings stay round figures.)
+      const discount = lines.length === 1 && gross >= 50000 && random() < 0.35 ? gross % step || step / 5 : 0;
       const total = gross - discount;
       const roll = random();
       const onCredit = roll < (pace.credit ?? 0.08);

@@ -27,7 +27,7 @@ const locales = readdirSync(messagesDir)
   .map((file) => file.replace(/\.json$/, ''));
 
 if (locales.length === 0) {
-  console.error('i18n:check — no message files found in /messages');
+  console.error('i18n:check: no message files found in /messages');
   process.exit(1);
 }
 
@@ -134,12 +134,12 @@ for (const file of sourceFiles) {
 // --- report -----------------------------------------------------------------
 
 if (problems.length > 0) {
-  console.error(`i18n:check — ${problems.length} problem(s):\n`);
+  console.error(`i18n:check: ${problems.length} problem(s):\n`);
   for (const problem of problems.sort()) console.error(`  ${problem}`);
   console.error('');
   process.exit(1);
 }
 
 console.log(
-  `i18n:check — ok (${allKeys.size} keys x ${locales.length} locales: ${locales.join(', ')})`
+  `i18n:check: ok (${allKeys.size} keys x ${locales.length} locales: ${locales.join(', ')})`
 );

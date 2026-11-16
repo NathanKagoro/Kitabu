@@ -53,7 +53,7 @@ export function LastSeen({ shop }: { shop: ShopSummary }) {
   return (
     <span className={tone}>
       {t('lastSeen')}: {text}
-      {shop.sales30 > 0 ? ` · ${t('sales30', { count: shop.sales30 })}` : ''}
+      {shop.sales30 > 0 ? `, ${t('sales30', { count: shop.sales30 })}` : ''}
     </span>
   );
 }
@@ -74,7 +74,7 @@ export function ShopPeople({ shop }: { shop: ShopSummary }) {
               <span className="block truncate font-semibold">{person.name || t('noName')}</span>
               <span className="block truncate text-ink-faint">
                 {ts(`roles.${person.role}`)}
-                {person.phone ? ` · ${formatPhone(person.phone)}` : ''}
+                {person.phone ? `, ${formatPhone(person.phone)}` : ''}
               </span>
             </span>
             {person.hasLogin ? <Badge tone="brand">{t('canSignIn')}</Badge> : <Badge tone="info">{t('tillOnly')}</Badge>}

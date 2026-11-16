@@ -14,16 +14,16 @@ config({ path: ['.env.local', '.env'], quiet: true });
 
 const url = process.env.DATABASE_URL;
 if (!url) {
-  console.error('db:migrate — set DATABASE_URL in .env.local (Supabase > Project Settings > Database).');
+  console.error('db:migrate: set DATABASE_URL in .env.local (Supabase > Project Settings > Database).');
   process.exit(1);
 }
 
 const client = postgres(url, { max: 1, prepare: false });
 try {
   await migrate(drizzle(client), { migrationsFolder: './db/migrations' });
-  console.log('db:migrate — up to date');
+  console.log('db:migrate: up to date');
 } catch (error) {
-  console.error('db:migrate — failed:', error instanceof Error ? error.message : error);
+  console.error('db:migrate: failed:', error instanceof Error ? error.message : error);
   process.exitCode = 1;
 } finally {
   await client.end();

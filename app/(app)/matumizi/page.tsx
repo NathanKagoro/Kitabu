@@ -70,7 +70,7 @@ export default function ExpensesPage() {
         <section className="card px-4 py-2">
           <h2 className="pt-2 text-sm font-bold text-ink-soft">{t('todayTotal')}</h2>
           {todays?.length ? (
-            todays.map((e) => <Row key={e.id} label={`${t(`categories.${e.category}`)}${e.note ? ` · ${e.note}` : ''}`} value={<Money value={-e.amount} />} tone="loss" />)
+            todays.map((e) => <Row key={e.id} label={`${t(`categories.${e.category}`)}${e.note ? `: ${e.note}` : ''}`} value={<Money value={-e.amount} />} tone="loss" />)
           ) : (
             <p className="py-3 text-sm text-ink-faint">{t('empty')}</p>
           )}

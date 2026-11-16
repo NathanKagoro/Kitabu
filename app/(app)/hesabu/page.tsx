@@ -9,7 +9,7 @@ import { useLocale, useTranslations } from 'next-intl';
 import { useState } from 'react';
 
 import { useApp } from '@/components/app-provider';
-import { BarChart } from '@/components/summary/bar-chart';
+import { BarChart, dayName, dayPoints, dayTick } from '@/components/summary/bar-chart';
 import { Money, PageHeader, Row } from '@/components/ui/bits';
 import { Segmented } from '@/components/ui/segmented';
 import { Button } from '@/components/ui/button';
@@ -59,7 +59,7 @@ export default function SummaryPage() {
     const points = salesByDay(rows.sales, days, (s) => businessDay(s.clientCreatedAt));
     const top = topProducts(rows.saleLines.filter((l) => live.has(l.saleId)), 5);
     const products = await db().products.bulkGet(top.map((p) => p.productId));
-    return { points, top: top.map((p, i) => ({ ...p, name: products[i] ? productLabel(products[i]) : '—' })) };
+    return { points, top: top.map((p, i) => ({ ...p, name: products[i] ? productLabel(products[i]) : '' })) };
   }, [businessId, today, range]);
 
   if (!data) return <PageHeader title={t('title')} />;
@@ -208,7 +208,17 @@ export default function SummaryPage() {
             ]}
           />
         </div>
-        {history ? <BarChart points={history.points} today={today} /> : <div className="h-40" />}
+        {history ? (
+          <BarChart
+            key={range}
+            points={dayPoints(history.points, today)}
+            current={today}
+            name={(key) => dayName(key, locale)}
+            tick={dayTick(range)}
+          />
+        ) : (
+          <div className="h-40" />
+        )}
         <dl className="mt-3 grid grid-cols-2 gap-2 border-t border-line pt-3">
           <div>
             <dt className="text-sm text-ink-soft">{t('average')}</dt>

@@ -49,7 +49,7 @@ export function productProfitability(input: {
     const unitCost = product?.cost ?? null;
     const row: ProductProfit = {
       productId,
-      name: product ? productLabel(product) : '—',
+      name: product ? productLabel(product) : '',
       icon: product?.icon ?? null,
       qtySold: 0,
       revenue: 0,

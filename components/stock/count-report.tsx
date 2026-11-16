@@ -62,8 +62,8 @@ export function CountReport({
         }
       >
         <p className="text-sm font-semibold opacity-90">
-          {count.kind === 'opening' ? t('openingLead') : t('checkLead')} · {dateText(day)}
-          {count.scope ? ` · ${count.scope}` : ''}
+          {count.kind === 'opening' ? t('openingLead') : t('checkLead')}, {dateText(day)}
+          {count.scope ? `, ${count.scope}` : ''}
         </p>
         {s.linesShort > 0 ? (
           <>
@@ -76,7 +76,7 @@ export function CountReport({
             <p className="mt-1 text-sm opacity-90">
               {s.valueShortCost > 0 ? t('atCost') : t('atPrice')}
               {s.valueShortCost > 0 && s.valueShortPrice > s.valueShortCost
-                ? ` · ${t('wouldHaveSold', { value: formatTZS(s.valueShortPrice, { symbol: true }) })}`
+                ? `, ${t('wouldHaveSold', { value: formatTZS(s.valueShortPrice, { symbol: true }) })}`
                 : ''}
             </p>
           </>

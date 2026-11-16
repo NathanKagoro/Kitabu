@@ -20,7 +20,7 @@ const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
 function stop(message: string): never {
-  console.error(`operator — ${message}`);
+  console.error(`operator: ${message}`);
   process.exit(1);
 }
 
@@ -42,7 +42,7 @@ if (existingId) {
     user_metadata: { must_set_password: false },
   });
   if (error) stop(error.message);
-  console.log(`operator — ${phone} is the operator; password updated.`);
+  console.log(`operator: ${phone} is the operator; password updated.`);
 } else {
   const { error } = await admin.auth.admin.createUser({
     email,
@@ -52,5 +52,5 @@ if (existingId) {
     user_metadata: { must_set_password: false },
   });
   if (error) stop(error.message);
-  console.log(`operator — created. Sign in to the app with ${phone} and your password, then open /admin.`);
+  console.log(`operator: created. Sign in to the app with ${phone} and your password, then open /admin.`);
 }

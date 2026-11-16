@@ -211,7 +211,7 @@ export default function CountPage() {
                     <span className="min-w-0 flex-1">
                       <span className="block truncate font-semibold">
                         {p.name}
-                        {p.variant ? <span className="font-normal text-ink-soft"> · {p.variant}</span> : null}
+                        {p.variant ? <span className="font-normal text-ink-soft"> {p.variant}</span> : null}
                       </span>
                       <span className="flex items-center gap-2 text-sm">
                         <span className="text-ink-faint">{t('records', { qty: formatQty(expected) })}</span>
@@ -227,7 +227,7 @@ export default function CountPage() {
                     <TextInput
                       inputMode="decimal"
                       aria-label={t('countedFor', { name: productLabel(p) })}
-                      placeholder="—"
+                      placeholder="0"
                       value={typed}
                       onChange={(e) => {
                         const value = e.target.value;

@@ -12,7 +12,7 @@ export interface ReceiptLine {
 /** Short enough to read on a lock screen, and useful without opening the link. */
 export function receiptItemsText(lines: readonly ReceiptLine[]): string {
   return lines
-    .map((line) => `• ${line.description} x${formatQty(line.qty)} — ${formatTZS(line.lineTotal)}`)
+    .map((line) => `• ${line.description} x${formatQty(line.qty)}: ${formatTZS(line.lineTotal)}`)
     .join('\n');
 }
 

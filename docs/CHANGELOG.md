@@ -1,6 +1,16 @@
 # Changelog
 
-## 0.14.0 — Fuller demo shops; the front page opens the demo (2026-11-16)
+## 0.15.0: Clean-up pass; charts that follow the period (2026-11-16)
+
+A pass against CLAUDE.md and the build plan's launch-readiness checks.
+
+- **No dashes or dot-joined text on screen.** Product names read "Bati Gauge 30" (`productLabel()` joins with a space), receipts "Nyanya x2: 2,000", and every "A · B" line on the screens and in both languages uses commas or colons. Lone "—" placeholders became words ("No name", "Choose a product") or nothing. The docs and CLAUDE.md are cleaned the same way, and CLAUDE.md gains principle 7 (short, plain text; no dashes or middle dots) so it stays that way.
+- **The dashboard chart follows the period:** Today shows sales by hour, This week Monday to Sunday, This month every day; time still ahead shows as empty slots and the chart's total matches the sales card. The readout opens on the latest bar with sales and no longer shows "-100%" for an empty hour. Many bars get narrower gaps, so the 30-day chart on the day's count is readable. `salesByHour` and `periodDays` with tests.
+- **360px audit:** every screen checked in English and Swahili for overflow, dashes and English in the Swahili screens. Fixed the one overflow (a seven-figure day beside its change on the sales card).
+- Today's stock purchases are labelled by supplier (or time) and what is still owed, instead of "Total" on every line; a stray comma on Profit by product is gone.
+- Demo: haggled discounts only on single-item sales, so best sellers show round figures.
+
+## 0.14.0: Fuller demo shops; the front page opens the demo (2026-11-16)
 
 - **Five weeks of trading instead of two**, so This month and the comparisons have something in them. Busier on Friday and Saturday, quiet on Sunday, a lift at month end, slow growth over the five weeks; today holds only the sales up to the current hour.
 - **Fuller shelves** (`lib/demo-catalogue.ts`): hardware 42 lines, duka 34, wholesale 24, clothes 30, at typical Dar prices, each with a popularity weight so best sellers stand out and a typical quantity (metres of cable, kilos of sugar, bags of cement).
@@ -10,7 +20,7 @@
 - **The demo always opens in English** (Kitabu) unless the link says `?lang=sw`, including on phones an older demo left set to Swahili. Demos made earlier the same day are rebuilt with the new data.
 - Seeding takes about 3 to 6 seconds on a laptop. Sales screen first load 209.6 KB.
 
-## 0.13.0 — The blend: soft, painted, striped (2026-11-13)
+## 0.13.0: The blend: soft, painted, striped (2026-11-13)
 
 Kitabu's look is now a blend of three of the five concepts, and the yellow header is gone.
 
@@ -21,7 +31,7 @@ Kitabu's look is now a blend of three of the five concepts, and the yellow heade
 - **A chart that says something:** a dashed "usual" line, bars solid when the day beat it and pale when it did not, today in yellow, the best day flagged, tap a day for its amount against the usual. The bars grow in once when the screen opens (not with reduced motion). Bars use a lighter tone in dark mode so they show.
 - New `components/summary/cash-route.tsx`; `--color-bar` token. Sales screen first load 209.3 KB.
 
-## 0.12.0 — The signboard: Kitabu's own look (2026-11-13)
+## 0.12.0: The signboard: Kitabu's own look (2026-11-13)
 
 The "Bank card" look read as a template. A second study gave five designers five different ideas (signboard, big numbers, today's target, daladala, receipt), built as full mockups; the **signboard** won.
 
@@ -33,7 +43,7 @@ The "Bank card" look read as a template. A second study gave five designers five
 - **Fix:** `cn()` dropped a side border's width when a colour followed (`border-b-[4px] border-sign`) and treated each side's colour as one; Daftari's red stripe under its header now shows as intended. Tests in `tests/unit/cn.test.ts`.
 - Removed the unused `components/dashboard/panel.tsx`. Sales screen first load 209.2 KB.
 
-## 0.11.0 — Kitabu's "Bank card" look, from a five-way design study (2026-11-13)
+## 0.11.0: Kitabu's "Bank card" look, from a five-way design study (2026-11-13)
 
 Five designer personas each restyled the dashboard against the same brief (mid-size Tanzanian shops, cheap Android phones on 3G, no web fonts, no new JavaScript, 48px taps, nothing ornate): Bank card, Counter, Daylight, Office and Harbour. **Bank card** won, with one idea from Counter (a full-width Sell button).
 
@@ -45,7 +55,7 @@ Five designer personas each restyled the dashboard against the same brief (mid-s
 - English: the purchases screen is "Buy stock" (it was "Stock", which clashed with the new Stock tab).
 - No new dependencies, no fonts. CSS is 8.4 KB compressed; the sales screen's first load stays at 209.2 KB.
 
-## 0.10.1 — Kitabu speaks English first; the demo opens the hardware shop (2026-11-02)
+## 0.10.1: Kitabu speaks English first; the demo opens the hardware shop (2026-11-02)
 
 - **Kitabu's default language is English.** A phone that has never chosen a language opens in English; Swahili is one tap away in Mipangilio and is fetched only by phones that pick it. Daftari stays Swahili first. Each edition now ships only its default wording (`lib/edition/messages*.ts`); sales screen first load 209.2 KB.
 - **`/demo` opens Baraka Hardware directly.** The choice of four shops is at `/demo?chagua=1`, where the demo strip's "Switch" button goes. `?lang=sw|en` still sets the language.
@@ -53,7 +63,7 @@ Five designer personas each restyled the dashboard against the same brief (mid-s
 - Till tiles no longer split a product name mid-word.
 - End-to-end tests run in Swahili (set per test); the budget is measured in English.
 
-## 0.10.0 — Navy Kitabu, a Stoo tab, wholesale prices, scanning and printing (2026-11-01)
+## 0.10.0: Navy Kitabu, a Stoo tab, wholesale prices, scanning and printing (2026-11-01)
 
 **Deploy note:** run migration `0015_wholesale_prices` on the server (`npm run db:migrate`) before shops set wholesale prices. Until a product has one, nothing new is sent.
 
@@ -81,7 +91,7 @@ Five designer personas each restyled the dashboard against the same brief (mid-s
 ### Size
 - Stock-count, stock and scanner wording load with their screens. Sales screen first load: 209.4 KB.
 
-## 0.9.0 — Kitabu opens on a business dashboard; Daftari takes the black and gold (2026-11-01)
+## 0.9.0: Kitabu opens on a business dashboard; Daftari takes the black and gold (2026-11-01)
 
 ### The looks swap
 - **Daftari** now has the first Daftari's look: black band top and bottom, red stripe, gold for the main figure, Anton and Barlow Condensed. Leo's profit sits on a black card in gold, with sales and the number of sales beneath. Default colour red; app icon red.
@@ -98,7 +108,7 @@ Five designer personas each restyled the dashboard against the same brief (mid-s
 - The wholesaler sells several bags and cartons at a time, a quarter of it on account, to small shops; the hardware's credit customers are fundis and builders. The wholesaler's stock list is longer.
 - The demo strip's code loads only on the demo link. Sales screen first load: 209.7 KB.
 
-## 0.8.0 — Two looks, light by default, no product pictures (2026-11-01)
+## 0.8.0: Two looks, light by default, no product pictures (2026-11-01)
 
 ### Kitabu and Daftari no longer look alike
 - **Kitabu** takes the old Daftari (Big Rabbit) look, cleaned up: a black band across the top and along the bottom tabs, a red rule under the header, gold for the active tab and the day's takings, and condensed display type (Anton for figures and titles, Barlow Condensed for labels; both bundled in `app/fonts`, about 40 KB, no outside requests).
@@ -118,7 +128,7 @@ Five designer personas each restyled the dashboard against the same brief (mid-s
 - The demo strip is shorter and no longer cut off.
 - Sales screen first load still 209.7 KB.
 
-## 0.7.0 — Daftari joins: one codebase, two products, one set of maths (2026-10-31)
+## 0.7.0: Daftari joins: one codebase, two products, one set of maths (2026-10-31)
 
 ### Daftari is an edition of this code
 - `NEXT_PUBLIC_EDITION=daftari` builds Daftari (`lib/edition`); anything else builds Kitabu. The Daftari repo's workflow checks out this repo and builds it that way, so the two apps can't drift apart on maths.
@@ -139,7 +149,7 @@ Five designer personas each restyled the dashboard against the same brief (mid-s
 ### Tests
 271 unit and database tests, 4 end-to-end tests.
 
-## 0.6.0 — shared foundations: honest cash, light and dark, icons, TRA-ready, the console (2026-10-31)
+## 0.6.0: shared foundations: honest cash, light and dark, icons, TRA-ready, the console (2026-10-31)
 
 Kitabu moved to its own repo (NathanKagoro/Kitabu); Hesabu and the first Daftari are in finance-trackers-legacy.
 
@@ -175,7 +185,7 @@ Kitabu moved to its own repo (NathanKagoro/Kitabu); Hesabu and the first Daftari
 ### Tests
 255 unit and database tests (from 206) and 4 end-to-end tests.
 
-## 0.5.1 — a demo link with no sign-in (2026-10-28)
+## 0.5.1: a demo link with no sign-in (2026-10-28)
 
 - **`/demo`** opens Baraka Hardware, a sample hardware shop: two weeks of sales, purchases, credit customers, day closings and two stock checks, with an owner (Baraka) and two staff (Neema, Juma) so "sales by staff" has people in it. There is no sign-in. `/demo?lang=en` opens it in English.
 - It runs in its own database in the browser ("hesabu-demo") with the server switched off, even on the connected site. A real shop's data on the same phone is untouched, and nothing is sent anywhere.
@@ -183,7 +193,7 @@ Kitabu moved to its own repo (NathanKagoro/Kitabu); Hesabu and the first Daftari
 - The demo seeder can name the owner and add staff (`createDemoBusiness(..., { owner, staff })`).
 - E2E: the demo link opens with no sign-in and makes no server requests.
 
-## 0.5.0 — before real shops: honest stock checks, who's selling, offers by consent (2026-10-28)
+## 0.5.0: before real shops: honest stock checks, who's selling, offers by consent (2026-10-28)
 
 Fixes for gaps the 0.4 tests didn't catch.
 
@@ -216,7 +226,7 @@ Fixes for gaps the 0.4 tests didn't catch.
 - New tests: one checks that every field the phone syncs is a real server column; others cover the till PIN, consent, duplicates and late-sync counts. There is an end-to-end test of the shared-phone flow. 206 unit/RLS tests and 3 end-to-end tests in total.
 - The sales screen loads less code: `recordSale` and the report hooks were split into their own modules. First load is 208.1 KB, against a 210 KB budget.
 
-## 0.4.0 — the stock check, customers for offers, and sales by staff (2026-10-17)
+## 0.4.0: the stock check, customers for offers, and sales by staff (2026-10-17)
 
 Built for the pitch: every visit leads with "N items missing, worth TZS X", and the cosmetics and hardware pitches promise customer offers and per-staff sales.
 
@@ -255,7 +265,7 @@ The sales screen's first load is 208.7 KB (limit 210). Almost all of the growth 
 ### Tests
 179 unit and database tests (from 146): the stock-check maths, saving a count and its corrections through sync, the first-visit report, customer offers and exports, staff totals, starter categories and pictures, and the new database rules.
 
-## 0.3.0 — Kitabu: one app, many shops (2026-10-14)
+## 0.3.0: Kitabu: one app, many shops (2026-10-14)
 
 Hesabu becomes **Kitabu**, a template an operator sets up and customises per shop, aimed first at cosmetics, clothes and hardware shops in Dar. The code before this release is on the `hesabu-original` branch. Nothing here adds a dependency.
 
@@ -284,7 +294,7 @@ Hesabu becomes **Kitabu**, a template an operator sets up and customises per sho
 - The demo-shop button only appears on the demo.
 
 ### Products with shades and sizes
-- **Variants** are product rows sharing a name, with a `variant` column (migration 0003): stock, price and profit per shade work with nothing new in the ledger. Sale lines, receipts, invoices and reports read "Lipstick – Red 01".
+- **Variants** are product rows sharing a name, with a `variant` column (migration 0003): stock, price and profit per shade work with nothing new in the ledger. Sale lines, receipts, invoices and reports read "Lipstick, Red 01".
 - **Bulk entry** (`/bidhaa/ingiza`): count a shelf and type it in, with *Rangi nyingine* copying a row for the next shade, or **paste a list** from Excel, Google Sheets or WhatsApp (tabs, commas or semicolons; "12,500" stays one number). Quantities become opening stock at cost. A new shop lands here straight after the PIN.
 - The till has **category chips** once a shop has more than one category, shows the shade on each tile, and searches name, shade, category and barcode.
 - The product list is grouped by category with search; the product form asks for shade/size, offers the trade's categories, and shows barcode where the preset wants it. *Rangi nyingine* on a product opens a new one prefilled.
@@ -296,19 +306,19 @@ Hesabu becomes **Kitabu**, a template an operator sets up and customises per sho
 - 146 unit and database tests (from 107): setup codes, phone-to-login mapping, function permissions, shop presets and feature precedence, payment methods, variant search and grouping, the paste parser, bulk save through sync, and the new database rules.
 - The end-to-end test is now an owner's real first day against a fake Supabase: setup code → own password → PIN → bulk entry of two shades → offline sales that sync exactly once.
 
-## 0.2.1 — the app now really does open offline (2026-09-24)
+## 0.2.1: the app now really does open offline (2026-09-24)
 
 ### Fixed: the PWA could not be reopened without a connection
-Deploying publicly exposed a defect the local tests had been blind to. Every page is server-rendered per request (the language is a cookie) and comes back `no-store`, so **no page HTML was ever cached**. Sales were safe in IndexedDB the whole time, but reopening the app with no signal had no shell to show them in — which is the core promise of the product.
+Deploying publicly exposed a defect the local tests had been blind to. Every page is server-rendered per request (the language is a cookie) and comes back `no-store`, so **no page HTML was ever cached**. Sales were safe in IndexedDB the whole time, but reopening the app with no signal had no shell to show them in: which is the core promise of the product.
 
 The tests had missed it because they only ever went offline *inside* an already-loaded page. Moving between screens in the app swaps router payloads rather than fetching pages, so nothing was cached on the way either.
 
 - The service worker now keeps the last good copy of each page and each navigation payload (`NetworkFirst`, so an online phone is never served a stale price list).
-- On install — once per deployed version, when a connection is known to exist — it warms the screens a trader actually opens: Mauzo, Manunuzi, Madeni, Hesabu, Zaidi, Bei and the offline page. About 50KB once per release, which is the price of the app opening at all without signal.
+- On install: once per deployed version, when a connection is known to exist, it warms the screens a trader actually opens: Mauzo, Manunuzi, Madeni, Hesabu, Zaidi, Bei and the offline page. About 50KB once per release, which is the price of the app opening at all without signal.
 - The end-to-end test now reloads the app, navigates between screens **and completes a whole sale while offline**, so this cannot regress silently.
 
 ### Fixed: the first sale made offline could not show its confirmation
-Found while verifying the fix above on the live site. The code-split screens — the payment, basket and success sheets, the keypad, the PIN lock — are fetched the first time they are needed, and the build's precache does not include them. "The first time" is exactly the market with no signal.
+Found while verifying the fix above on the live site. The code-split screens: the payment, basket and success sheets, the keypad, the PIN lock, are fetched the first time they are needed, and the build's precache does not include them. "The first time" is exactly the market with no signal.
 
 - `components/warm-chunks.tsx` loads them 2.5 seconds after the app is interactive, at idle priority, so they are in the cache before they are needed and a trader never waits on them.
 - The budget test now measures first-load JS at the moment the grid is usable (196.0 KB) and reports the deferred total separately, rather than counting work that happens after the screen is ready.
@@ -316,7 +326,7 @@ Found while verifying the fix above on the live site. The code-split screens —
 ### Deployment
 - Public demo at **https://hesabu-tz.netlify.app** (see `docs/DEPLOY.md`). Netlify's "Powered by Netlify" badge was turned off: it sits bottom-right, directly over the app's bottom navigation on a 360px screen.
 
-## 0.2.0 — buying in bulk, and what each product earns (2026-09-23)
+## 0.2.0: buying in bulk, and what each product earns (2026-09-23)
 
 From the first round of feedback on 0.1.0.
 
@@ -326,8 +336,8 @@ From the first round of feedback on 0.1.0.
 
 ### Stock purchases are a tab, and use the sizes stock is actually bought in
 - **Manunuzi now sits in the bottom bar, next to Mauzo** rather than under Zaidi. Five tabs: Mauzo, Manunuzi, Madeni, Hesabu, Zaidi.
-- A product can carry the **bulk sizes it is bought in** — a *tenga* of tomatoes, a 50kg *gunia* of rice, a *katoni* of soap — each recording how many selling units it holds. Edited on the product, under *Ununuzi wa jumla*.
-- Buying now asks **which size** and **how many**, not a vague "how much stock", and converts in front of the user before saving: "2 tenga → 80 fungu · 750 kwa fungu", followed by "unauza 1,000 — faida 250 kwa fungu", or a warning when the buying price is above the selling price.
+- A product can carry the **bulk sizes it is bought in**: a *tenga* of tomatoes, a 50kg *gunia* of rice, a *katoni* of soap, each recording how many selling units it holds. Edited on the product, under *Ununuzi wa jumla*.
+- Buying now asks **which size** and **how many**, not a vague "how much stock", and converts in front of the user before saving: "2 tenga → 80 fungu · 750 kwa fungu", followed by "unauza 1,000, faida 250 kwa fungu", or a warning when the buying price is above the selling price.
 - Buying loose is still one tap (*Kimoja kimoja*), and the purchase keeps what was actually bought ("2 × tenga"), so it reads back the way it was entered.
 - New table `product_packs` with its own RLS: everyone in the business can read the sizes, owners and managers maintain them.
 
@@ -336,13 +346,13 @@ From the first round of feedback on 0.1.0.
 - Each line also shows the current buy-versus-sell per unit and what was spent restocking it, so a thin margin is visible before it becomes a bad month. Products losing money are flagged, and a product whose sales could not be costed says so rather than counting as pure profit.
 
 ### Branding
-- The app has a **logo**: a ruled book — the daftari a trader already keeps — in the app's own green.
+- The app has a **logo**: a ruled book, the daftari a trader already keeps, in the app's own green.
 - It is generated once from a single set of shapes in `scripts/make-icons.mjs` (`npm run icons`) and appears as: the browser tab icon (`app/icon.svg`), the iOS home-screen icon (`app/apple-icon.png`), the installed-app icons (192 and 512), and the link-preview card shown when a receipt link is shared (`app/opengraph-image.tsx`).
 - In the app itself it appears on sign-in, onboarding, the PIN screen, the loading splash, the offline page, the bottom of the More screen, and on the public receipt a customer opens. `components/brand/logo.tsx` is the same mark as SVG.
 - The demo business now buys in packs and restocks a few lines each morning, so its numbers behave like a real stall.
 
 
-## 0.1.0 — MVP, phases 0–7 (2026-09-21)
+## 0.1.0: MVP, phases 0-7 (2026-09-21)
 
 The whole build plan, built in one pass. The plan says to field-test genge and duka modes with real users after Phase 5, before biashara mode. That hasn't happened yet, so treat Phase 6 as unvalidated with users.
 

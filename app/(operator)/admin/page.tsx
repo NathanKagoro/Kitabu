@@ -178,9 +178,9 @@ export default function AdminPage() {
               <span className="min-w-0 flex-1">
                 <span className="block truncate font-semibold">{shop.name}</span>
                 <span className="block truncate text-sm text-ink-faint">
-                  {shop.edition === 'daftari' ? 'Daftari' : 'Kitabu'} · {to(`types.${shop.type}`)}
-                  {shop.plan ? ` · ${t(`console.plans.${shop.plan}`)}` : ''}
-                  {shop.owner?.phone ? ` · ${shop.owner.name ? `${shop.owner.name}, ` : ''}${formatPhone(shop.owner.phone)}` : ''}
+                  {shop.edition === 'daftari' ? 'Daftari' : 'Kitabu'}, {to(`types.${shop.type}`)}
+                  {shop.plan ? `, ${t(`console.plans.${shop.plan}`)}` : ''}
+                  {shop.owner?.phone ? `, ${shop.owner.name ? `${shop.owner.name}, ` : ''}${formatPhone(shop.owner.phone)}` : ''}
                 </span>
                 <span className="block truncate text-sm">
                   <LastSeen shop={shop} />

@@ -168,7 +168,7 @@ export default function ProductsPage() {
                     <span className="min-w-0 flex-1">
                       <span className="block truncate font-semibold">
                         {product.name}
-                        {product.variant ? <span className="font-normal text-ink-soft"> · {product.variant}</span> : null}
+                        {product.variant ? <span className="font-normal text-ink-soft"> {product.variant}</span> : null}
                       </span>
                       <span className="text-sm text-ink-faint">
                         <Money value={product.price} /> / {product.unit === 'custom' ? product.unitLabel : t(`unitsShort.${product.unit}`)}
@@ -179,7 +179,7 @@ export default function ProductsPage() {
                         <Badge tone="loss">{t('outOfStock')}</Badge>
                       ) : isLowStock(onHand, product.lowStockLevel) ? (
                         <Badge tone="debt">
-                          {t('lowStock')} · {formatQty(onHand)}
+                          {t('lowStock')}: {formatQty(onHand)}
                         </Badge>
                       ) : (
                         <Badge>{formatQty(onHand)}</Badge>

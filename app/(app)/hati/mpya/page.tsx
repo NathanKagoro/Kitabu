@@ -83,7 +83,7 @@ function NewDocument() {
         <section className="card space-y-3 p-4">
           <p className="font-semibold">{t('addLine')}</p>
           <Select value={productId} onChange={(e) => pickProduct(e.target.value)} aria-label={t('linesLabel')}>
-            <option value="">—</option>
+            <option value="">{t('pickProduct')}</option>
             {products?.map((p) => (
               <option key={p.id} value={p.id}>
                 {productLabel(p)}

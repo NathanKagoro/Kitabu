@@ -1,4 +1,4 @@
-# Build Plan — prompts for Claude Code
+# Build Plan: prompts for Claude Code
 
 How to use this file:
 1. Create an empty folder, put `CLAUDE.md` in the root and `MVP_SPEC.md` + `BUILD_PLAN.md` in `/docs`.
@@ -10,7 +10,7 @@ Setup you need to do yourself (Claude Code can't do these for you): create a Sup
 
 ---
 
-## Phase 0 — Foundation
+## Phase 0: Foundation
 ```
 Read CLAUDE.md and docs/MVP_SPEC.md fully. Then set up the project foundation:
 - Next.js App Router + TypeScript strict, Tailwind, shadcn/ui, next-intl (sw default, en), Drizzle connected to Supabase Postgres, Zod, Vitest, Playwright, ESLint.
@@ -25,7 +25,7 @@ Before writing code, show me a short plan and the folder structure.
 
 ---
 
-## Phase 1 — Onboarding & auth
+## Phase 1: Onboarding & auth
 ```
 Implement section 3.1 of docs/MVP_SPEC.md:
 - Phone OTP sign-up/login via Supabase Auth (dev mode OTP 123456 via env flag).
@@ -39,7 +39,7 @@ Keep onboarding to 3 screens maximum.
 
 ---
 
-## Phase 2 — Products, prices & stock
+## Phase 2: Products, prices & stock
 ```
 Implement sections 3.2 and 3.6 of the spec:
 - Product list, add/edit product (unit picker incl. fungu, kg, kipande, bunda, debe, pakti, lita, dazeni, custom), emoji/photo icon.
@@ -52,9 +52,9 @@ Unit tests for stock calculation and weighted-average cost.
 
 ---
 
-## Phase 3 — Sales (POS) with offline support
+## Phase 3: Sales (POS) with offline support
 ```
-Implement section 3.3 and section 4 of the spec. This is the most important screen in the app — optimise for speed.
+Implement section 3.3 and section 4 of the spec. This is the most important screen in the app: optimise for speed.
 - Home = product tile grid; tap adds 1; tap quantity for numeric keypad with decimals. Cart as a bottom sheet.
 - Amount-only quick sale for genge/duka modes.
 - Payment: cash, mobile money (M-Pesa, Mixx by Yas, Airtel Money, HaloPesa + optional reference), credit (requires customer; allow creating a customer inline), split payment.
@@ -68,7 +68,7 @@ Target: a sale in 3 taps from home.
 
 ---
 
-## Phase 4 — Customers & credit (Daftari la madeni)
+## Phase 4: Customers & credit (Daftari la madeni)
 ```
 Implement section 3.4 of the spec:
 - Customer list sorted by balance owed, with days since last payment.
@@ -79,7 +79,7 @@ Implement section 3.4 of the spec:
 
 ---
 
-## Phase 5 — Expenses, purchases & daily summary
+## Phase 5: Expenses, purchases & daily summary
 ```
 Implement sections 3.5 and 3.7 of the spec:
 - Expense entry with Tanzanian-relevant categories (nauli, ushuru, kodi, umeme, chakula, mishahara, nyingine).
@@ -94,7 +94,7 @@ Unit tests for expected cash and profit calculations.
 
 ---
 
-## Phase 6 — Biashara mode
+## Phase 6: Biashara mode
 ```
 Implement section 3.8 of the spec:
 - Documents flow: proforma → delivery note → invoice → payments, one tap per conversion, lines carried forward, per-business numbering.
@@ -107,7 +107,7 @@ Implement section 3.8 of the spec:
 
 ---
 
-## Phase 7 — Polish & launch readiness
+## Phase 7: Polish & launch readiness
 ```
 Review the whole app against CLAUDE.md principles:
 - Audit every screen at 360px width and in both languages; fix any English leaking into Swahili UI.
@@ -123,4 +123,4 @@ Review the whole app against CLAUDE.md principles:
 - Ask for a plan first on big phases ("show me the plan before coding").
 - If something breaks, paste the exact error message; don't describe it.
 - Test on a real cheap Android phone after every phase, not just your laptop.
-- Keep Swahili copy reviewed by a native speaker who actually runs or shops at a genge — it's your biggest differentiator.
+- Keep Swahili copy reviewed by a native speaker who actually runs or shops at a genge: it's your biggest differentiator.
